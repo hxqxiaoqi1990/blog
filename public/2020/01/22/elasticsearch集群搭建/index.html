@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>elasticstarch集群搭建 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="elasticstarch集群搭建">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-01-22 09:00" pubdate>
+        2020年1月22日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">elasticstarch集群搭建</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>针对一个索引，Elasticsearch 中其实有专门的衡量索引健康状况的标志，分为三个等级：</p>
+<ul>
+<li>green，绿色。这代表所有的主分片和副本分片都已分配。你的集群是 100% 可用的。</li>
+<li>yellow，黄色。所有的主分片已经分片了，但至少还有一个副本是缺失的。不会有数据丢失，所以搜索结果依然是完整的。不过，你的高可用性在某种程度上被弱化。如果更多的分片消失，你就会丢数据了。所以可把 yellow 想象成一个需要及时调查的警告。</li>
+<li>red，红色。至少一个主分片以及它的全部副本都在缺失中。这意味着你在缺少数据：搜索只能返回部分数据，而分配到这个分片上的写入请求会返回一个异常。</li>
+</ul>
+<p>如果你只有一台主机的话，其实索引的健康状况也是 yellow，因为一台主机，集群没有其他的主机可以防止副本，所以说，这就是一个不健康的状态，因此集群也是十分有必要的。</p>
+<h1 id="搭建步骤"><a href="#搭建步骤" class="headerlink" title="搭建步骤"></a>搭建步骤</h1><p><strong>主机环境：</strong></p>
+<ul>
+<li>jdk + es：192.168.40.100</li>
+<li>jdk + es：192.168.40.101</li>
+<li>jdk + es：192.168.40.102</li>
+</ul>
+<p><strong>安装步骤：</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/2019/08/08/elasticsearch-6.6.1%E5%AE%89%E8%A3%85/">参考elasticsearch安装</a> 在两台主机上安装</li>
+<li>修改配置文件</li>
+</ol>
+<p><strong>192.168.40.100配置文件</strong></p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># ======================== Elasticsearch Configuration =========================</span><br>  <span class="hljs-comment"># 集群名称</span><br>  <span class="hljs-attr">cluster.name:</span> <span class="hljs-string">mmh-es</span><br>  <span class="hljs-comment"># 节点名称，不同节点命名不能一样</span><br>  <span class="hljs-attr">node.name:</span> <span class="hljs-string">node-1</span><br><span class="hljs-comment"># ----------------------------------- Memory -----------------------------------</span><br>  <span class="hljs-comment">#因为centos6.x操作系统不支持SecComp，而elasticsearch5.5.2默认bootstrap.system_call_filter为true进行检测，所以导致检测失败，失败后直接导致ES不能启动。</span><br>  <span class="hljs-attr">bootstrap.memory_lock:</span> <span class="hljs-literal">false</span><br>  <span class="hljs-attr">bootstrap.system_call_filter:</span> <span class="hljs-literal">false</span><br>  <br>  <span class="hljs-comment"># 当前节点Ip，不同节点配置不一样</span><br>  <span class="hljs-attr">network.host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>  <br>  <span class="hljs-comment"># 设置对外服务的http端口,默认为9200 </span><br>  <span class="hljs-attr">http.port:</span> <span class="hljs-number">9200</span><br>  <br>  <span class="hljs-comment"># 设置节点间交互的tcp端口,默认是9300 </span><br>  <span class="hljs-attr">transport.tcp.port:</span> <span class="hljs-number">9300</span><br>  <br>  <span class="hljs-comment"># 这是一个集群中的主节点的初始列表,当节点(主节点或者数据节点)启动时使用这个列表进行探测 </span><br>  <span class="hljs-attr">discovery.zen.ping.unicast.hosts:</span> [<span class="hljs-string">&quot;192.168.40.100&quot;</span>,<span class="hljs-string">&quot;192.168.40.101&quot;</span>,<span class="hljs-string">&quot;192.168.40.102&quot;</span>]<br>  <br>  <span class="hljs-comment"># 设置这个参数来保证集群中的节点可以知道其它N个有master资格的节点.默认为1,对于大的集群来说,可以设置大一点的值(2-4) </span><br>  <span class="hljs-attr">discovery.zen.minimum_master_nodes:</span> <span class="hljs-number">1</span><br>  <br>  <span class="hljs-comment">#使用head等插件监控集群信息，需要打开以下配置项</span><br>  <span class="hljs-attr">http.cors.enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">http.cors.allow-origin:</span> <span class="hljs-string">&quot;*&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>192.168.40.101配置文件</strong></p>
+<p>其它与192.168.40.100配置一致</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">node.name:</span> <span class="hljs-string">node-2</span><br><span class="hljs-attr">network.host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.101</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>192.168.40.102配置文件</strong></p>
+<p>其它与192.168.40.100配置一致</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">node.name:</span> <span class="hljs-string">node-3</span><br><span class="hljs-attr">network.host:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.102</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="安装head插件"><a href="#安装head插件" class="headerlink" title="安装head插件"></a>安装head插件</h1><p>由于head插件本质上还是一个nodejs的工程，因此需要安装node，使用npm来安装依赖的包。（npm可以理解为maven）</p>
+<p>在192.168.40.100操作</p>
+<p><strong>node安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载nodejs最新的bin包</span><br>wget https://nodejs.org/dist/v9.3.0/node-v9.3.0-linux-x64.tar.xz　<br><span class="hljs-comment"># 解压</span><br>xz -d node-v9.3.0-linux-x64.tar.xz<br>tar -xf node-v9.3.0-linux-x64.tar<br><br><span class="hljs-comment"># 部署bin文件，先确定nodejs的bin路径</span><br>ln -s ~/node-v9.3.0-linux-x64/bin/node /usr/bin/node  <br>ln -s ~/node-v9.3.0-linux-x64/bin/npm /usr/bin/npm<br><br><span class="hljs-comment"># npm加速 全局安装cnpm 指定来源淘宝镜像</span><br>npm install -g cnpm --registry=https://registry.npm.taobao.org<br></code></pre></td></tr></table></figure>
+
+<p><strong>elasticsearch-head安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /usr/<span class="hljs-built_in">local</span>/<br>git <span class="hljs-built_in">clone</span> git://github.com/mobz/elasticsearch-head.git<br><span class="hljs-built_in">cd</span> elasticsearch-head<br>npm install<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>注：</font> </p>
+<ol>
+<li>5.0以上，elasticsearch-head 不能放在elasticsearch的 plugins、modules 目录下，否则elasticsearch启动会报错。</li>
+<li>这里如果grunt没有安装成功也无所谓，可以通过其他方式启动elasticsearch-head插件（npm run start）。</li>
+</ol>
+<p><strong>grunt安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># grunt是一个很方便的构建工具，可以进行打包压缩、测试、执行等等的工作，5.0里的head插件就是通过grunt启动的。</span><br><span class="hljs-built_in">cd</span>  /usr/<span class="hljs-built_in">local</span>/elasticsearch-head<br>npm install -g grunt-cli  //执行后会生成node_modules文件夹<br>npm install<br></code></pre></td></tr></table></figure>
+
+<p><strong>修改配置</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span>  /usr/<span class="hljs-built_in">local</span>/elasticsearch-head<br>vim _site/app.js<br><span class="hljs-comment"># 修改以下内容</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 这里的 localhost 是指进入elasticsearch-head页面时默认访问的ES集群地址，把他修改为其中一台ES节点的地址即可</span><br>this.base_uri = this.config.base_uri || this.prefs.get(<span class="hljs-string">&quot;app-base_uri&quot;</span>) || <span class="hljs-string">&quot;http://192.168.40.100:9200&quot;</span>;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span>  /usr/<span class="hljs-built_in">local</span>/elasticsearch-head<br>vim Gruntfile.js<br><span class="hljs-comment"># 修改以下内容</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs js">connect: &#123;<br>    <span class="hljs-attr">server</span>: &#123;<br>        <span class="hljs-attr">options</span>: &#123;<br>            <span class="hljs-attr">port</span>: <span class="hljs-number">9100</span>,<br>            <span class="hljs-attr">base</span>: <span class="hljs-string">&#x27;.&#x27;</span>,<br>            <span class="hljs-attr">keepalive</span>: <span class="hljs-literal">true</span>,<br>            <span class="hljs-attr">hostname</span>: <span class="hljs-string">&#x27;*&#x27;</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>启动</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /usr/<span class="hljs-built_in">local</span>/elasticsearch-head <br><span class="hljs-comment"># 若想在后台运行，结尾追加“&amp;”,也可以使用 npm run start启动</span><br>grunt server<br></code></pre></td></tr></table></figure>
+
+<p><strong>访问</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 到浏览器访问</span><br>curl http://192.168.40.100:9100<br></code></pre></td></tr></table></figure>
+
+<p><strong>验证</strong></p>
+<ul>
+<li>访问，有两个节点即成功</li>
+<li>head可以操作和查看es的所有索引</li>
+</ul>
+<h1 id="集群备份和恢复"><a href="#集群备份和恢复" class="headerlink" title="集群备份和恢复"></a>集群备份和恢复</h1><p>备份es集群是使用<code>snapshot</code> API快照功能，需要一个共同的数据保存仓库，可以是：</p>
+<ul>
+<li>共享文件系统，比如 NAS，NFS</li>
+<li>Amazon S3</li>
+<li>HDFS (Hadoop 分布式文件系统)</li>
+<li>Azure Cloud</li>
+</ul>
+<p>这里，我们使用NFS做共享仓库，服务地址为：192.168.40.103，注意，需要集群外的<code>NFS</code>服务端提供目录共享，集群内搭建的<code>NFS</code>服务端会连接报错。</p>
+<p>NFS 搭建</p>
+<p><a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/2019/06/05/nfs%20%E7%9B%AE%E5%BD%95%E5%85%B1%E4%BA%AB/">NFS 搭建教程跳转</a></p>
+<p>创建es系统仓库</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">PUT</span> <span class="hljs-string">_snapshot/my_backup</span> <br>&#123;<br>    <span class="hljs-attr">&quot;type&quot;:</span> <span class="hljs-string">&quot;fs&quot;</span>, <br>    <span class="hljs-attr">&quot;settings&quot;:</span> &#123;<br>        <span class="hljs-attr">&quot;location&quot;:</span> <span class="hljs-string">&quot;/mount/backups/my_backup&quot;</span> <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>_snapshot</code> es快照接口</li>
+<li><code>my_backup</code> 快照仓库，自定义</li>
+<li><code>/mount/backups/my_backup</code> NFS共享目录挂在地址，自定义，注意：共享文件系统路径必须确保集群所有节点都可以访问到。</li>
+</ul>
+<p>快照备份</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 备份索引打开索引</span><br><span class="hljs-string">PUT</span> <span class="hljs-string">_snapshot/my_backup/snapshot_1</span><br><br><span class="hljs-comment"># 备份单个索引</span><br><span class="hljs-string">PUT</span> <span class="hljs-string">_snapshot/my_backup/snapshot_2</span><br>&#123;<br>    <span class="hljs-attr">&quot;indices&quot;:</span> <span class="hljs-string">&quot;index_1,index_2&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>snapshot_1</code> 快照名称，自定义</li>
+</ul>
+<p>查看快照</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">GET</span> <span class="hljs-string">_snapshot/my_backup/snapshot_2</span><br></code></pre></td></tr></table></figure>
+
+<p>删除快照</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">DELETE</span> _snapshot<span class="hljs-regexp">/my_backup/</span>snapshot_2<br></code></pre></td></tr></table></figure>
+
+<p>恢复快照</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># 恢复所有索引</span><br><span class="hljs-string">POST</span> <span class="hljs-string">_snapshot/my_backup/snapshot_1/_restore</span><br><br><span class="hljs-comment"># 恢复单个索引</span><br><span class="hljs-string">POST</span> <span class="hljs-string">/_snapshot/my_backup/snapshot_1/_restore</span><br>&#123;<br>    <span class="hljs-attr">&quot;indices&quot;:</span> <span class="hljs-string">&quot;index_1&quot;</span>, <br>    <span class="hljs-attr">&quot;rename_pattern&quot;:</span> <span class="hljs-string">&quot;index_(.+)&quot;</span>, <br>    <span class="hljs-attr">&quot;rename_replacement&quot;:</span> <span class="hljs-string">&quot;restored_index_$1&quot;</span> <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>只恢复 <code>index_1</code> 索引，忽略快照中存在的其余索引。</li>
+<li>查找所提供的模式能匹配上的正在恢复的索引。</li>
+<li>然后把它们重命名成替代的模式。</li>
+</ol>
+<p>这个会恢复 <code>index_1</code> 到你及群里，但是重命名成了 <code>restored_index_1</code> 。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/es/">es</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/01/22/elasticsearch%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">elasticstarch执行语句</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/01/21/RocketMQ%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">RocketMQ分布式部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

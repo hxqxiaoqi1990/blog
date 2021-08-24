@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>solr安装 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="solr安装">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-08-11 18:00" pubdate>
+        2019年8月11日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      914 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      14
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">solr安装</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Solr是一个独立的企业级搜索应用服务器，它对外提供类似于Web-service的API接口。用户可以通过http请求，向搜索引擎服务器提交一定格式的XML文件，生成索引；也可以通过Http Get操作提出查找请求，并得到XML格式的返回结果。</p>
+<p>Solr是一个高性能，采用Java开发，基于Lucene的全文搜索服务器。同时对其进行了扩展，提供了比Lucene更为丰富的查询语言，同时实现了可配置、可扩展并对查询性能进行了优化，并且提供了一个完善的功能管理界面，是一款非常优秀的全文搜索引擎。</p>
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p>Solr的安装必须先 <a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/2019/06/04/JDK1.8%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85-linux/">安装JDK</a>，这个的安装这里不再赘述，下面将要介绍的是solr的安装流程。</p>
+<ol>
+<li>下载tomcat和solr，并解压</li>
+<li>复制solr文件到tomcat</li>
+<li>启动并访问solr</li>
+<li>创建核心</li>
+<li>下载并配置中文分词</li>
+</ol>
+<h2 id="下载tomcat和solr，并解压"><a href="#下载tomcat和solr，并解压" class="headerlink" title="下载tomcat和solr，并解压"></a>下载tomcat和solr，并解压</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装目录</span><br><span class="hljs-built_in">cd</span> /data<br><br><span class="hljs-comment"># 下载</span><br>wget http://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.45/bin/apache-tomcat-8.5.45.tar.gz<br>wget http://archive.apache.org/dist/lucene/solr/7.1.0/solr-7.1.0.tgz<br><br>tar xf apache-tomcat-8.5.45.tar.gz<br>mv  apache-tomcat-8.5.45 tomcat-solr<br><br>tar xf solr-7.1.0.tgz<br></code></pre></td></tr></table></figure>
+
+<h2 id="复制solr文件到tomcat"><a href="#复制solr文件到tomcat" class="headerlink" title="复制solr文件到tomcat"></a>复制solr文件到tomcat</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /data<br>cp -a solr-7.1.0/server/solr-webapp/webapp tomcat-solr/webapps/solr<br>cp -a solr-7.1.0/server/lib/ext/* tomcat-solr/webapps/solr/WEB_INF/lib<br>cp -a solr-7.1.0/server/lib/metrics* tomcat-solr/webapps/solr/WEB_INF/lib<br>cp -a solr-7.1.0/dist/solr-dataimporthandler* tomcat-solr/webapps/solr/WEB_INF/lib<br><br><span class="hljs-built_in">cd</span> tomcat-solr/webapps/solr/WEB-INF/<br>mkdir classes<br><span class="hljs-built_in">cd</span> classes<br>cp -a solr-7.1.0/server/resources/log4j.properties .<br><br><span class="hljs-built_in">cd</span> /data<br>mkdir solrhome<br>cp -a solr-7.1.0/server/solr/* solrhome<br>cp -a solr-7.1.0/dist/ solrhome/<br>cp -a solr-7.1.0/contrib/ solrhome/<br><br>vim tomcat-solr/webapps/solr/WEB_INF/web.xml<br>	<span class="hljs-comment"># 在web-app节点下添加，然后把security-constraint相关的都注释掉</span><br>    &lt;env-entry&gt;<br>       &lt;env-entry-name&gt;solr/home&lt;/env-entry-name&gt;<br>       &lt;env-entry-value&gt;/data/solrhome&lt;/env-entry-value&gt;<br>       &lt;env-entry-type&gt;java.lang.String&lt;/env-entry-type&gt;<br>    &lt;/env-entry&gt;<br></code></pre></td></tr></table></figure>
+
+<h2 id="启动并访问solr"><a href="#启动并访问solr" class="headerlink" title="启动并访问solr"></a>启动并访问solr</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 启动</span><br>/data/tomcat-solr/bin/startup.sh<br><br><span class="hljs-comment"># 访问</span><br>Ip:8080/solr/index.html<br></code></pre></td></tr></table></figure>
+<h2 id="创建核心"><a href="#创建核心" class="headerlink" title="创建核心"></a>创建核心</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /data/solrhome<br>mkdir -p testCore/conf<br><br><span class="hljs-built_in">cd</span> testCore/conf<br>cp -a /data/solr-7.1.0/server/solr/configsets/_default/conf/* .<br><br>vim solrconfig.xml<br><span class="hljs-comment"># 添加以下配置，并把原来的&lt;lib dir= 也改为当前路径</span><br>&lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/contrib/extraction/lib&quot;</span> regex=<span class="hljs-string">&quot;.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/dist/&quot;</span> regex=<span class="hljs-string">&quot;solr-cell-\d.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/contrib/clustering/lib/&quot;</span> regex=<span class="hljs-string">&quot;.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/dist/&quot;</span> regex=<span class="hljs-string">&quot;solr-clustering-\d.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/contrib/langid/lib/&quot;</span> regex=<span class="hljs-string">&quot;.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/dist/&quot;</span> regex=<span class="hljs-string">&quot;solr-langid-\d.*\.jar&quot;</span> /&gt;<br>    &lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/contrib/velocity/lib&quot;</span> regex=<span class="hljs-string">&quot;.*\.jar&quot;</span> /&gt;<br>&lt;lib dir=<span class="hljs-string">&quot;/data/solrhome/dist/&quot;</span> regex=<span class="hljs-string">&quot;solr-velocity-\d.*\.jar&quot;</span> /&gt;<br><br><span class="hljs-built_in">cd</span> /data/solrhome/testCore<br>mkdir data<br><br>vim core.properties<br><span class="hljs-comment"># 写入以下内容</span><br>name=testCore<br>config=conf/solrconfig.xml<br>schema=conf/managed-schema<br>dataDir=data<br></code></pre></td></tr></table></figure>
+
+<p>完成以上步骤重启tomcat就可以了</p>
+<h2 id="分词器安装"><a href="#分词器安装" class="headerlink" title="分词器安装"></a>分词器安装</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># github地址</span><br>https://github.com/magese/ik-analyzer-solr/tree/v7.5.0<br><br><span class="hljs-comment"># 下载</span><br>wget https://search.maven.org/remotecontent?filepath=com/github/magese/ik-analyzer/7.5.0/ik-analyzer-7.5.0.jar<br><br>cp -a ik-analyzer-7.5.0.jar tomcat-solr/webapps/solr/WEB-INF/lib<br><br>vim solrhome/testCore/conf/managed-schema<br><span class="hljs-comment"># 添加以下配置</span><br>&lt;fieldType name=<span class="hljs-string">&quot;text_ik&quot;</span> class=<span class="hljs-string">&quot;solr.TextField&quot;</span> positionIncrementGap=<span class="hljs-string">&quot;100&quot;</span>&gt;  <br>         	&lt;analyzer <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;    <br>            		&lt;tokenizer class=<span class="hljs-string">&quot;org.wltea.analyzer.lucene.IKTokenizerFactory&quot;</span> useSmart=<span class="hljs-string">&quot;true&quot;</span> /&gt;   <br>         	&lt;/analyzer&gt;    <br>         	&lt;analyzer <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;query&quot;</span>&gt;    <br>             		&lt;tokenizer class=<span class="hljs-string">&quot;org.wltea.analyzer.lucene.IKTokenizerFactory&quot;</span> useSmart=<span class="hljs-string">&quot;true&quot;</span> /&gt;   <br>         	&lt;/analyzer&gt;    <br>&lt;/fieldType&gt;  <br><br>&lt;field name=<span class="hljs-string">&quot;text_ik&quot;</span> <span class="hljs-built_in">type</span>=<span class="hljs-string">&quot;text_ik&quot;</span> indexed=<span class="hljs-string">&quot;true&quot;</span> stored=<span class="hljs-string">&quot;true&quot;</span> multiValued=<span class="hljs-string">&quot;false&quot;</span> /&gt;<br></code></pre></td></tr></table></figure>
+<p>配置完成后，重启tomcat就可以使用分词功能了</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/solr/">solr</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/09/01/maven-3.6.1%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">maven-3.6.1安装脚本</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/08/08/elasticsearch-6.6.1%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">elasticsearch安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

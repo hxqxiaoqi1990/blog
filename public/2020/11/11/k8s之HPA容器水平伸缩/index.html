@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>k8s之HPA容器水平伸缩 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="k8s之HPA容器水平伸缩">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-11-11 11:00" pubdate>
+        2020年11月11日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      23
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">k8s之HPA容器水平伸缩</h1>
+            
+            <div class="markdown-body">
+              <h1 id="HPA简介"><a href="#HPA简介" class="headerlink" title="HPA简介"></a>HPA简介</h1><p>HPA（Horizontal Pod Autoscaler）是kubernetes（以下简称k8s）的一种资源对象，能够根据某些指标对在statefulSet、replicaController、replicaSet等集合中的pod数量进行动态伸缩，使运行在上面的服务对指标的变化有一定的自适应能力。</p>
+<p>HPA目前支持四种类型的指标，分别是Resource、Object、External、Pods。其中在稳定版本autoscaling/v1中只支持对CPU指标的动态伸缩，在测试版本autoscaling/v2beta2中支持memory和自定义指标的动态伸缩，并以annotation的方式工作在autoscaling/v1版本中。</p>
+<ul>
+<li><strong>HPA动态伸缩的原理</strong><br>HPA在k8s中也由一个controller控制，controller会间隔循环HPA，检查每个HPA中监控的指标是否触发伸缩条件，默认的间隔时间为15s。一旦触发伸缩条件，controller会向k8s发送请求，修改伸缩对象（statefulSet、replicaController、replicaSet）子对象scale中控制pod数量的字段。k8s响应请求，修改scale结构体，然后会刷新一次伸缩对象的pod数量。伸缩对象被修改后，自然会通过<code>list/watch</code>机制增加或减少pod数量，达到动态伸缩的目的。</li>
+<li><strong>HPA伸缩过程叙述</strong><br>HPA的伸缩主要流程如下：</li>
+</ul>
+<ol>
+<li>判断当前pod数量是否在HPA设定的pod数量区间中，如果不在，过小返回最小值，过大返回最大值，结束伸缩。</li>
+<li>判断指标的类型，并向api server发送对应的请求，拿到设定的监控指标。一般来说指标会根据预先设定的指标从以下三个<code>aggregated APIs</code>中获取：<code>metrics.k8s.io</code>、<code>custom.metrics.k8s.io</code>、 <code>external.metrics.k8s.io</code>。其中<code>metrics.k8s.io</code>一般由k8s自带的metrics-server来提供，主要是cpu，memory使用率指标，另外两种需要第三方的adapter来提供。<code>custom.metrics.k8s.io</code>提供自定义指标数据，一般跟k8s集群有关，比如跟特定的pod相关。<code>external.metrics.k8s.io</code>同样提供自定义指标数据，但一般跟k8s集群无关。许多知名的第三方监控平台提供了adapter实现了上述api（如prometheus），可以将监控和adapter一同部署在k8s集群中提供服务，甚至能够替换原来的metrics-server来提供上述三类api指标，达到深度定制监控数据的目的。</li>
+<li>根据获得的指标，应用相应的算法算出一个伸缩系数，并乘以目前pod数量获得期望pod数量。系数是指标的期望值与目前值的比值，如果大于1表示扩容，小于1表示缩容。指标数值有平均值（AverageValue）、平均使用率（Utilization）、裸值（Value）三种类型，每种类型的数值都有对应的算法。以下几点值得注意：如果系数有小数点，统一进一；系数如果未达到某个容忍值，HPA认为变化太小，会忽略这次变化，容忍值默认为0.1。<br>HPA扩容算法是一个非常保守的算法。如果出现获取不到指标的情况，扩容时算最小值，缩容时算最大值；如果需要计算平均值，出现pod没准备好的情况，平均数的分母不计入该pod。<br>一个HPA支持多个指标的监控，HPA会循环获取所有的指标，并计算期望的pod数量，并从期望结果中获得最大的pod数量作为最终的伸缩的pod数量。一个伸缩对象在k8s中允许对应多个HPA，但是只是k8s不会报错而已，事实上HPA彼此不知道自己监控的是同一个伸缩对象，在这个伸缩对象中的pod会被多个HPA无意义地来回修改pod数量，给系统增加消耗，如果想要指定多个监控指标，可以如上述所说，在一个HPA中添加多个监控指标。</li>
+<li>检查最终的pod数量是否在HPA设定的pod数量范围的区间，如果超过最大值或不足最小值都会修改为最大值或最小值。然后向k8s发出请求，修改伸缩对象的子对象scale的pod数量，结束一个HPA的检查，获取下一个HPA，完成一个伸缩流程。</li>
+</ol>
+<ul>
+<li><strong>HPA的应用场景</strong><br>HPA的特性结合第三方的监控应用，使得部署在HPA伸缩对象（statefulSet、replicaController、replicaSet）上的服务有了非常灵活的自适应能力，能够在一定限度内复制多个副本来应对某个指标的急剧飙升，也可以在某个指标较小的情况下删除副本来让出计算资源给其他更需要资源的应用使用，维持整个系统的稳定。非常适合于一些流量波动大，机器资源吃紧，服务数量多的业务场景，如：电商服务、抢票服务、金融服务等。</li>
+<li><strong>k8s-prometheus-adapter</strong><br>前文说到，许多监控系统通过adapter实现了接口，给HPA提供指标数据。在这里我们具体介绍一下prometheus监控系统的adapter。<br>prometheus是一个知名开源监控系统，具有数据维度多，存储高效，使用便捷等特点。用户可以通过丰富的表达式和内置函数，定制自己所需要的监控数据。<br>prometheus-adapter在prometheus和api-server中起到了适配者的作用。prometheus-adapter接受从HPA中发来，通过apiserver aggregator中转的指标查询请求，然后根据内容发送相应的请求给prometheus拿到指标数据，经过处理后返回给HPA使用。prometheus可以同时实现<code>metrics.k8s.io</code>、<code>custom.metrics.k8s.io</code>、 <code>external.metrics.k8s.io</code>三种api接口，代替k8s自己的matrics-server，提供指标数据服务。<br>prometheus-adapter部署能否成功的关键在于配置文件是否正确。配置文件中可以设定需要的指标以及对指标的处理方式，以下是一份简单的配置文件，加上注释以稍做解释。</li>
+</ul>
+<h1 id="配置结构"><a href="#配置结构" class="headerlink" title="配置结构"></a>配置结构</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">autoscaling/v2beta2</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">HorizontalPodAutoscaler</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">php-apache</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-comment"># HPA的伸缩对象描述，HPA会动态修改该对象的pod数量</span><br>  <span class="hljs-attr">scaleTargetRef:</span><br>    <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br>    <span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">php-apache</span><br>  <span class="hljs-comment"># HPA的最小pod数量和最大pod数量</span><br>  <span class="hljs-attr">minReplicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">maxReplicas:</span> <span class="hljs-number">10</span><br>  <span class="hljs-comment"># 监控的指标数组，支持多种类型的指标共存</span><br>  <span class="hljs-attr">metrics:</span><br>  <span class="hljs-comment"># Object类型的指标</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">Object</span><br>    <span class="hljs-attr">object:</span><br>      <span class="hljs-attr">metric:</span><br>        <span class="hljs-comment"># 指标名称</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">requests-per-second</span><br>      <span class="hljs-comment"># 监控指标的对象描述，指标数据来源于该对象</span><br>      <span class="hljs-attr">describedObject:</span><br>        <span class="hljs-attr">apiVersion:</span> <span class="hljs-string">networking.k8s.io/v1beta1</span><br>        <span class="hljs-attr">kind:</span> <span class="hljs-string">Ingress</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">main-route</span><br>      <span class="hljs-comment"># Value类型的目标值，Object类型的指标只支持Value和AverageValue类型的目标值</span><br>      <span class="hljs-attr">target:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">Value</span><br>        <span class="hljs-attr">value:</span> <span class="hljs-string">10k</span><br>  <span class="hljs-comment"># Resource类型的指标</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">Resource</span><br>    <span class="hljs-attr">resource:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">cpu</span><br>      <span class="hljs-comment"># Utilization类型的目标值，Resource类型的指标只支持Utilization和AverageValue类型的目标值</span><br>      <span class="hljs-attr">target:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">Utilization</span><br>        <span class="hljs-attr">averageUtilization:</span> <span class="hljs-number">50</span><br>  <span class="hljs-comment"># Pods类型的指标</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">Pods</span><br>    <span class="hljs-attr">pods:</span><br>      <span class="hljs-attr">metric:</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">packets-per-second</span><br>      <span class="hljs-comment"># AverageValue类型的目标值，Pods指标类型下只支持AverageValue类型的目标值</span><br>      <span class="hljs-attr">target:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">AverageValue</span><br>        <span class="hljs-attr">averageValue:</span> <span class="hljs-string">1k</span><br>  <span class="hljs-comment"># External类型的指标</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">type:</span> <span class="hljs-string">External</span><br>    <span class="hljs-attr">external:</span><br>      <span class="hljs-attr">metric:</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">queue_messages_ready</span><br>        <span class="hljs-comment"># 该字段与第三方的指标标签相关联，（此处官方文档有问题，正确的写法如下）</span><br>        <span class="hljs-attr">selector:</span><br>          <span class="hljs-attr">matchLabels:</span><br>            <span class="hljs-attr">env:</span> <span class="hljs-string">&quot;stage&quot;</span><br>            <span class="hljs-attr">app:</span> <span class="hljs-string">&quot;myapp&quot;</span><br>      <span class="hljs-comment"># External指标类型下只支持Value和AverageValue类型的目标值</span><br>      <span class="hljs-attr">target:</span><br>        <span class="hljs-attr">type:</span> <span class="hljs-string">AverageValue</span><br>        <span class="hljs-attr">averageValue:</span> <span class="hljs-number">30</span><br></code></pre></td></tr></table></figure>
+
+<p><code>autoscaling/v1</code>版本将metrics字段放在了annotation中进行处理。</p>
+<p>target共有3种类型：Utilization、Value、AverageValue。Utilization表示平均使用率；Value表示裸值；AverageValue表示平均值。</p>
+<p>metrics中的type字段有四种类型的值：Object、Pods、Resource、External。</p>
+<p>Resource指的是当前伸缩对象下的pod的cpu和memory指标，只支持Utilization和AverageValue类型的目标值。</p>
+<p>Object指的是指定k8s内部对象的指标，数据需要第三方adapter提供，只支持Value和AverageValue类型的目标值。</p>
+<p>Pods指的是伸缩对象（statefulSet、replicaController、replicaSet）底下的Pods的指标，数据需要第三方的adapter提供，并且只允许</p>
+<p>AverageValue类型的目标值。</p>
+<p>External指的是k8s外部的指标，数据同样需要第三方的adapter提供，只支持Value和AverageValue类型的目标值。</p>
+<h1 id="操作命令"><a href="#操作命令" class="headerlink" title="操作命令"></a>操作命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看指定名称空间下，所有pod的cpu和内存使用量</span><br>kubectl top pods -n mamahao<br><br><span class="hljs-comment"># 查看指定名称空间下，的 hpa 配置项</span><br>kubectl get hpa -n mamahao<br><br><span class="hljs-comment"># 查看指定名称空间下，指定pod的详细内容</span><br>kubectl describe hpa web-test -n mamahao<br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/11/12/mybatis%E6%A1%86%E6%9E%B6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mybatis框架</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/11/03/spring%20boot%E5%AD%A6%E4%B9%A0/">
+                        <span class="hidden-mobile">spring boot学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

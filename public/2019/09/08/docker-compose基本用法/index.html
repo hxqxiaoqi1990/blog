@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>docker-compose基本用法 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="docker-compose基本用法">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-09-08 21:00" pubdate>
+        2019年9月8日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      46
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">docker-compose基本用法</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Compose项目来源于之前的fig项目，使用python语言编写,与docker/swarm配合度很高。</p>
+<p>Compose 是 Docker 容器进行编排的工具，定义和运行多容器的应用，可以一条命令启动多个容器，使用Docker Compose不再需要使用shell脚本来启动容器。 </p>
+<p>Compose 通过一个配置文件来管理多个Docker容器，在配置文件中，所有的容器通过services来定义，然后使用docker-compose脚本来启动，停止和重启应用，和应用中的服务以及所有依赖服务的容器，非常适合组合使用多个容器进行开发的场景。</p>
+<h1 id="docker-compose安装"><a href="#docker-compose安装" class="headerlink" title="docker-compose安装"></a>docker-compose安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># github 慢</span><br>curl -L <span class="hljs-string">&quot;https://github.com/docker/compose/releases/download/1.24.1/docker-compose-<span class="hljs-subst">$(uname -s)</span>-<span class="hljs-subst">$(uname -m)</span>&quot;</span> -o /usr/<span class="hljs-built_in">local</span>/bin/docker-compose<br><br><span class="hljs-comment"># daocloud 快</span><br>curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.1/docker-compose-`uname -s`-`uname -m` -o /usr/<span class="hljs-built_in">local</span>/bin/docker-compose<br><br>chmod +x /usr/<span class="hljs-built_in">local</span>/bin/docker-compose<br><br>ln -s /usr/<span class="hljs-built_in">local</span>/bin/docker-compose /usr/bin/docker-compose<br><br>docker-compose --version<br></code></pre></td></tr></table></figure>
+
+<h1 id="mysql模板"><a href="#mysql模板" class="headerlink" title="mysql模板"></a>mysql模板</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><span class="hljs-attr">services:</span><br>    <span class="hljs-attr">mysql:</span><br>        <span class="hljs-attr">network_mode:</span> <span class="hljs-string">&quot;bridge&quot;</span><br>        <span class="hljs-attr">container_name:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>        <span class="hljs-attr">environment:</span><br>            <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-string">&quot;123123&quot;</span><br>            <span class="hljs-attr">MYSQL_USER:</span> <span class="hljs-string">&#x27;test&#x27;</span><br>            <span class="hljs-attr">MYSQL_PASS:</span> <span class="hljs-string">&#x27;123123&#x27;</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">&quot;mysql:5.7&quot;</span> <br>        <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>        <span class="hljs-attr">volumes:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;./db:/var/lib/mysql&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;./conf/my.cnf:/etc/my.cnf&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;./init:/docker-entrypoint-initdb.d/&quot;</span><br>        <span class="hljs-attr">ports:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;3306:3306&quot;</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>创建db、conf、init三个目录</li>
+<li>在conf目录下创建my.cnf配置文件</li>
+<li>在init目录下创建init.sql初始化文件</li>
+</ol>
+<p><font color='90EE90'>my.cnf实例</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">[mysqld]<br>user=mysql<br>default-storage-engine=INNODB<br>character-set-server=utf8<br>[client]<br>default-character-set=utf8<br>[mysql]<br>default-character-set=utf8<br></code></pre></td></tr></table></figure>
+
+<p><font color='90EE90'>init.sql实例</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">use mysql;<br>ALTER USER <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;%&#x27;</span> IDENTIFIED WITH mysql_native_password BY <span class="hljs-string">&#x27;123123&#x27;</span>;<br>create database <span class="hljs-built_in">test</span>;<br>use <span class="hljs-built_in">test</span>;<br>create table user<br>(<br>    id int auto_increment primary key,<br>    username varchar(64) unique not null,<br>    email varchar(120) unique not null,<br>    password_hash varchar(128) not null,<br>    avatar varchar(128) not null<br>);<br>insert into user values(1, <span class="hljs-string">&quot;zhangsan&quot;</span>,<span class="hljs-string">&quot;test12345@qq.com&quot;</span>,<span class="hljs-string">&quot;passwd&quot;</span>,<span class="hljs-string">&quot;avaterpath&quot;</span>);<br>insert into user values(2, <span class="hljs-string">&quot;lisi&quot;</span>,<span class="hljs-string">&quot;12345test@qq.com&quot;</span>,<span class="hljs-string">&quot;passwd&quot;</span>,<span class="hljs-string">&quot;avaterpath&quot;</span>);<br></code></pre></td></tr></table></figure>
+
+<h1 id="nginx模板"><a href="#nginx模板" class="headerlink" title="nginx模板"></a>nginx模板</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">web:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx</span><br>    <span class="hljs-attr">ports:</span> <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;8080:80&quot;</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">&quot;web&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">dev</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">dev:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="zabbix模板"><a href="#zabbix模板" class="headerlink" title="zabbix模板"></a>zabbix模板</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">mysql:</span><br>    <span class="hljs-comment"># 依赖于wurstmeister/zookeeper镜像，本地无则自动下载</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mysql:5.7</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">hostname:</span> <span class="hljs-string">mysql_5.7.24</span><br>    <span class="hljs-attr">command:</span> <br>      <span class="hljs-string">--character-set-server=utf8</span><br>      <span class="hljs-string">--collation-server=utf8_unicode_ci</span><br>    <span class="hljs-comment"># 映射端口</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;3306:3306&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/mysql:/var/lib/mysql</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-number">123123</span><br>    <span class="hljs-comment"># 容器名称</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">mysql</span><br>  <span class="hljs-attr">zabbix-server:</span><br>    <span class="hljs-comment"># 依赖于wurstmeister/zookeeper镜像，本地无则自动下载</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">zabbix/zabbix-server-mysql:alpine-5.0.7</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">hostname:</span> <span class="hljs-string">zabbix-server</span><br>    <span class="hljs-comment"># 映射端口</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;10051:10051&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_SERVER_HOST:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>      <span class="hljs-attr">MYSQL_USER:</span> <span class="hljs-string">root</span><br>      <span class="hljs-attr">MYSQL_PASSWORD:</span> <span class="hljs-number">123123</span><br>    <span class="hljs-comment"># 容器名称</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">zabbix-server</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">mysql</span><br>  <span class="hljs-attr">zabbix-web:</span><br>    <span class="hljs-comment"># 依赖于wurstmeister/zookeeper镜像，本地无则自动下载</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">zabbix/zabbix-web-nginx-mysql:alpine-5.0.7</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">hostname:</span> <span class="hljs-string">zabbix-web</span><br>    <span class="hljs-comment"># 映射端口</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;80:8080&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_SERVER_HOST:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>      <span class="hljs-attr">MYSQL_USER:</span> <span class="hljs-string">root</span><br>      <span class="hljs-attr">MYSQL_PASSWORD:</span> <span class="hljs-number">123123</span><br>      <span class="hljs-attr">ZBX_SERVER_HOST:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>      <span class="hljs-attr">PHP_TZ:</span> <span class="hljs-string">Asia/Shanghai</span><br>    <span class="hljs-comment"># 容器名称</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">zabbix-web</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">zabbix-server</span><br>  <span class="hljs-attr">zabbix-agent:</span><br>    <span class="hljs-comment"># 依赖于wurstmeister/zookeeper镜像，本地无则自动下载</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">zabbix/zabbix-agent:alpine-5.0.7</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br>    <span class="hljs-attr">hostname:</span> <span class="hljs-string">zabbix-agent</span><br>    <span class="hljs-comment"># 映射端口</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;10050:10050&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">ZBX_HOSTNAME:</span> <span class="hljs-string">agent100</span><br>      <span class="hljs-attr">ZBX_SERVER_HOST:</span> <span class="hljs-number">172.18</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span><br>    <span class="hljs-comment"># 容器名称</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">zabbix-agent</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">zabbix-server</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h1><h2 id="image"><a href="#image" class="headerlink" title="image"></a>image</h2><p>image 是指定服务的镜像名称或镜像 ID。如果镜像在本地不存在，Compose 将会尝试拉取这个镜像。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">services:<br>  web:<br>    image: hello-world<br></code></pre></td></tr></table></figure>
+
+<h2 id="build"><a href="#build" class="headerlink" title="build"></a>build</h2><p>服务除了可以基于指定的镜像，还可以基于一份 Dockerfile，在使用 up 启动之时执行构建任务，这个构建标签就是 build，它可以指定 Dockerfile 所在文件夹的路径。Compose 将会利用它自动构建这个镜像，然后使用这个镜像启动服务容器。</p>
+<p>build: /path/to/build/dir<br>也可以是相对路径，只要上下文确定就可以读取到 Dockerfile。</p>
+<p>build: ./dir<br>设定上下文根目录，然后以该目录为准指定 Dockerfile。</p>
+<p>build:<br>  context: ../<br>  dockerfile: path/of/Dockerfile<br>注意 build 都是一个目录，如果你要指定 Dockerfile 文件需要在 build 标签的子级标签中使用 dockerfile 标签指定，如上面的例子。<br>如果你同时指定了 image 和 build 两个标签，那么 Compose 会构建镜像并且把镜像命名为 image 后面的那个名字。</p>
+<p>build: ./dir<br>image: webapp:tag<br>既然可以在 docker-compose.yml 中定义构建任务，那么一定少不了 arg 这个标签，就像 Dockerfile 中的 ARG 指令，它可以在构建过程中指定环境变量，但是在构建成功后取消，在 docker-compose.yml 文件中也支持这样的写法：</p>
+<p>build:<br>  context: .<br>  args:<br>    buildno: 1<br>    password: secret<br>下面这种写法也是支持的，一般来说下面的写法更适合阅读。</p>
+<p>build:<br>  context: .<br>  args:<br>    - buildno=1<br>    - password=secret<br>与 ENV 不同的是，ARG 是允许空值的。例如：</p>
+<p>args:</p>
+<ul>
+<li>buildno</li>
+<li>password<br>这样构建过程可以向它们赋值。</li>
+</ul>
+<p>注意：YAML 的布尔值（true, false, yes, no, on, off）必须要使用引号引起来（单引号、双引号均可），否则会当成字符串解析。</p>
+<h2 id="command"><a href="#command" class="headerlink" title="command"></a>command</h2><p>使用 command 可以覆盖容器启动后默认执行的命令。</p>
+<p>command: bundle exec thin -p 3000<br>也可以写成类似 Dockerfile 中的格式：</p>
+<p>command: [bundle, exec, thin, -p, 3000]</p>
+<h2 id="container-name"><a href="#container-name" class="headerlink" title="container_name"></a>container_name</h2><p>前面说过 Compose 的容器名称格式是：&lt;项目名称&gt;&lt;服务名称&gt;&lt;序号&gt;<br>虽然可以自定义项目名称、服务名称，但是如果你想完全控制容器的命名，可以使用这个标签指定：</p>
+<p>container_name: app<br>这样容器的名字就指定为 app 了。</p>
+<h2 id="depends-on"><a href="#depends-on" class="headerlink" title="depends_on"></a>depends_on</h2><p>在使用 Compose 时，最大的好处就是少打启动命令，但是一般项目容器启动的顺序是有要求的，如果直接从上到下启动容器，必然会因为容器依赖问题而启动失败。<br>例如在没启动数据库容器的时候启动了应用容器，这时候应用容器会因为找不到数据库而退出，为了避免这种情况我们需要加入一个标签，就是 depends_on，这个标签解决了容器的依赖、启动先后的问题。<br>例如下面容器会先启动 redis 和 db 两个服务，最后才启动 web 服务：</p>
+<p>version: ‘2’<br>services:<br>  web:<br>    build: .<br>    depends_on:<br>      - db<br>      - redis<br>  redis:<br>    image: redis<br>  db:<br>    image: postgres<br>注意的是，默认情况下使用 docker-compose up web 这样的方式启动 web 服务时，也会启动 redis 和 db 两个服务，因为在配置文件中定义了依赖关系。</p>
+<h2 id="dns"><a href="#dns" class="headerlink" title="dns"></a>dns</h2><p>和 –dns 参数一样用途，格式如下：</p>
+<p>dns: 8.8.8.8<br>也可以是一个列表：</p>
+<p>dns:</p>
+<ul>
+<li>8.8.8.8</li>
+<li>9.9.9.9<br>此外 dns_search 的配置也类似：</li>
+</ul>
+<p>dns_search: example.com<br>dns_search:</p>
+<ul>
+<li>dc1.example.com</li>
+<li>dc2.example.com<h2 id="tmpfs"><a href="#tmpfs" class="headerlink" title="tmpfs"></a>tmpfs</h2>挂载临时目录到容器内部，与 run 的参数一样效果：</li>
+</ul>
+<p>tmpfs: /run<br>tmpfs:</p>
+<ul>
+<li>/run</li>
+<li>/tmp<h2 id="entrypoint"><a href="#entrypoint" class="headerlink" title="entrypoint"></a>entrypoint</h2>在 Dockerfile 中有一个指令叫做 ENTRYPOINT 指令，用于指定接入点，第四章有对比过与 CMD 的区别。<br>在 docker-compose.yml 中可以定义接入点，覆盖 Dockerfile 中的定义：</li>
+</ul>
+<p>entrypoint: /code/entrypoint.sh<br>格式和 Docker 类似，不过还可以写成这样：</p>
+<p>entrypoint:<br>    - php<br>    - -d<br>    - zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/xdebug.so<br>    - -d<br>    - memory_limit=-1<br>    - vendor/bin/phpunit</p>
+<h2 id="env-file"><a href="#env-file" class="headerlink" title="env_file"></a>env_file</h2><p>还记得前面提到的 .env 文件吧，这个文件可以设置 Compose 的变量。而在 docker-compose.yml 中可以定义一个专门存放变量的文件。<br>如果通过 docker-compose -f FILE 指定了配置文件，则 env_file 中路径会使用配置文件路径。</p>
+<p>如果有变量名称与 environment 指令冲突，则以后者为准。格式如下：</p>
+<p>env_file: .env<br>或者根据 docker-compose.yml 设置多个：</p>
+<p>env_file:</p>
+<ul>
+<li>./common.env</li>
+<li>./apps/web.env</li>
+<li>/opt/secrets.env<br>注意的是这里所说的环境变量是对宿主机的 Compose 而言的，如果在配置文件中有 build 操作，这些变量并不会进入构建过程中，如果要在构建中使用变量还是首选前面刚讲的 arg 标签。</li>
+</ul>
+<h2 id="environment"><a href="#environment" class="headerlink" title="environment"></a>environment</h2><p>与上面的 env_file 标签完全不同，反而和 arg 有几分类似，这个标签的作用是设置镜像变量，它可以保存变量到镜像里面，也就是说启动的容器也会包含这些变量设置，这是与 arg 最大的不同。<br>一般 arg 标签的变量仅用在构建过程中。而 environment 和 Dockerfile 中的 ENV 指令一样会把变量一直保存在镜像、容器中，类似 docker run -e 的效果。</p>
+<p>environment:<br>  RACK_ENV: development<br>  SHOW: ‘true’<br>  SESSION_SECRET:</p>
+<p>environment:</p>
+<ul>
+<li>RACK_ENV=development</li>
+<li>SHOW=true</li>
+<li>SESSION_SECRET<h2 id="expose"><a href="#expose" class="headerlink" title="expose"></a>expose</h2>这个标签与Dockerfile中的EXPOSE指令一样，用于指定暴露的端口，但是只是作为一种参考，实际上docker-compose.yml的端口映射还得ports这样的标签。</li>
+</ul>
+<p>expose:</p>
+<ul>
+<li>“3000”</li>
+<li>“8000”<h2 id="external-links"><a href="#external-links" class="headerlink" title="external_links"></a>external_links</h2>在使用Docker过程中，我们会有许多单独使用docker run启动的容器，为了使Compose能够连接这些不在docker-compose.yml中定义的容器，我们需要一个特殊的标签，就是external_links，它可以让Compose项目里面的容器连接到那些项目配置外部的容器（前提是外部容器中必须至少有一个容器是连接到与项目内的服务的同一个网络里面）。<br>格式如下：</li>
+</ul>
+<p>external_links:</p>
+<ul>
+<li>redis_1</li>
+<li>project_db_1:mysql</li>
+<li>project_db_1:postgresql<h2 id="extra-hosts"><a href="#extra-hosts" class="headerlink" title="extra_hosts"></a>extra_hosts</h2>添加主机名的标签，就是往/etc/hosts文件中添加一些记录，与Docker client的–add-host类似：</li>
+</ul>
+<p>extra_hosts:</p>
+<ul>
+<li>“somehost:162.242.195.82”</li>
+<li>“otherhost:50.31.209.229”<br>启动之后查看容器内部hosts：</li>
+</ul>
+<p>162.242.195.82  somehost<br>50.31.209.229   otherhost</p>
+<h2 id="labels"><a href="#labels" class="headerlink" title="labels"></a>labels</h2><p>向容器添加元数据，和Dockerfile的LABEL指令一个意思，格式如下：</p>
+<p>labels:<br>  com.example.description: “Accounting webapp”<br>  com.example.department: “Finance”<br>  com.example.label-with-empty-value: “”<br>labels:</p>
+<ul>
+<li>“com.example.description=Accounting webapp”</li>
+<li>“com.example.department=Finance”</li>
+<li>“com.example.label-with-empty-value”<h2 id="links"><a href="#links" class="headerlink" title="links"></a>links</h2>还记得上面的depends_on吧，那个标签解决的是启动顺序问题，这个标签解决的是容器连接问题，与Docker client的–link一样效果，会连接到其它服务中的容器。<br>格式如下：</li>
+</ul>
+<p>links:</p>
+<ul>
+<li>db</li>
+<li>db:database</li>
+<li>redis<br>使用的别名将会自动在服务容器中的/etc/hosts里创建。例如：</li>
+</ul>
+<p>172.12.2.186  db<br>172.12.2.186  database<br>172.12.2.187  redis<br>相应的环境变量也将被创建。</p>
+<h2 id="logging"><a href="#logging" class="headerlink" title="logging"></a>logging</h2><p>这个标签用于配置日志服务。格式如下：</p>
+<p>logging:<br>  driver: syslog<br>  options:<br>    syslog-address: “tcp://192.168.0.42:123”<br>默认的driver是json-file。只有json-file和journald可以通过docker-compose logs显示日志，其他方式有其他日志查看方式，但目前Compose不支持。对于可选值可以使用options指定。<br>有关更多这方面的信息可以阅读官方文档：<br><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/admin/logging/overview/">https://docs.docker.com/engine/admin/logging/overview/</a></p>
+<h2 id="pid"><a href="#pid" class="headerlink" title="pid"></a>pid</h2><p>pid: “host”<br>将PID模式设置为主机PID模式，跟主机系统共享进程命名空间。容器使用这个标签将能够访问和操纵其他容器和宿主机的名称空间。</p>
+<h2 id="ports"><a href="#ports" class="headerlink" title="ports"></a>ports</h2><p>映射端口的标签。<br>使用HOST:CONTAINER格式或者只是指定容器的端口，宿主机会随机映射端口。</p>
+<p>ports:</p>
+<ul>
+<li>“3000”</li>
+<li>“8000:8000”</li>
+<li>“49100:22”</li>
+<li>“127.0.0.1:8001:8001”<br>注意：当使用HOST:CONTAINER格式来映射端口时，如果你使用的容器端口小于60你可能会得到错误得结果，因为YAML将会解析xx:yy这种数字格式为60进制。所以建议采用字符串格式。</li>
+</ul>
+<h2 id="security-opt"><a href="#security-opt" class="headerlink" title="security_opt"></a>security_opt</h2><p>为每个容器覆盖默认的标签。简单说来就是管理全部服务的标签。比如设置全部服务的user标签值为USER。</p>
+<p>security_opt:</p>
+<ul>
+<li>label:user:USER</li>
+<li>label:role:ROLE<h2 id="stop-signal"><a href="#stop-signal" class="headerlink" title="stop_signal"></a>stop_signal</h2>设置另一个信号来停止容器。在默认情况下使用的是SIGTERM停止容器。设置另一个信号可以使用stop_signal标签。</li>
+</ul>
+<p>stop_signal: SIGUSR1</p>
+<h2 id="volumes"><a href="#volumes" class="headerlink" title="volumes"></a>volumes</h2><p>挂载一个目录或者一个已存在的数据卷容器，可以直接使用 [HOST:CONTAINER] 这样的格式，或者使用 [HOST:CONTAINER:ro] 这样的格式，后者对于容器来说，数据卷是只读的，这样可以有效保护宿主机的文件系统。<br>Compose的数据卷指定路径可以是相对路径，使用 . 或者 .. 来指定相对目录。<br>数据卷的格式可以是下面多种形式：</p>
+<p>volumes:<br>  // 只是指定一个路径，Docker 会自动在创建一个数据卷（这个路径是容器内部的）。</p>
+<ul>
+<li>/var/lib/mysql</li>
+</ul>
+<p>  // 使用绝对路径挂载数据卷</p>
+<ul>
+<li>/opt/data:/var/lib/mysql</li>
+</ul>
+<p>  // 以 Compose 配置文件为中心的相对路径作为数据卷挂载到容器。</p>
+<ul>
+<li>./cache:/tmp/cache</li>
+</ul>
+<p>  // 使用用户的相对路径（~/ 表示的目录是 /home/&lt;用户目录&gt;/ 或者 /root/）。</p>
+<ul>
+<li>~/configs:/etc/configs/:ro</li>
+</ul>
+<p>  // 已经存在的命名的数据卷。</p>
+<ul>
+<li>datavolume:/var/lib/mysql<br>如果你不使用宿主机的路径，你可以指定一个volume_driver。</li>
+</ul>
+<p>volume_driver: mydriver</p>
+<h2 id="volumes-from"><a href="#volumes-from" class="headerlink" title="volumes_from"></a>volumes_from</h2><p>从其它容器或者服务挂载数据卷，可选的参数是 :ro或者 :rw，前者表示容器只读，后者表示容器对数据卷是可读可写的。默认情况下是可读可写的。</p>
+<p>volumes_from:</p>
+<ul>
+<li>service_name</li>
+<li>service_name:ro</li>
+<li>container:container_name</li>
+<li>container:container_name:rw<h2 id="cap-add-cap-drop"><a href="#cap-add-cap-drop" class="headerlink" title="cap_add, cap_drop"></a>cap_add, cap_drop</h2>添加或删除容器的内核功能。详细信息在前面容器章节有讲解，此处不再赘述。</li>
+</ul>
+<p>cap_add:</p>
+<ul>
+<li>ALL</li>
+</ul>
+<p>cap_drop:</p>
+<ul>
+<li>NET_ADMIN</li>
+<li>SYS_ADMIN<h2 id="cgroup-parent"><a href="#cgroup-parent" class="headerlink" title="cgroup_parent"></a>cgroup_parent</h2>指定一个容器的父级cgroup。</li>
+</ul>
+<p>cgroup_parent: m-executor-abcd</p>
+<h2 id="devices"><a href="#devices" class="headerlink" title="devices"></a>devices</h2><p>设备映射列表。与Docker client的–device参数类似。</p>
+<p>devices:</p>
+<ul>
+<li>“/dev/ttyUSB0:/dev/ttyUSB0”<h2 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h2>这个标签可以扩展另一个服务，扩展内容可以是来自在当前文件，也可以是来自其他文件，相同服务的情况下，后来者会有选择地覆盖原有配置。</li>
+</ul>
+<p>extends:<br>  file: common.yml<br>  service: webapp<br>用户可以在任何地方使用这个标签，只要标签内容包含file和service两个值就可以了。file的值可以是相对或者绝对路径，如果不指定file的值，那么Compose会读取当前YML文件的信息。<br>更多的操作细节在后面的12.3.4小节有介绍。</p>
+<h2 id="network-mode"><a href="#network-mode" class="headerlink" title="network_mode"></a>network_mode</h2><p>网络模式，与Docker client的–net参数类似，只是相对多了一个service:[service name] 的格式。<br>例如：</p>
+<p>network_mode: “bridge”<br>network_mode: “host”<br>network_mode: “none”<br>network_mode: “service:[service name]”<br>network_mode: “container:[container name/id]”<br>可以指定使用服务或者容器的网络。</p>
+<h2 id="networks"><a href="#networks" class="headerlink" title="networks"></a>networks</h2><p>加入指定网络，格式如下：</p>
+<p>services:<br>  some-service:<br>    networks:<br>     - some-network<br>     - other-network<br>关于这个标签还有一个特别的子标签aliases，这是一个用来设置服务别名的标签，例如：</p>
+<p>services:<br>  some-service:<br>    networks:<br>      some-network:<br>        aliases:<br>         - alias1<br>         - alias3<br>      other-network:<br>        aliases:<br>         - alias2<br>相同的服务可以在不同的网络有不同的别名。</p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><p>还有这些标签：cpu_shares, cpu_quota, cpuset, domainname, hostname, ipc, mac_address, mem_limit, memswap_limit, privileged, read_only, restart, shm_size, stdin_open, tty, user, working_dir<br>上面这些都是一个单值的标签，类似于使用docker run的效果。</p>
+<p>cpu_shares: 73<br>cpu_quota: 50000<br>cpuset: 0,1</p>
+<p>user: postgresql<br>working_dir: /code</p>
+<p>domainname: foo.com<br>hostname: foo<br>ipc: host<br>mac_address: 02:42:ac:11:65:43</p>
+<p>mem_limit: 1000000000<br>memswap_limit: 2000000000<br>privileged: true</p>
+<p>restart: always</p>
+<p>read_only: true<br>shm_size: 64M<br>stdin_open: true<br>tty: true</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/docker/">docker</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/09/09/ansible%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ansible基本配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/09/07/Elasticsearch%20+%20Logstash%20+%20filebeat%20+%20redis%20+%20Kibana/">
+                        <span class="hidden-mobile">ELK部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

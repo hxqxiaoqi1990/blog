@@ -1,0 +1,896 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 50vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="自在技术博客 专心一点">
+              
+            </span>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/23/oss%E5%91%BD%E4%BB%A4%E5%B7%A5%E5%85%B7/" target="_self">
+          oss安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/23/oss%E5%91%BD%E4%BB%A4%E5%B7%A5%E5%85%B7/" target="_self">
+          
+          
+            
+          
+          介绍oss是阿里云存储服务，可以使用客户端或命令行工具上传下载文件。
+使用下载
+123wget http://gosspublic.alicdn.com/ossutil/1.6.10/ossutil64?spm=a2c4g.11186623.2.12.3467448aqUzNnHmv ossutil64?spm=a2c4g.11186623.2.12.3467448aqUzNnH ossutil6
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-23 17:00" pubdate>
+              2020-01-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/22/elasticsearch%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5/" target="_self">
+          elasticstarch执行语句
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/22/elasticsearch%E6%89%A7%E8%A1%8C%E8%AF%AD%E5%8F%A5/" target="_self">
+          
+          
+            
+          
+          介绍索引是ElasticSearch存放数据的地方，可以理解为关系型数据库中的一个数据库。
+es与数据库对应关系 
+
+
+
+数据库类型
+库名
+表名
+记录
+字段
+
+
+
+Relational DB
+Databases
+Tables
+Rows
+Columns
+
+
+Elasticsearch
+Indices
+Types
+Documents
+Fields
+
+
+文档元数据
+一个文档不只有数据。它还包含了元数据(
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-22 11:00" pubdate>
+              2020-01-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/es/">es</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/22/elasticsearch%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
+          elasticstarch集群搭建
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/22/elasticsearch%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
+          
+          
+            
+          
+          介绍针对一个索引，Elasticsearch 中其实有专门的衡量索引健康状况的标志，分为三个等级：
+
+green，绿色。这代表所有的主分片和副本分片都已分配。你的集群是 100% 可用的。
+yellow，黄色。所有的主分片已经分片了，但至少还有一个副本是缺失的。不会有数据丢失，所以搜索结果依然是完整的。不过，你的高可用性在某种程度上被弱化。如果更多的分片消失，你就会丢数据了。所以可把 yellow
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-22 09:00" pubdate>
+              2020-01-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/es/">es</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/21/RocketMQ%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2/" target="_self">
+          RocketMQ分布式部署
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/21/RocketMQ%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2/" target="_self">
+          
+          
+            
+          
+          介绍RocketMQ的多Master多Slave的模式在Linux服务器部署案例进行详细的说明。
+部署步骤主机环境：
+
+Nameserver1 + Master1 + Master2-Slave：192.168.40.100
+Nameserver2 + Master2 + Master1-Slave：192.168.40.101
+
+系统环境：
+
+64位JDK 1.8+;
+Maven 3.6.x;
+
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-21 16:00" pubdate>
+              2020-01-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/RocketMQ/">RocketMQ</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/21/RocketMQ%E5%AE%89%E8%A3%85/" target="_self">
+          RocketMQ安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/21/RocketMQ%E5%AE%89%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          介绍RocketMQ是一款分布式、队列模型的消息中间件，是由阿里巴巴设计的，具有以下特点：
+
+支持严格的消息顺序
+支持Topic与Queue两种模式
+亿级消息堆积能力
+比较友好的分布式特性
+同时支持Push与Pull方式消费消息
+RocketMQ是纯java编写，基于通信框架Netty
+
+相关术语
+Producer：消息生产者，负责产生消息，一般由业务系统负责产生消息。
+Producer Grou
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-21 10:00" pubdate>
+              2020-01-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/RocketMQ/">RocketMQ</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/20/canal%E9%AB%98%E5%8F%AF%E7%94%A8%E5%AE%89%E8%A3%85/" target="_self">
+          canal高可用安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/20/canal%E9%AB%98%E5%8F%AF%E7%94%A8%E5%AE%89%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          介绍canal高可用模式是通过zookeeper注册canal当前服务状态来实现的。
+搭建参考地址：https://github.com/alibaba/canal/wiki/AdminGuide
+搭建步骤主机环境：
+
+canal+admin+zookeeper+jdk：192.168.40.100
+mysql+jdk+canal：192.168.40.101
+
+搭建步骤：
+
+安装mysql
+安装
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-20 16:00" pubdate>
+              2020-01-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/canal/">canal</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/20/elk%E7%9B%91%E6%8E%A7%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97/" target="_self">
+          elk监控容器日志
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/20/elk%E7%9B%91%E6%8E%A7%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97/" target="_self">
+          
+          
+            
+          
+          介绍本章使用sebp/elk镜像直接启动elk环境，使用rtoma/logspout-redis-logstash镜像收集改镜像运行主机的所有容器日志。
+搭建步骤主机环境：
+
+elk+redis：192.168.40.100
+eureka+logspout：192.168.40.102
+
+整体架构：eureka日志源–&gt;logspout-redis-logstash收集日志–&gt;redi
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-20 11:00" pubdate>
+              2020-01-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E7%9B%91%E6%8E%A7/">监控</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/elk/">elk</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/19/canal%E5%AE%89%E8%A3%85/" target="_self">
+          canal安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/19/canal%E5%AE%89%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          介绍**canal [kə’næl]**，主要用途是基于 MySQL 数据库增量日志解析，提供增量数据订阅和消费。支持数据同步到elasticsearch、redis、kafka等服务。
+当前的 canal 支持源端 MySQL 版本包括 5.1.x , 5.5.x , 5.6.x , 5.7.x , 8.0.x
+搭建参考地址：https://github.com/alibaba/canal/wi
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-19 10:00" pubdate>
+              2020-01-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/canal/">canal</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/01/01/mongodb%20%E9%9D%9E%E6%AD%A3%E5%B8%B8%E5%85%B3%E9%97%AD/" target="_self">
+          mongodb 非正常关闭
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/01/01/mongodb%20%E9%9D%9E%E6%AD%A3%E5%B8%B8%E5%85%B3%E9%97%AD/" target="_self">
+          
+          
+            
+          
+          问题mongodb 没有一个正常的关闭指令，经常会遇到服务器重启，或磁盘满了等问题，导致mongodb崩溃，无法启动。
+解决方法
+
+删除 mongodb data目录下的mongod.lock 文件
+启动修复模式：/opt/mongodb/bin/mongod -f  /opt/mongodb/mongodb.conf –repair
+修复后再次正常启动：/opt/mongodb/bin/mong
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-01-01 11:00" pubdate>
+              2020-01-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/mongodb/">mongodb</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2019/12/27/linux%E6%9F%A5%E8%AF%A2%E5%91%BD%E4%BB%A4/" target="_self">
+          linux查询命令
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2019/12/27/linux%E6%9F%A5%E8%AF%A2%E5%91%BD%E4%BB%A4/" target="_self">
+          
+          
+            
+          
+          介绍查看系统的相关信息
+常用查看命令系统硬件信息#查看 CPU 物理个数grep ‘physical id’ /proc/cpuinfo | sort -u | wc -l
+#查看 CPU 核心数量grep ‘core id’ /proc/cpuinfo | sort -u | wc -l
+#查看 CPU 线程数grep ‘processor’ /proc/cpuinfo | sort -u | 
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2019-12-27 16:56" pubdate>
+              2019-12-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/linux/">linux</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/blog/page/6/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/5/#board">5</a><a class="page-number" href="/blog/page/6/#board">6</a><span class="page-number current">7</span><a class="page-number" href="/blog/page/8/#board">8</a><a class="page-number" href="/blog/page/9/#board">9</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/13/#board">13</a><a class="extend next" rel="next" href="/blog/page/8/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

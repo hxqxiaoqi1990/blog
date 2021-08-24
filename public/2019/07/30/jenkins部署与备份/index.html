@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>jenkins部署与备份 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="jenkins部署与备份">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-07-30 14:27" pubdate>
+        2019年7月30日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      12
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">jenkins部署与备份</h1>
+            
+            <div class="markdown-body">
+              <h1 id="jenkins介绍"><a href="#jenkins介绍" class="headerlink" title="jenkins介绍"></a>jenkins介绍</h1><p>Jenkins只是一个平台，真正运作的都是插件，它是一个自动化部署工具，通过插件完成拉起源代码、编译、发布等功能。</p>
+<p>下载地址：<a target="_blank" rel="noopener" href="http://mirrors.jenkins.io/war-stable/latest/jenkins.war">http://mirrors.jenkins.io/war-stable/latest/jenkins.war</a></p>
+<h1 id="jenkins部署"><a href="#jenkins部署" class="headerlink" title="jenkins部署"></a>jenkins部署</h1><p>部署jenkins之前需要安装jdk环境，请按照：<a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/tags/jdk/">jdk环境部署</a> 操作安装jdk。</p>
+<h2 id="部署方式一"><a href="#部署方式一" class="headerlink" title="部署方式一"></a>部署方式一</h2><p>1.下载的<strong>Jenkins.war</strong>包上传到服务器<br>2.服务器上执行以下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#前台运行</span><br>java -jar jenkins.war<br><br><span class="hljs-comment">#后台运行</span><br>nohup java -jar jenkins.war &amp;&gt; ./jen.log &amp;<br><br><span class="hljs-comment">#获取Jenkins密码，访问时需要</span><br>cat /root/.jenkins/secrets/initialAdminPassword<br></code></pre></td></tr></table></figure>
+<p>3.访问：<strong>localhost:8080</strong>，输入密码<br>4.选择默认模式<br>5.设置登录账号密码</p>
+<h2 id="部署方式二"><a href="#部署方式二" class="headerlink" title="部署方式二"></a>部署方式二</h2><p>1.安装tomcat<br>2.下载的Jenkins.war包上传到tomcat目录下的webapps目录下<br>3.运行tomcat<br>4.访问：localhost:8080/jenkins</p>
+<h2 id="jenkins工作目录说明"><a href="#jenkins工作目录说明" class="headerlink" title="jenkins工作目录说明"></a>jenkins工作目录说明</h2><p>第一次启动jenkins时，会在用户家目录下自动生成 <strong>.jenkins</strong> 的隐藏工作目录。</p>
+<p><strong>.jenkins：</strong><br><strong>config.xml：</strong> jenkins 的核心配置文件<br><strong>jobs：</strong> 构建作业的配置细节，及构建产物和数据<br><strong>workspace：</strong> jenkins 对当前作业进行构建的地方<br><strong>builds：</strong> 包含当前作业的构建历史<br><strong>config.xml：</strong> 存放当前作业的所有配置细节<br><strong>nextBuildNumber：</strong> 下一次构建的 number<br><strong>lastStable：</strong> 最后一个稳定构建的链接（成功的构建）<br><strong>lastSuccessful：</strong> 最近成功的构建链接（没有任何编译错误）<br><strong>plugins：</strong> 存放所有已安装的插件，更新 jenkins 不需要重新安装插件<br><strong>users：</strong> 当使用 jenkins 本地用户数据库时，用户信息会存放在这个目录下<br><strong>updates：</strong> 存放可用的插件更新<br><strong>userContent：</strong> 存放用户自己为 jenkins 服务器定制化的一些内容<br><strong>war：</strong> 存放扩展的 web 应用程序，当以单机应用程序的形式运，jenkins 时，会把 web 应用程序解压到这个目录。</p>
+<h2 id="更改工作目录"><a href="#更改工作目录" class="headerlink" title="更改工作目录"></a>更改工作目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#默认jenkins主目录在/root/.jenkins</span><br>cp -a /root/.jenkins /home/.jenkins<br><br><span class="hljs-comment">#添加profile</span><br>vim /etc/profile<br>	<span class="hljs-comment">#jenkins</span><br>	JENKINS_HOME=<span class="hljs-string">&quot;/home/.jenkins&quot;</span><br>	<span class="hljs-built_in">export</span> JENKINS_HOME<br>	<br><span class="hljs-comment">#重新加载profile</span><br><span class="hljs-built_in">source</span> /etc/profile<br></code></pre></td></tr></table></figure>
+<h1 id="jenkins备份与恢复"><a href="#jenkins备份与恢复" class="headerlink" title="jenkins备份与恢复"></a>jenkins备份与恢复</h1><p>1.登录Jenkins–&gt;选择系统管理–&gt;选择插件管理–&gt;选择可选插件<br>2.搜索ThinBackup插件，安装<br>3.安装成功后，在系统管理中出现ThinBackup选项，点击ThinBackup</p>
+<p>设置说明：<br>Backup Now：立即备份，需要设置备份路径，之后在服务器上创建该目录<br>Restore：恢复，按时间选择备份文件<br>Settings：备份设置，设置备份路径，定时备份时间，备份方式等</p>
+<h1 id="jenkins配置项目"><a href="#jenkins配置项目" class="headerlink" title="jenkins配置项目"></a>jenkins配置项目</h1><p>这里以java项目举例说明：<br>配置java项目需要安装插件：<strong>Publish Over SSH</strong> 、 <strong>Maven Release Plug-in</strong>和<strong>Git</strong></p>
+<p>1.登录jenkins，点击新建视图<br>2.输入项目名，选择简单视图，保存<br>3.在该项目下点击新建任务，输入任务名称，选择构建maven项目，选择ok<br>4.选择<strong>源码管理</strong>的类型，我这边选择git，输入git地址和账号密码<br>5.在<strong>Build</strong>栏目，添加pom配置路径</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">例1：pom在当前目录<br>	./pom.xml<br>	clean install package<br>		<br>例2：pom在二级目录<br>	ytb-manager-server/pom.xml<br>	clean install -pl ../ytb-manager-server -am<br></code></pre></td></tr></table></figure>
+
+<p>6.在<strong>Post Steps</strong>点击 <strong>Add post-build step</strong>，选择<strong>send files or execute commands over SSH</strong><br>7.ssh配置举例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash">name：选择jar包传输的服务器，需要在系统设置中先添加ssh主机<br><br><span class="hljs-comment">#生成jar包位置</span><br>Source files：ytb-manager-server/target/*.jar<br><br><span class="hljs-comment">#移除Source files路径</span><br>Remove prefix：ytb-manager-server/target/<br><br><span class="hljs-comment">#jar上传到服务的目录</span><br>Remote directory：/home/opt/ytb<br><br><span class="hljs-comment">#服务器执行的脚本</span><br>Exec <span class="hljs-built_in">command</span>：<br>	<span class="hljs-comment">#!/bin/bash</span><br>	<span class="hljs-built_in">cd</span> /home/opt/ytb/manager-server<br>	sh ./stop.sh<br>	sh ./start.sh<br></code></pre></td></tr></table></figure>
+<p>8.保存配置，之后点击立即构建即可查看是否成功。</p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><h2 id="安装插件失败"><a href="#安装插件失败" class="headerlink" title="安装插件失败"></a>安装插件失败</h2><p>因为国内防火墙的问题，有时候无法获取到Jenkins的插件，或下载失败<br>1.更换插件源地址<br>2.<a target="_blank" rel="noopener" href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a> 更换为 <a target="_blank" rel="noopener" href="http://mirror.xmission.com/jenkins/updates/update-center.json">http://mirror.xmission.com/jenkins/updates/update-center.json</a><br>3.或更换为<a target="_blank" rel="noopener" href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a><br>4.点击提交<br>5.点击立即获取</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/jenkins/">jenkins</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/07/31/go-fastdfs%E9%83%A8%E7%BD%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">go-fastdfs部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/07/25/Node.js%E5%AE%89%E8%A3%85%E4%B8%8Enpm%E7%BC%96%E8%AF%91%E5%89%8D%E7%AB%AF/">
+                        <span class="hidden-mobile">Node.js安装与npm编译前端</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

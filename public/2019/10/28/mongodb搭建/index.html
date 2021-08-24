@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>mongodb搭建 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="mongodb搭建">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-10-28 16:20" pubdate>
+        2019年10月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      15
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">mongodb搭建</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><strong>MongoDB：</strong> 是由C++语言编写的一个基于分布式文件存储的开源数据库系统，它的目的在于为WEB应用提供可扩展的高性能数据存储解决方案。是一个介于关系型数据库和非关系型数据库之间的产品，是非关系型数据库当中功能最丰富，最像关系型数据库的。它支持的数据结构非常松散，会将数据存储为一个文档，数据结构由键值对(key=&gt;value)组成，是类似于json的bson格式，字段值可以包含其它文档、数组和文档数组，因此可以存储比较复杂的数据类型。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><a target="_blank" rel="noopener" href="https://fastdl.mongodb.org/">官网下载</a><br>以下为自动安装脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment"># 自动安装mongodb</span><br>workdir=/data<br>mongodb_version=mongodb-linux-x86_64-3.6.14<br>[ -e <span class="hljs-variable">$workdir</span> ] || mkdir <span class="hljs-variable">$workdir</span> <br>mongodb_dir=<span class="hljs-variable">$workdir</span>/<span class="hljs-variable">$mongodb_version</span><br><br>yum -y install wget<br>wget https://fastdl.mongodb.org/linux/<span class="hljs-variable">$mongodb_version</span>.tgz<br><br>tar xf <span class="hljs-variable">$mongodb_version</span>.tgz -C /data<br><span class="hljs-built_in">cd</span> <span class="hljs-variable">$mongodb_dir</span><br>mkdir &#123;data,logs&#125;<br><br>cat &gt; mongodb.conf &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string"># 数据库路径</span><br><span class="hljs-string">dbpath=$mongodb_dir/data</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 日志输出文件路径</span><br><span class="hljs-string">logpath=$mongodb_dir/logs/mongodb.log</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 错误日志采用追加模式</span><br><span class="hljs-string">logappend=true</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 启用日志文件，默认启用</span><br><span class="hljs-string">journal=true</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 这个选项可以过滤掉一些无用的日志信息，若需要调试使用请设置为false</span><br><span class="hljs-string">quiet=true</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 端口号 默认为27017</span><br><span class="hljs-string">port=27017</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 允许远程访问</span><br><span class="hljs-string">bind_ip=0.0.0.0</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 开启子进程</span><br><span class="hljs-string">fork=true</span><br><span class="hljs-string"></span><br><span class="hljs-string"># 为每一个数据库按照数据库名建立文件夹存放</span><br><span class="hljs-string">directoryperdb=true</span><br><span class="hljs-string"></span><br><span class="hljs-string">#开启认证，必选先添加用户</span><br><span class="hljs-string">#auth=true</span><br><span class="hljs-string">EOF</span><br><br><span class="hljs-variable">$mongodb_dir</span>/bin/mongod -f <span class="hljs-variable">$mongodb_dir</span>/mongodb.conf<br></code></pre></td></tr></table></figure>
+
+<h1 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment"># mongodb启动脚本</span><br><span class="hljs-comment"># chkconfig: 2345 10 90</span><br>dir=/data/mongodb-linux-x86_64-3.6.14<br><span class="hljs-function"><span class="hljs-title">start</span></span>() &#123;<br><span class="hljs-variable">$dir</span>/bin/mongod --config <span class="hljs-variable">$dir</span>/mongodb.conf<br>&#125;<br><span class="hljs-function"><span class="hljs-title">stop</span></span>() &#123;<br><span class="hljs-variable">$dir</span>/bin/mongod --config <span class="hljs-variable">$dir</span>/mongodb.conf --shutdown<br>&#125;<br><br><span class="hljs-keyword">case</span> <span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span> <span class="hljs-keyword">in</span><br>start)<br> start<br> ;;<br>stop)<br> stop<br> ;;<br>restart)<br> stop<br> start<br> ;;<br>*)<br> <span class="hljs-built_in">echo</span> $<span class="hljs-string">&quot;Usage: <span class="hljs-variable">$0</span> &#123;start|stop|restart&#125;&quot;</span><br> <span class="hljs-built_in">exit</span> 1<br><span class="hljs-keyword">esac</span><br></code></pre></td></tr></table></figure>
+<h2 id="开机自启动"><a href="#开机自启动" class="headerlink" title="开机自启动"></a>开机自启动</h2><p>把以上启动脚本存为mongodb</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">mv mongodb /etc/rc.d/init.d/<br>chmod +x /etc/rc.d/init.d/mongodb<br>chkconfig --add mongodb<br>chkconfig mongodb on<br>chkconfig --list<br></code></pre></td></tr></table></figure>
+<h1 id="备份和恢复"><a href="#备份和恢复" class="headerlink" title="备份和恢复"></a>备份和恢复</h1><p><strong>备份整个库</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">例如： <br>mongodump -h localhost -d users -o /root/mongdbbak/<br><br>-h：<br>MongDB所在服务器地址，例如：127.0.0.1或localhost，当然也可以指定端口号：127.0.0.1:27017<br><br>-d：<br>需要备份的数据库实例名，例如：users<br><br>-o：<br>指定备份的数据存放的目录位置，例如：/root/mongdbbak/，当然该目录需要提前建立，在备份完成后，系统自动在/root/mongdbbak/目录下建立一个users目录，这个目录里面存放该数据库实例的备份数据。数据形式是以JSON的格式文件存储。<br></code></pre></td></tr></table></figure>
+
+<p><strong>恢复整个库</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">例如：<br>mongorestore -h localhost -d users --dir /root/mongdbbak/users<br><br>--host &lt;:port&gt;, -h &lt;:port&gt;：<br>MongoDB所在服务器地址，默认为:localhost:27017<br><br>-d ：<br>需要恢复的数据库实例名，例如：users，当然这个名称也可以和备份时候的不一样，比如user2<br><br>--dir：<br>指定备份的目录。<br></code></pre></td></tr></table></figure>
+<p><strong>导出集合</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">例如：<br>mongoexport -d mydb -c promotionConfiguration -o promotionConfiguration.json<br><br>-h ：数据库地址，MongoDB 服务器所在的 IP 与 端口，如 localhost:27017<br><br>-d ：指明使用的数据库实例，如 <span class="hljs-built_in">test</span><br><br>-c 指明要导出的集合，如 demo<br><br>-o 指明要导出的文件名，demo.json，文件类型支持txt、xls、docs 等等<br></code></pre></td></tr></table></figure>
+<p><strong>导入集合</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">例如：<br>mongoimport -d mydb -c u_vip_card_item  --<span class="hljs-built_in">type</span>=json --file u_vip_card_item.json<br><br>-h ： 数据库地址，MongoDB 服务器所在的 IP 与 端口，如 localhost:27017<br><br>-d ：指明使用的库，指明使用的数据库实例，如 <span class="hljs-built_in">test</span><br><br>-c ：指明要导入的集合，如 demo可以和导出时不一致，自定义即可，不存在时会直接创建。<br></code></pre></td></tr></table></figure>
+
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><p><strong>关闭mongodb</strong><br>mongod  –shutdown  –dbpath /database/mongodb/data/<br>或<br>use admin;<br>db.shutdownServer();</p>
+<p><strong>查看库大小</strong><br>单位B查看<br>db.stats();</p>
+<p>单位M查看<br>db.stats(1048576);</p>
+<p>单位G查看<br>db.stats(1073741824);</p>
+<p><strong>查看表大小(单位字节)</strong><br>db.tables.stats()</p>
+<p><strong>查看全部数据库</strong><br>show dbs;                  </p>
+<p><strong>显示当前数据库中的集合</strong>（类似关系数据库中的表）<br>show collections;  </p>
+<p><strong>查看当前数据库的用户信息</strong><br>show users;                </p>
+<p> <strong>切换数据库跟mysql一样</strong> （如果没用库，则创建，需要有数据才能生成库）<br>use <db name>;            </p>
+<p><strong>查看当前所在数据库</strong><br>db;<br>db.getName(); </p>
+<p> <strong>对于当前数据库中的foo集合进行数据查找</strong>（由于没有条件，会列出所有数据）<br>db.foo.find();          </p>
+<p><strong>对于当前数据库中的foo集合进行查找</strong> （条件是数据中有一个属性叫a，且a的值为1）<br>db.foo.find( { a : 1 } );  </p>
+<p><strong>创建表</strong><br>db.test.insert({“_id”:”520”,”name”:”xiaoming”})        </p>
+<p><strong>创建用户</strong><br>use admin<br>db.createUser({user:”xiaoming”,pwd:”123456”,roles:[{role:”userAdmin”,db:”test”}]})   </p>
+<p> <strong>删除用户</strong><br>db.removeUser(“userName”);      </p>
+<p><strong>显示当前所有用户</strong><br>show users;   </p>
+<p><strong>删除当前所在库</strong><br>db.dropDatabase();</p>
+<p><strong>查看当前库状态</strong><br>db.stats();</p>
+<p><strong>查看当前连接数和最大连接数</strong><br>db.serverStatus().connections</p>
+<p><strong>实时查运行状态</strong><br>mongostat</p>
+<p><strong>查看压力</strong><br>mongotop</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/mongodb/">mongodb</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/10/28/mongodb%E4%B8%BB%E4%BB%8E%E4%B8%8E%E4%BB%B2%E8%A3%81%E6%90%AD%E5%BB%BA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">mongodb主从与仲裁搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/10/27/ssh%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">
+                        <span class="hidden-mobile">ssh端口转发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

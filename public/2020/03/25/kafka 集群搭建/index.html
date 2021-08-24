@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>kafka 集群搭建 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="kafka 集群搭建">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-25 17:07" pubdate>
+        2020年3月25日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      53
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">kafka 集群搭建</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>kafka 是一个分布式的消息队列系统，消息以topic分类传输，生产者往topic发送消息时，消息会被分散到topic的不同分区中，消费者以组的形式消费topic中的数据，一个topic的一个分区，只能被同一个组里的一个消费者消费，但同一个消费者，可以消费多个分区数据，每个组自己维护topic每个分区的消费偏移量。</p>
+<p>kafka 不能保证不同分区消息的消费顺序，因此若对于消息消费顺序有要求，必须确保该类消息处于同一分区，可以通过发送消息时，指定相同key来处理。</p>
+<h1 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h1><h2 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h2><p><font color='32CD32'>配置hosts文件，让集群服务器间互相使用主机名访问</font></p>
+<table>
+<thead>
+<tr>
+<th align="center">服务器ip</th>
+<th align="center">主机名</th>
+<th align="center">服务</th>
+<th align="center">安装目录</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">192.168.40.100</td>
+<td align="center">kafka0</td>
+<td align="center">kafka，zookeeper，jdk8</td>
+<td align="center">/opt</td>
+</tr>
+<tr>
+<td align="center">192.168.40.101</td>
+<td align="center">kafka1</td>
+<td align="center">kafka，zookeeper，jdk8</td>
+<td align="center">/opt</td>
+</tr>
+<tr>
+<td align="center">192.168.40.102</td>
+<td align="center">kafka2</td>
+<td align="center">kafka，zookeeper，jdk8</td>
+<td align="center">/opt</td>
+</tr>
+</tbody></table>
+<h2 id="jdk8-安装"><a href="#jdk8-安装" class="headerlink" title="jdk8 安装"></a>jdk8 安装</h2><p>所有节点安装：<a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/2019/06/04/JDK1.8%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85-linux/">jdk 安装教程</a></p>
+<h2 id="zookeeper-集群安装"><a href="#zookeeper-集群安装" class="headerlink" title="zookeeper 集群安装"></a>zookeeper 集群安装</h2><p><a target="_blank" rel="noopener" href="https://hxqxiaoqi.gitee.io/2020/03/26/zookeeper%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">zk集群安装教程</a></p>
+<h2 id="kafka-集群安装"><a href="#kafka-集群安装" class="headerlink" title="kafka 集群安装"></a>kafka 集群安装</h2><p><font color='32CD32'>在 kafka0 主机上配置</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>wget http://archive.apache.org/dist/kafka/2.4.0/kafka_2.13-2.4.0.tgz<br><br>tar xf kafka_2.13-2.4.0.tgz -C /opt<br><span class="hljs-built_in">cd</span> /opt/kafka_2.13-2.4.0/config<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>修改 server.properties 文件</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 集群识别号，每台服务器上的kafka都不能相同</span><br>broker.id=0<br><br><span class="hljs-comment"># 监听地址，填写本机地址</span><br>listeners=PLAINTEXT://kafka0:9092<br><br><span class="hljs-comment"># 外网监听地址，返回给客户端的地址，填写本机地址</span><br>advertised.listeners=PLAINTEXT://kafka0:9092<br><br><span class="hljs-comment"># 数据存储目录,默认/tmp下，建议不要设置到/tmp下，否则有可能服务崩溃</span><br>log.dirs=/data/kafka-logs<br><br><span class="hljs-comment"># zookeeper地址</span><br>zookeeper.connect=kafka0:2181,kafka1:2181,kafka2:2181<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>修改/opt/kafka_2.13-2.4.0/bin/kafka-server-start.sh 文件</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;x<span class="hljs-variable">$KAFKA_HEAP_OPTS</span>&quot;</span> = <span class="hljs-string">&quot;x&quot;</span> ]; <span class="hljs-keyword">then</span><br>    <span class="hljs-built_in">export</span> KAFKA_HEAP_OPTS=<span class="hljs-string">&quot;-Xmx1G -Xms1G&quot;</span><br>    <span class="hljs-comment"># 添加以下这条设置，用于kafka-manager监控</span><br>    <span class="hljs-built_in">export</span> JMX_PORT=<span class="hljs-string">&quot;9999&quot;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>复制 kafka 目录到其它集群服务器上，并修改相应配置</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 如果没有免密，需要输入密码</span><br>scp -r /opt/kafka_2.13-2.4.0 root@kafka1:/opt<br>scp -r /opt/kafka_2.13-2.4.0 root@kafka1:/opt<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>启动与关闭</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 前台启动</span><br>/opt/kafka_2.13-2.4.0/bin/kafka-server-start.sh /opt/kafka_2.13-2.4.0/config/server.properties<br><br><span class="hljs-comment"># 后台启动</span><br>/opt/kafka_2.13-2.4.0/bin/kafka-server-start.sh -daemon /opt/kafka_2.13-2.4.0/config/server.properties<br><br><span class="hljs-comment"># 关闭</span><br>/opt/kafka_2.13-2.4.0/bin/kafka-server-stop.sh<br></code></pre></td></tr></table></figure>
+
+<h2 id="kafka-manager安装"><a href="#kafka-manager安装" class="headerlink" title="kafka-manager安装"></a>kafka-manager安装</h2><p>kafka-manager用于监控kafka集群状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/yahoo/CMAK/archive/3.0.0.4.tar.gz<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /opt/kafka_2.13-2.4.0/bin/<br><br><span class="hljs-comment"># 创建topic，--replication-facto：副本，--partitions：分区</span><br>./kafka-topics.sh --create --zookeeper kafka0:2181,kafka1:2181,kafka2:2181 --replication-factor 3 --partitions 1 --topic kafka-test<br><br><span class="hljs-comment"># 查看top信息</span><br>./kafka-topics.sh --describe --zookeeper kafka0:2181,kafka1:2181,kafka2:2181 --topic kafka-test<br><br><span class="hljs-comment"># 启动生产者</span><br>./kafka-console-producer.sh --broker-list kafka0:9092,kafka1:9092,kafka2:9092 --topic kafka-test<br><br><span class="hljs-comment"># 启动消费者，--from-beginning：从头开始消费，不加 --from-beginning 从最新开始消费</span><br>./kafka-console-consumer.sh --bootstrap-server kafka0:9092,kafka1:9092,kafka2:9092 --topic kafka-test --from-beginning<br><br><span class="hljs-comment"># 查看topic列表</span><br>./kafka-topics.sh --list --zookeeper kafka0:2181,kafka1:2181,kafka2:2181<br><br><span class="hljs-comment"># 删除topic</span><br>./kafka-topics.sh --zookeeper kafka0:2181,kafka1:2181,kafka2:2181 --delete  --topic kafka-test<br><br><span class="hljs-comment"># 查看topic策略</span><br>bin/kafka-configs.sh --zookeeper 192.168.10.111:2181,192.168.10.112:2181,192.168.10.113:2181 --describe --entity-type topics --entity-name TOPIC_DW_USER_STATS<br><br><span class="hljs-comment"># 设置topic策略，保存时间</span><br>bin/kafka-configs.sh --zookeeper 192.168.10.111:2181,192.168.10.112:2181,192.168.10.113:2181 --entity-type topics --entity-name TOPIC_DW_USER_STATS --alter --add-config retention.ms=10000<br><br><span class="hljs-comment"># 取消topic策略</span><br>bin/kafka-configs.sh --zookeeper 192.168.10.111:2181,192.168.10.112:2181,192.168.10.113:2181 --entity-type topics --entity-name TOPIC_DW_USER_STATS --alter --delete-config retention.ms<br><br><span class="hljs-comment"># 查看所有消费者</span><br>bin/kafka-consumer-groups.sh --bootstrap-server 192.168.10.111:9092,192.168.10.112:9092,192.168.10.113:9092 --list<br><br><span class="hljs-comment"># 查看指定消费者信息</span><br>bin/kafka-consumer-groups.sh --describe --bootstrap-server 192.168.10.111:9092,192.168.10.112:9092,192.168.10.113:9092 --group member-star-member-count-job<br></code></pre></td></tr></table></figure>
+
+<h2 id="动态添加partition副本"><a href="#动态添加partition副本" class="headerlink" title="动态添加partition副本"></a>动态添加partition副本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># test.json文件自己编写，参照以下例子</span><br>/data/kafka_2.13-2.4.0/bin/kafka-reassign-partitions.sh --zookeeper 192.168.10.111:2181,192.168.10.112:2181,192.168.10.113:2181 --reassignment-json-file test.json --execute<br></code></pre></td></tr></table></figure>
+
+<p>test.json例子</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-number">1</span>,<span class="hljs-attr">&quot;partitions&quot;</span>: [<br>    &#123;<span class="hljs-attr">&quot;topic&quot;</span>: <span class="hljs-string">&quot;mytest1&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>: <span class="hljs-number">0</span>,<span class="hljs-attr">&quot;replicas&quot;</span>: [<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">3</span>]&#125;,<br>    &#123;<span class="hljs-attr">&quot;topic&quot;</span>: <span class="hljs-string">&quot;mytest2&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>: <span class="hljs-number">0</span>,<span class="hljs-attr">&quot;replicas&quot;</span>: [<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;<br>]&#125;<br><br># partition根据实际topic分区填写<br># replicas根据broker数填写，其中数字为broker ID，其中对顺也有要求，[<span class="hljs-number">1</span>,<span class="hljs-number">0</span>,<span class="hljs-number">3</span>]中第一个数尽量与原分区Leader一致，否则	Preferred Leader将为<span class="hljs-literal">false</span>，但不影响使用<br><br></code></pre></td></tr></table></figure>
+
+<p>__consumer_offsets调整副本数示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<span class="hljs-attr">&quot;version&quot;</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">&quot;partitions&quot;</span>:<br>[<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">0</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">1</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">2</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">3</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">4</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">5</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">6</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">7</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">8</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">9</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">10</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">11</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">12</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">13</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">14</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">15</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">16</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">17</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">18</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">19</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">20</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">21</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">22</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">23</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">24</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">25</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">26</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">27</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">28</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">29</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">30</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">31</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">32</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">33</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">34</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">35</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">36</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">37</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">38</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">39</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">40</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">41</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">42</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">43</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">44</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">45</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">46</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">47</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">48</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>,<span class="hljs-number">1</span>]&#125;,<br>&#123;<span class="hljs-attr">&quot;topic&quot;</span>:<span class="hljs-string">&quot;__consumer_offsets&quot;</span>,<span class="hljs-attr">&quot;partition&quot;</span>:<span class="hljs-number">49</span>,<span class="hljs-attr">&quot;replicas&quot;</span>:[<span class="hljs-number">0</span>,<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]&#125;<br>]&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="server-properties-配置文件详解"><a href="#server-properties-配置文件详解" class="headerlink" title="server.properties 配置文件详解"></a>server.properties 配置文件详解</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># broker在集群中的唯一标识，不能为负数</span><br>broker.id<br><br><span class="hljs-comment"># 数据存放的目录，这个目录可以配置为“，”逗号分割的表达式，下面的num.io.threads要大于这个目录的个数，如果配置多个目录，新创建topic消息持久化的地方是，当前以逗号分割的目录中，分区数最少的那一个</span><br>log.dirs<br><br><span class="hljs-comment"># 相当于下面的host.name+port</span><br>listeners	PLAINTEXT://hostname:port<br><br><span class="hljs-comment"># 外网客户端访问返回的地址 PLAINTEXT://hostname:port</span><br>advertised.listeners	<br><br><span class="hljs-comment"># broker的主机地址，若是设置了，那么会绑定到这个地址上，若是没有，会绑定到所有的接口上，并将其中之一发送到ZK</span><br>host.name	<br><br><span class="hljs-comment"># 监听端口</span><br>port<br><br><span class="hljs-comment"># 消息最大字节</span><br>message.max.bytes<br><br><span class="hljs-comment"># broker处理网络消息的最大线程数</span><br>num.network.threads<br><br><span class="hljs-comment"># broker处理磁盘IO的线程数，数值应该大于你的目录数</span><br>num.io.threads<br><br><span class="hljs-comment"># 处理后台任务的线程数，例如过期消息文件的删除等</span><br>background.threads<br><br><span class="hljs-comment"># 等待IO线程处理的请求队列最大数，若是等待IO的请求超过这个数值，那么会停止接受外部消息，应该是一种自我保护机制</span><br>queued.max.requests<br><br><span class="hljs-comment"># socket的发送缓冲区</span><br>socket.send.buffer.bytes<br><br><span class="hljs-comment"># socket的接受缓冲区</span><br>socket.receive.buffer.bytes<br><br><span class="hljs-comment"># socket请求的最大字节数值，防止serverOOM，message.max.bytes必然要小于socket.request.max.bytes，会被topic创建时的指定参数覆盖</span><br>socket.request.max.bytes<br><br><span class="hljs-comment"># topic的分区是以一堆segment文件存储的，这个控制每个segment的大小，会被topic创建时的指定参数覆盖</span><br>log.segment.bytes<br><br><span class="hljs-comment"># 在日志segment没有达到log.segment.bytes设置的大小，但超过设定时间，也会强制新建一个segment。会被 topic创建时的指定参数覆盖</span><br>log.roll.hours<br><br><span class="hljs-comment"># 日志清理策略选择有：delete和compact主要针对过期数据的处理，或是日志文件达到限制的额度，会被 topic创建时的指定参数覆盖</span><br>log.cleanup.policy<br><br><span class="hljs-comment"># 数据存储的最大时间超过这个时间会根据log.cleanup.policy设置的策略处理数据，也就是消费端能够多久去消费数据，log.retention.bytes和log.retention.minutes任意一个达到要求，都会执行删除，会被topic创建时的指定参数覆盖</span><br>log.retention.minutes<br><br><span class="hljs-comment"># topic每个分区的最大文件大小，一个topic的大小限制 =分区数*log.retention.bytes。-1没有大小限log.retention.bytes和log.retention.minutes任意一个达到要求，都会执行删除，会被topic创建时的指定参数覆盖</span><br>log.retention.bytes<br><br><span class="hljs-comment"># 文件大小检查的周期时间，是否执行 log.cleanup.policy中设置的策略</span><br>log.retention.check.interval.ms<br><br><span class="hljs-comment"># 是否开启日志压缩</span><br>log.cleaner.enable<br><br><span class="hljs-comment"># 日志压缩运行的线程数</span><br>log.cleaner.threads<br><br><span class="hljs-comment"># 日志压缩时每秒处理的最大大小</span><br>log.cleaner.io.max.bytes.per.second<br><br><span class="hljs-comment"># 日志压缩去重时候的缓存空间，在空间允许的情况下，越大越好</span><br>log.cleaner.dedupe.buffer.size<br><br><span class="hljs-comment"># 日志清理时候用到的IO块大小一般不需要修改</span><br>log.cleaner.io.buffer.size<br><br><span class="hljs-comment"># 日志清理中hash表的扩大因子一般不需要修改</span><br>log.cleaner.io.buffer.load.factor<br><br><span class="hljs-comment"># 检查是否触发日志清理的间隔</span><br>log.cleaner.backoff.ms<br><br><span class="hljs-comment"># 日志清理的频率控制，越大意味着更高效的清理，同时会存在一些空间上的浪费，会被topic创建时的指定参数覆盖</span><br>log.cleaner.min.cleanable.ratio<br><br><span class="hljs-comment"># 对于压缩的日志保留的最长时间，也是客户端消费消息的最长时间，与log.retention.minutes的区别在于一个控制未压缩数据，一个控制压缩后的数据。会被topic创建时的指定参数覆盖</span><br>log.cleaner.delete.retention.ms<br><br><span class="hljs-comment"># 对于segment日志的索引文件大小限制，会被topic创建时的指定参数覆盖</span><br>log.index.size.max.bytes<br><br><span class="hljs-comment"># 当执行一个fetch操作后，需要一定的空间来扫描最近的offset大小，设置越大，代表扫描速度越快，但是也更好内存，一般情况下不需要搭理这个参数</span><br>log.index.interval.bytes<br><br><span class="hljs-comment"># log文件”sync”到磁盘之前累积的消息条数,因为磁盘IO操作是一个慢操作,但又是一个”数据可靠性&quot;的必要手段,所以此参数的设置,需要在&quot;数据可靠性&quot;与&quot;性能&quot;之间做必要的权衡.如果此值过大,将会导致每次&quot;fsync&quot;的时间较长(IO阻塞),如果此值过小,将会导致&quot;fsync&quot;的次数较多,这也意味着整体的client请求有一定的延迟.物理server故障,将会导致没有fsync的消息丢失.</span><br>log.flush.interval.messages<br><br><span class="hljs-comment"># 检查是否需要固化到硬盘的时间间隔</span><br>log.flush.scheduler.interval.ms<br><br><span class="hljs-comment"># 仅仅通过interval来控制消息的磁盘写入时机,是不足的.此参数用于控制&quot;fsync&quot;的时间间隔,如果消息量始终没有达到阀值,但是离上一次磁盘同步的时间间隔达到阀值,也将触发.</span><br>log.flush.interval.ms<br><br><span class="hljs-comment"># 文件在索引中清除后保留的时间一般不需要去修改</span><br>log.delete.delay.ms<br><br><span class="hljs-comment"># 控制上次固化硬盘的时间点，以便于数据恢复一般不需要去修改</span><br>log.flush.offset.checkpoint.interval.ms <br><br><span class="hljs-comment"># 消息时间戳类型，CreateTime 和 LogAppendTime ；前者表示producer创建这条消息的时间；后者表示broker接收到这条消息的时间(严格来说，是leader broker将这条消息写入到log的时间</span><br>log.message.timestamp.type	<br><br><span class="hljs-comment"># 是否允许自动创建topic，若是false，就需要通过命令创建topic</span><br>auto.create.topics.enable <br><br><span class="hljs-comment"># 每个topic的分区个数，会被topic创建时的指定参数覆盖</span><br>num.partitions<br><br><span class="hljs-comment"># 用于配置offset记录的topic的partition的副本个数</span><br>offsets.topic.replication.factor=3<br><br><span class="hljs-comment"># 事务主题的复制因子</span><br>transaction.state.log.replication.factor=3<br><br><span class="hljs-comment"># 覆盖事务主题的min.insync.replicas配置</span><br>transaction.state.log.min.isr=3<br><br><span class="hljs-comment"># 新建Topic时默认的分区数</span><br>default.replication.factor=3<br><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/kafka/">kafka</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/03/26/zookeeper%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">zookeeper 集群搭建</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/03/20/hbash%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%AD%E5%BB%BA/">
+                        <span class="hidden-mobile">hbase 分布式搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>redis常用命令 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="redis常用命令">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-10-19 15:29" pubdate>
+        2019年10月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.4k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">redis常用命令</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>方便自己查询使用</p>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="登录查询命令"><a href="#登录查询命令" class="headerlink" title="登录查询命令"></a>登录查询命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 登录redis</span><br>./redis-cli -h 主机IP -a 密码 -p 端口 [可执行命令]<br><br><span class="hljs-comment"># 查看redis信息</span><br>info<br><br><span class="hljs-comment"># 查看集群身份</span><br>info Replication<br><br><span class="hljs-comment"># 清除当前数据库的所有keys</span><br>flush db   <br><br><span class="hljs-comment"># 清除所有数据库的所有keys</span><br>flush all    <br><br> <span class="hljs-comment"># 查看所有keys</span><br>keys *    <br><br><span class="hljs-comment"># 查看前缀为&quot;prefix_&quot;的所有keys</span><br>keys prefix_*     <br><br><span class="hljs-comment"># 确认一个key是否存在</span><br>exists key      <br><br><span class="hljs-comment"># 设置key和value</span><br><span class="hljs-built_in">set</span> key value   <br><br><span class="hljs-comment"># 获取key的value</span><br>get key        <br><br> <span class="hljs-comment"># 删除一个key</span><br>del key        <br><br> <span class="hljs-comment"># 返回值的类型</span><br><span class="hljs-built_in">type</span> key       <br><br><span class="hljs-comment"># 返回满足给定pattern的所有key</span><br>keys pattern    <br><br><span class="hljs-comment"># 随机返回key空间的一个</span><br>random key      <br><br> <span class="hljs-comment"># 重命名key</span><br>key rename oldname newname   <br><br> <span class="hljs-comment"># 返回当前数据库中key的数目</span><br>db size        <br><br><span class="hljs-comment"># 选择第0~15中的库</span><br>select index   <br><br><span class="hljs-comment"># 移动当前数据库中的key到dbindex数据库</span><br>move key dbindex      <br><br><span class="hljs-comment"># 设置key过期时间为120秒</span><br><span class="hljs-built_in">set</span> key value ex 120<br><br><span class="hljs-comment"># 批量删除键</span><br>redis-cli -h 192.168.10.71 -p 6379  keys <span class="hljs-string">&quot;Mpos:base:user:info:key:*&quot;</span> | xargs redis-cli -h 192.168.10.71 -p 6379 del<br></code></pre></td></tr></table></figure>
+
+<h2 id="持久化存储命令"><a href="#持久化存储命令" class="headerlink" title="持久化存储命令"></a>持久化存储命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># SAVE命令会占用当前的redis服务进程进行重写</span><br>127.0.0.1:6379&gt; SAVE<br><br><span class="hljs-comment"># BGSAVE命令会以redis服务进程启动一个名为redis-rdb-bgsave的子进程,因此temp-PID.rdb中的PID即是该子进程redis-rdb-bgsave的PID,因此不会阻塞redis服务进程，redis正常对外服务</span><br>127.0.0.1:6379&gt; BGSAVE<br><br><span class="hljs-comment"># 该命令会以redis服务进程打开一个名为redis-aof-rewrite的子程序</span><br>127.0.0.1:6379&gt; BGREWRITEAOF<br></code></pre></td></tr></table></figure>
+
+<h2 id="客户端连接命令"><a href="#客户端连接命令" class="headerlink" title="客户端连接命令"></a>客户端连接命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看当前连接到redis的会话：</span><br>redis-cli -h 192.168.77.100 -p 7000 client list<br><br><span class="hljs-comment"># 使用awk格式化输出，生成简易报表：</span><br>redis-cli  client list|sed <span class="hljs-string">&#x27;s/\r//&#x27;</span>|awk -F<span class="hljs-string">&#x27; |:&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1,$2,$5,$6,$9,$19&#125;&#x27;</span>|column -t<br></code></pre></td></tr></table></figure>
+
+<h2 id="参数命令"><a href="#参数命令" class="headerlink" title="参数命令"></a>参数命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 批量删除key</span><br>cat token.txt |awk <span class="hljs-string">&#x27;&#123;print &quot;redis-cli del&quot;&quot;\t&quot;$1 &#125;&#x27;</span>| sh<br><br><span class="hljs-comment"># 获取所有的参数</span><br>redis-cli -h 192.168.77.100 -p 7000 CONFIG GET <span class="hljs-string">&quot;*&quot;</span><br><br><span class="hljs-comment"># 获取最大内存参数</span><br>redis-cli -h 192.168.77.100 -p 7000 CONFIG GET maxmemory<br><span class="hljs-comment"># 返回值 6871947673</span><br><br><span class="hljs-comment"># 设置参数，当前生效，无需重启</span><br>redis-cli -h 192.168.77.100 -p 7000 CONFIG SET maxmemory 7000000000<br>redis-cli -h 192.168.77.100 -p 7000 CONFIG GET maxmemory<br><span class="hljs-comment"># 返回值 7000000000</span><br><br>cat redis_7000.conf |grep ^maxmemory<br><span class="hljs-comment"># maxmemory 6871947673</span><br><span class="hljs-comment"># 配置文件并没有被修改，redis重启参数设置回滚</span><br><br><span class="hljs-comment"># 将当前参数刷入配置文件</span><br>redis-cli -h 192.168.77.100 -p 7000 CONFIG REWRITE<br>cat redis_7000.conf |grep ^maxmemory<br><span class="hljs-comment"># maxmemory 7000000000</span><br><span class="hljs-comment"># 配置文件更新，参数永久设置</span><br><br><span class="hljs-comment"># 重置 INFO 命令中的某些统计数据</span><br><span class="hljs-comment"># 被重置的数据包括：</span><br><span class="hljs-comment"># Keyspace hits (键空间命中次数)</span><br><span class="hljs-comment"># Keyspace misses (键空间不命中次数)</span><br><span class="hljs-comment"># Number of commands processed (执行命令的次数)</span><br><span class="hljs-comment"># Number of connections received (连接服务器的次数)</span><br><span class="hljs-comment"># Number of expired keys (过期key的数量)</span><br><span class="hljs-comment"># Number of rejected connections (被拒绝的连接数量)</span><br><span class="hljs-comment"># Latest fork(2) time(最后执行 fork(2) 的时间)</span><br><span class="hljs-comment"># The aof_delayed_fsync counter(aof_delayed_fsync 计数器的值)</span><br>redis-cli -h 192.168.77.100 -p 7000 CONFIG RESETSTAT<br></code></pre></td></tr></table></figure>
+
+<h2 id="底层命令"><a href="#底层命令" class="headerlink" title="底层命令"></a>底层命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 获取全部的命令列表</span><br>redis-cli -h 192.168.77.100 -p 7000 COMMAND<br><br><span class="hljs-comment"># 获取这些命令的总数</span><br>redis-cli -h 192.168.77.100 -p 7000 COMMAND COUNT<br><br><span class="hljs-comment"># 获取给定命令的所有键</span><br>redis-cli -h 192.168.77.100 -p 7000 COMMAND GETKEYS SET key value<br>redis-cli -h 192.168.77.100 -p 7000 COMMAND GETKEYS MSET k1 v1 k2 v2 k3 v3<br><br><span class="hljs-comment"># 获取Redis相应命令描述的数组</span><br>redis-cli -h 192.168.77.100 -p 7000 COMMAND INFO del <span class="hljs-built_in">set</span><br><span class="hljs-comment"># 不负责任的猜测：</span><br><span class="hljs-comment">#   是命令实现的简单描述</span><br><span class="hljs-comment">#   如set需要先调用write写</span><br><span class="hljs-comment">#   然后调用denyoom拒绝被oom</span><br></code></pre></td></tr></table></figure>
+<h2 id="清楚库命令"><a href="#清楚库命令" class="headerlink" title="清楚库命令"></a>清楚库命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 需要将命令流转化成dos格式，然后使用--pipe参数装入到redis实例</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;select 2\nflushdb&quot;</span>|sed <span class="hljs-string">&#x27;s/$/\r/&#x27;</span>|redis-cli -h 192.168.77.100 -p 7000 --pipe<br><br><span class="hljs-comment"># 删除所有数据库的所有key，全部库的key都会被清空</span><br>redis-cli -h 192.168.77.100 -p 7000 FLUSHALL<br><br><span class="hljs-comment"># 关闭redis服务</span><br>redis-cli -h 192.168.77.100 -p 7000 SHUTDOWN<br><br><span class="hljs-comment"># 默认使用SAVE命令，阻塞服务请求，生成新的RDB，然后关闭redis服务</span><br>redis-cli -h 192.168.77.100 -p 7000 SHUTDOWN SAVE<br><br><span class="hljs-comment"># 服务崩溃命令</span><br>redis-cli -h 192.168.77.100 -p 7000 DEBUG SEGFAULT<br></code></pre></td></tr></table></figure>
+
+<h2 id="服务状态命令"><a href="#服务状态命令" class="headerlink" title="服务状态命令"></a>服务状态命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs bash">TIME <br><span class="hljs-comment"># 返回当前服务器时间UNIX时间戳，到&#x27;1970-01-01 00:00:00&#x27;+时区 的间隔秒和微秒</span><br><br>DBSIZE <br><span class="hljs-comment"># 返回当前数据库的 key 的数量</span><br><br>LASTSAVE <br><span class="hljs-comment"># 返回上一次成功保存RDB的时间戳，UNIX时间戳，到&#x27;1970-01-01 00:00:00&#x27;+时区的间隔秒</span><br><br>DEBUG OBJECT key <br><span class="hljs-comment"># 获取 key 的调试信息</span><br><span class="hljs-comment"># Value at:0x7f2167c72528 refcount:1</span><br><span class="hljs-comment"># encoding:embstr serializedlength:17 lru:13993658 lru_seconds_idle:1424</span><br><span class="hljs-comment"># 返回的信息包括value内存地址、编码方式、序列化长度、lru空闲秒数 等</span><br><br><span class="hljs-comment"># 慢日志相关</span><br>redis-cli -c -h 192.168.21.101 -p 7000 SLOWLOG LEN<br><span class="hljs-comment"># 查看当前有多少条慢日志</span><br>redis-cli -c -h 192.168.21.101 -p 7000 SLOWLOG GET 1<br><span class="hljs-comment"># 获取最后一条慢日志</span><br><span class="hljs-comment"># 1) 1) (integer) 95            慢日志的ID</span><br><span class="hljs-comment">#    2) (integer) 1523857790    慢日志UNIX时间戳</span><br><span class="hljs-comment">#    3) (integer) 13730         慢日志的耗时/微秒</span><br><span class="hljs-comment">#    4) 1) &quot;ZADD&quot;               慢日志具体操作内容</span><br><span class="hljs-comment">#       2) &quot;&#123;OPREATE_RECORD...</span><br><span class="hljs-comment">#       3) &quot;5.6704707E7&quot;</span><br><span class="hljs-comment">#       4) &quot;&#123;\&quot;aaCreateTime...</span><br><span class="hljs-comment">#    5) &quot;192.168.1.117:55165&quot;   会话来源</span><br>redis-cli -c -h 192.168.21.101 -p 7000 SLOWLOG GET<br><span class="hljs-comment"># 获取全部慢日志</span><br>redis-cli -c -h 192.168.21.101 -p 7000 SLOWLOG RESET<br><span class="hljs-comment"># 清空慢日志</span><br><br><span class="hljs-comment"># 监控 MONITOR</span><br>redis-cli -c -h 192.168.77.100 -p 7000 MONITOR<br><span class="hljs-comment"># 相当于tailf log，将所有到该redis服务器的会话连接全部监控起来</span><br><span class="hljs-comment"># 1523933983.091873 [0 192.168.77.100:43468] &quot;dbsize&quot;</span><br><span class="hljs-comment"># 时间戳 [数据库 IP:PORT] &quot;命令&quot;</span><br>date -d@1523933983.091873 +%F_%T_%N<br><span class="hljs-comment"># 2018-04-17_10:59:43_091873000</span><br></code></pre></td></tr></table></figure>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/redis/">redis</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/10/23/centos7%E5%AE%89%E8%A3%85mariadb/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">centos7安装mariadb</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/10/19/redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/">
+                        <span class="hidden-mobile">redis配置文件详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

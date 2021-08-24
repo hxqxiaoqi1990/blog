@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>k8s之存储 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="k8s之存储">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-06-04 09:06" pubdate>
+        2020年6月4日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      79
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">k8s之存储</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>为了保证数据的持久性，必须保证数据在外部存储在docker容器中，为了实现数据的持久性存储，在宿主机和容器内做映射，可以保证在容器的生命周期结束，数据依旧可以实现持久性存储。但是在k8s中，由于*pod分布在各个不同的节点之上，并不能实现不同节点之间持久性数据的共享，并且，在节点故障时，可能会导致数据的永久性丢失。为此，k8s就引入了外部存储卷的功能。</p>
+<p>k8s的存储卷类型：</p>
+<ol>
+<li><code>emptyDir</code>（临时目录）:Pod删除，数据也会被清除，这种存储成为emptyDir，用于数据的临时存储。</li>
+<li><code>hostPath</code> (宿主机目录映射):</li>
+<li><code>本地的SAN</code> (iSCSI,FC)、NAS(nfs,cifs,http)存储</li>
+<li><code>分布式存储</code>（glusterfs，rbd，cephfs）</li>
+<li><code>云存储</code>（EBS，Azure Disk）</li>
+</ol>
+<p><font color='32CD32'>k8s整体存储概念为</font>：实际存储空间（nfs，hostpath…）—&gt; pv（抽象的存储卷，从实际的存储空间划分）—&gt; pvc（存储卷创建申请，从pv中划分定义）—&gt; pod（在创建pod中引用pvc进行挂在）</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/linuxk/p/9760363.html">https://www.cnblogs.com/linuxk/p/9760363.html</a></p>
+<h1 id="emptyDir存储卷演示"><a href="#emptyDir存储卷演示" class="headerlink" title="emptyDir存储卷演示"></a>emptyDir存储卷演示</h1><p>一个emptyDir 第一次创建是在一个pod被指定到具体node的时候，并且会一直存在在pod的生命周期当中，正如它的名字一样，它初始化是一个空的目录，pod中的容器都可以读写这个目录，这个目录可以被挂在到各个容器相同或者不相同的的路径下。当一个pod因为任何原因被移除的时候，这些数据会被永久删除。注意：一个容器崩溃了不会导致数据的丢失，因为容器的崩溃并不移除pod。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@k8s-master ~]<span class="hljs-comment"># kubectl explain pods.spec.volumes.emptyDir  #查看emptyDir存储定义</span><br>[root@k8s-master ~]<span class="hljs-comment"># kubectl explain pods.spec.containers.volumeMounts  #查看容器挂载方式</span><br>[root@k8s-master ~]<span class="hljs-comment"># cd mainfests &amp;&amp; mkdir volumes &amp;&amp; cd volumes</span><br>[root@k8s-master volumes]<span class="hljs-comment"># cp ../pod-demo.yaml ./</span><br>[root@k8s-master volumes]<span class="hljs-comment"># mv pod-demo.yaml pod-vol-demo.yaml</span><br><br>[root@k8s-master volumes]<span class="hljs-comment"># vim pod-vol-demo.yaml   #创建emptyDir的清单</span><br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: pod-demo<br>  namespace: default<br>  labels:<br>    app: myapp<br>    tier: frontend<br>  annotations:<br>    magedu.com/create-by:<span class="hljs-string">&quot;cluster admin&quot;</span><br>spec:<br>  containers:<br>  - name: myapp<br>    image: ikubernetes/myapp:v1<br>    imagePullPolicy: IfNotPresent<br>    ports:<br>    - name: http<br>      containerPort: 80<br>    volumeMounts:    <span class="hljs-comment">#在容器内定义挂载存储名称和挂载路径</span><br>    - name: html<br>      mountPath: /usr/share/nginx/html/<br>  - name: busybox<br>    image: busybox:latest<br>    imagePullPolicy: IfNotPresent<br>    volumeMounts:<br>    - name: html<br>      mountPath: /data/    <span class="hljs-comment">#在容器内定义挂载存储名称和挂载路径</span><br>    <span class="hljs-built_in">command</span>: [<span class="hljs-string">&#x27;/bin/sh&#x27;</span>,<span class="hljs-string">&#x27;-c&#x27;</span>,<span class="hljs-string">&#x27;while true;do echo $(date) &gt;&gt; /data/index.html;sleep 2;done&#x27;</span>]<br>  volumes:  <span class="hljs-comment">#定义存储卷</span><br>  - name: html    <span class="hljs-comment">#定义存储卷名称  </span><br>    emptyDir: &#123;&#125;  <span class="hljs-comment">#定义存储卷类型</span><br>    <br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-vol-demo.yaml </span><br>pod/pod-vol-demo created <br><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pods</span><br>NAME                                 READY     STATUS    RESTARTS   AGE<br>pod-vol-demo                         2/2       Running   0          27s<br><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pods -o wide</span><br>NAME                      READY     STATUS    RESTARTS   AGE       IP            NODE<br>......<br>pod-vol-demo              2/2       Running   0          16s       10.244.2.34   k8s-node02<br>......<br><br><span class="hljs-comment"># 在上面，我们定义了2个容器，其中一个容器是输入日期到index.html中，然后验证访问nginx的html是否可以获取日期。以验证两个容器之间挂载的emptyDir实现共享。如下访问验证:</span><br>[root@k8s-master volumes]<span class="hljs-comment"># curl 10.244.2.34  #访问验证</span><br>Tue Oct 9 03:56:53 UTC 2018<br>Tue Oct 9 03:56:55 UTC 2018<br>Tue Oct 9 03:56:57 UTC 2018<br>Tue Oct 9 03:56:59 UTC 2018<br>Tue Oct 9 03:57:01 UTC 2018<br>Tue Oct 9 03:57:03 UTC 2018<br>Tue Oct 9 03:57:05 UTC 2018<br>Tue Oct 9 03:57:07 UTC 2018<br>Tue Oct 9 03:57:09 UTC 2018<br>Tue Oct 9 03:57:11 UTC 2018<br>Tue Oct 9 03:57:13 UTC 2018<br>Tue Oct 9 03:57:15 UTC 2018<br></code></pre></td></tr></table></figure>
+
+<h1 id="hostPath存储卷演示"><a href="#hostPath存储卷演示" class="headerlink" title="hostPath存储卷演示"></a>hostPath存储卷演示</h1><p>hostPath宿主机路径，就是把pod所在的宿主机之上的脱离pod中的容器名称空间的之外的宿主机的文件系统的某一目录和pod建立关联关系，在pod删除时，存储数据不会丢失。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@k8s-master volumes]<span class="hljs-comment"># vim pod-hostpath-vol.yaml</span><br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: pod-vol-hostpath<br>  namespace: default<br>spec:<br>  containers:<br>  - name: myapp<br>    image: ikubernetes/myapp:v1<br>    volumeMounts:<br>    - name: html<br>      mountPath: /usr/share/nginx/html<br>  volumes:<br>    - name: html<br>      hostPath:<br>        path: /data/pod/volume1<br>        <span class="hljs-built_in">type</span>: DirectoryOrCreate<br><span class="hljs-comment"># DirectoryOrCreate  宿主机上不存在创建此目录  </span><br><span class="hljs-comment"># Directory 必须存在挂载目录  </span><br><span class="hljs-comment"># FileOrCreate 宿主机上不存在挂载文件就创建  </span><br><span class="hljs-comment"># File 必须存在文件  </span><br><br>[root@k8s-node01 ~]<span class="hljs-comment"># mkdir -p /data/pod/volume1</span><br>[root@k8s-node01 ~]<span class="hljs-comment"># vim /data/pod/volume1/index.html</span><br>node01.magedu.com<br>[root@k8s-node02 ~]<span class="hljs-comment"># mkdir -p /data/pod/volume1</span><br>[root@k8s-node02 ~]<span class="hljs-comment"># vim /data/pod/volume1/index.html</span><br>node02.magedu.com<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-hostpath-vol.yaml </span><br>pod/pod-vol-hostpath created<br><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pods -o wide</span><br>NAME                                 READY     STATUS    RESTARTS   AGE       IP            NODE<br>......<br>pod-vol-hostpath                     1/1       Running   0          37s       10.244.2.35   k8s-node02<br>......<br>[root@k8s-master volumes]<span class="hljs-comment"># curl 10.244.2.35</span><br>node02.magedu.com<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl delete -f pod-hostpath-vol.yaml  #删除pod，再重建，验证是否依旧可以访问原来的内容</span><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-hostpath-vol.yaml </span><br>pod/pod-vol-hostpath created<br>[root@k8s-master volumes]<span class="hljs-comment"># curl  10.244.2.37 </span><br>node02.magedu.com<br></code></pre></td></tr></table></figure>
+
+<h1 id="nfs共享存储卷演示"><a href="#nfs共享存储卷演示" class="headerlink" title="nfs共享存储卷演示"></a>nfs共享存储卷演示</h1><p>nfs使的我们可以挂在已经存在的共享到的我们的Pod中，和emptyDir不同的是，emptyDir会被删除当我们的Pod被删除的时候，但是nfs不会被删除，仅仅是解除挂在状态而已，这就意味着NFS能够允许我们提前对数据进行处理，而且这些数据可以在Pod之间相互传递.并且，nfs可以同时被多个pod挂在并进行读写。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs bash">（1）在stor01节点上安装nfs，并配置nfs服务<br>[root@stor01 ~]<span class="hljs-comment"># yum install -y nfs-utils  ==》192.168.56.14</span><br>[root@stor01 ~]<span class="hljs-comment"># mkdir /data/volumes -pv</span><br>[root@stor01 ~]<span class="hljs-comment"># vim /etc/exports</span><br>/data/volumes 192.168.56.0/24(rw,no_root_squash)<br>[root@stor01 ~]<span class="hljs-comment"># systemctl start nfs</span><br>[root@stor01 ~]<span class="hljs-comment"># showmount -e</span><br>Export list <span class="hljs-keyword">for</span> stor01:<br>/data/volumes 192.168.56.0/24<br><br>（2）在node01和node02节点上安装nfs-utils，并测试挂载<br>[root@k8s-node01 ~]<span class="hljs-comment"># yum install -y nfs-utils</span><br>[root@k8s-node02 ~]<span class="hljs-comment"># yum install -y nfs-utils</span><br>[root@k8s-node02 ~]<span class="hljs-comment"># mount -t nfs stor01:/data/volumes /mnt</span><br>[root@k8s-node02 ~]<span class="hljs-comment"># mount</span><br>......<br>stor01:/data/volumes on /mnt <span class="hljs-built_in">type</span> nfs4 (rw,relatime,vers=4.1,rsize=131072,wsize=131072,namlen=255,hard,proto=tcp,port=0,timeo=600,retrans=2,sec=sys,clientaddr=192.168.56.13,local_lock=none,addr=192.168.56.14)<br>[root@k8s-node02 ~]<span class="hljs-comment"># umount /mnt/</span><br><br>（3）创建nfs存储卷的使用清单<br>[root@k8s-master volumes]<span class="hljs-comment"># cp pod-hostpath-vol.yaml pod-nfs-vol.yaml</span><br>[root@k8s-master volumes]<span class="hljs-comment"># vim pod-nfs-vol.yaml</span><br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: pod-vol-nfs<br>  namespace: default<br>spec:<br>  containers:<br>  - name: myapp<br>    image: ikubernetes/myapp:v1<br>    volumeMounts:<br>    - name: html<br>      mountPath: /usr/share/nginx/html<br>  volumes:<br>    - name: html<br>      nfs:<br>        path: /data/volumes<br>        server: stor01<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-nfs-vol.yaml </span><br>pod/pod-vol-nfs created<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pods -o wide</span><br>NAME                     READY     STATUS    RESTARTS   AGE       IP            NODE<br>pod-vol-nfs              1/1       Running   0          21s       10.244.2.38   k8s-node02<br><br>（3）在nfs服务器上创建index.html<br>[root@stor01 ~]<span class="hljs-comment"># cd /data/volumes</span><br>[root@stor01 volumes ~]<span class="hljs-comment"># vim index.html</span><br>&lt;h1&gt; nfs stor01&lt;/h1&gt;<br>[root@k8s-master volumes]<span class="hljs-comment"># curl 10.244.2.38</span><br>&lt;h1&gt; nfs stor01&lt;/h1&gt;<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl delete -f pod-nfs-vol.yaml   #删除nfs相关pod，再重新创建，可以得到数据的持久化存储</span><br>pod <span class="hljs-string">&quot;pod-vol-nfs&quot;</span> deleted<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-nfs-vol.yaml </span><br></code></pre></td></tr></table></figure>
+
+<h1 id="NFS使用PV和PVC（静态创建pv）"><a href="#NFS使用PV和PVC（静态创建pv）" class="headerlink" title="NFS使用PV和PVC（静态创建pv）"></a>NFS使用PV和PVC（静态创建pv）</h1><h2 id="1、配置nfs存储"><a href="#1、配置nfs存储" class="headerlink" title="1、配置nfs存储"></a>1、配置nfs存储</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@stor01 volumes]<span class="hljs-comment"># mkdir v&#123;1,2,3,4,5&#125;</span><br>[root@stor01 volumes]<span class="hljs-comment"># vim /etc/exports</span><br>/data/volumes/v1 192.168.56.0/24(rw,no_root_squash)<br>/data/volumes/v2 192.168.56.0/24(rw,no_root_squash)<br>/data/volumes/v3 192.168.56.0/24(rw,no_root_squash)<br>/data/volumes/v4 192.168.56.0/24(rw,no_root_squash)<br>/data/volumes/v5 192.168.56.0/24(rw,no_root_squash)<br>[root@stor01 volumes]<span class="hljs-comment"># exportfs -arv</span><br>exporting 192.168.56.0/24:/data/volumes/v5<br>exporting 192.168.56.0/24:/data/volumes/v4<br>exporting 192.168.56.0/24:/data/volumes/v3<br>exporting 192.168.56.0/24:/data/volumes/v2<br>exporting 192.168.56.0/24:/data/volumes/v1<br>[root@stor01 volumes]<span class="hljs-comment"># showmount -e</span><br>Export list <span class="hljs-keyword">for</span> stor01:<br>/data/volumes/v5 192.168.56.0/24<br>/data/volumes/v4 192.168.56.0/24<br>/data/volumes/v3 192.168.56.0/24<br>/data/volumes/v2 192.168.56.0/24<br>/data/volumes/v1 192.168.56.0/24<br></code></pre></td></tr></table></figure>
+
+<h2 id="2、定义PV"><a href="#2、定义PV" class="headerlink" title="2、定义PV"></a>2、定义PV</h2><p>这里定义了pvc的访问模式为多路读写，该访问模式必须在前面pv定义的访问模式之中。定义PVC申请的大小为2Gi，此时PVC会自动去匹配多路读写且大小为2Gi的PV，匹配成功获取PVC的状态即为Bound</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@k8s-master volumes]<span class="hljs-comment"># kubectl explain pv</span><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl explain pv.spec.nfs</span><br>[root@k8s-master volumes]<span class="hljs-comment"># vim pv-demo.yaml</span><br>apiVersion: v1<br>kind: PersistentVolume<br>metadata:<br>  name: pv001<br>  labels:<br>    name: pv001<br>spec:<br>  nfs:<br>    path: /data/volumes/v1<br>    server: stor01<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteMany&quot;</span>,<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]<br>    <span class="hljs-comment">#accessModes（定义访问模型，有以下三种访问模型，以列表的方式存在，也就是说可以定义多个访问模式）</span><br>    <span class="hljs-comment">#ReadWriteOnce（RWO）  单节点读写</span><br>	<span class="hljs-comment">#ReadOnlyMany（ROX）  多节点只读</span><br>	<span class="hljs-comment">#ReadWriteMany（RWX）  多节点读写</span><br>  capacity:<br>    storage: 1Gi<br>---<br>apiVersion: v1<br>kind: PersistentVolume<br>metadata:<br>  name: pv002<br>  labels:<br>    name: pv002<br>spec:<br>  nfs:<br>    path: /data/volumes/v2<br>    server: stor01<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]<br>  capacity:<br>    storage: 2Gi<br>---<br>apiVersion: v1<br>kind: PersistentVolume<br>metadata:<br>  name: pv003<br>  labels:<br>    name: pv003<br>spec:<br>  nfs:<br>    path: /data/volumes/v3<br>    server: stor01<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteMany&quot;</span>,<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]<br>  capacity:<br>    storage: 2Gi<br>---<br>apiVersion: v1<br>kind: PersistentVolume<br>metadata:<br>  name: pv004<br>  labels:<br>    name: pv004<br>spec:<br>  nfs:<br>    path: /data/volumes/v4<br>    server: stor01<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteMany&quot;</span>,<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]<br>  capacity:<br>    storage: 4Gi<br>---<br>apiVersion: v1<br>kind: PersistentVolume<br>metadata:<br>  name: pv005<br>  labels:<br>    name: pv005<br>spec:<br>  nfs:<br>    path: /data/volumes/v5<br>    server: stor01<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteMany&quot;</span>,<span class="hljs-string">&quot;ReadWriteOnce&quot;</span>]<br>  capacity:<br>    storage: 5Gi<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pv-demo.yaml </span><br>persistentvolume/pv001 created<br>persistentvolume/pv002 created<br>persistentvolume/pv003 created<br>persistentvolume/pv004 created<br>persistentvolume/pv005 created<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pv</span><br>NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM     STORAGECLASS   REASON    AGE<br>pv001     1Gi        RWO,RWX        Retain           Available                                      7s<br>pv002     2Gi        RWO            Retain           Available                                      7s<br>pv003     2Gi        RWO,RWX        Retain           Available                                      7s<br>pv004     4Gi        RWO,RWX        Retain           Available                                      7s<br>pv005     5Gi        RWO,RWX        Retain           Available                                      7s<br></code></pre></td></tr></table></figure>
+
+<h2 id="3、定义PVC"><a href="#3、定义PVC" class="headerlink" title="3、定义PVC"></a>3、定义PVC</h2><p>这里定义了pvc的访问模式为多路读写，该访问模式必须在前面pv定义的访问模式之中。定义PVC申请的大小为2Gi，此时PVC会自动去匹配多路读写且大小为2Gi的PV，匹配成功获取PVC的状态即为Bound</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@k8s-master volumes ~]<span class="hljs-comment"># vim pod-vol-pvc.yaml</span><br>apiVersion: v1<br>kind: PersistentVolumeClaim<br>metadata:<br>  name: mypvc<br>  namespace: default<br>spec:<br>  accessModes: [<span class="hljs-string">&quot;ReadWriteMany&quot;</span>]<br>  resources:<br>    requests:<br>      storage: 2Gi<br>---<br>apiVersion: v1<br>kind: Pod<br>metadata:<br>  name: pod-vol-pvc<br>  namespace: default<br>spec:<br>  containers:<br>  - name: myapp<br>    image: ikubernetes/myapp:v1<br>    volumeMounts:<br>    - name: html<br>      mountPath: /usr/share/nginx/html<br>  volumes:<br>    - name: html<br>      persistentVolumeClaim:<br>        claimName: mypvc<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl apply -f pod-vol-pvc.yaml </span><br>persistentvolumeclaim/mypvc created<br>pod/pod-vol-pvc created<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pv</span><br>NAME      CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM           STORAGECLASS   REASON    AGE<br>pv001     1Gi        RWO,RWX        Retain           Available                                            19m<br>pv002     2Gi        RWO            Retain           Available                                            19m<br>pv003     2Gi        RWO,RWX        Retain           Bound       default/mypvc                            19m<br>pv004     4Gi        RWO,RWX        Retain           Available                                            19m<br>pv005     5Gi        RWO,RWX        Retain           Available                                            19m<br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pvc</span><br>NAME      STATUS    VOLUME    CAPACITY   ACCESS MODES   STORAGECLASS   AGE<br>mypvc     Bound     pv003     2Gi        RWO,RWX                       22s<br></code></pre></td></tr></table></figure>
+
+<h2 id="4、测试访问"><a href="#4、测试访问" class="headerlink" title="4、测试访问"></a>4、测试访问</h2><p>在存储服务器上创建index.html，并写入数据，通过访问Pod进行查看，可以获取到相应的页面。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@stor01 volumes]<span class="hljs-comment"># cd v3/</span><br>[root@stor01 v3]<span class="hljs-comment"># echo &quot;welcome to use pv3&quot; &gt; index.html</span><br>[root@k8s-master volumes]<span class="hljs-comment"># kubectl get pods -o wide</span><br>pod-vol-pvc             1/1       Running   0          3m        10.244.2.39   k8s-node02<br>[root@k8s-master volumes]<span class="hljs-comment"># curl  10.244.2.39</span><br>welcome to use pv3<br></code></pre></td></tr></table></figure>
+
+<h1 id="StorageClass（动态创建pv）"><a href="#StorageClass（动态创建pv）" class="headerlink" title="StorageClass（动态创建pv）"></a>StorageClass（动态创建pv）</h1><p>在pv和pvc使用过程中存在的问题，在pvc申请存储空间时，未必就有现成的pv符合pvc申请的需求，上面nfs在做pvc可以成功的因素是因为我们做了指定的需求处理。那么当PVC申请的存储空间不一定有满足PVC要求的PV事，又该如何处理呢？？？为此，Kubernetes为管理员提供了描述存储”class（类）”的方法（StorageClass）。举个例子，在存储系统中划分一个1TB的存储空间提供给Kubernetes使用，当用户需要一个10G的PVC时，会立即通过restful发送请求，从而让存储空间创建一个10G的image，之后在我们的集群中定义成10G的PV供给给当前的PVC作为挂载使用。在此之前我们的存储系统必须支持restful接口，比如ceph分布式存储，而glusterfs则需要借助第三方接口完成这样的请求。</p>
+<p>StorageClass 中包含 provisioner、parameters 和 reclaimPolicy 字段，当 class 需要动态分配 PersistentVolume 时会使用到。由于StorageClass需要一个独立的存储系统。</p>
+<p> 之前我们部署了PV 和 PVC 的使用方法，但是前面的 PV 都是静态的，什么意思？就是我要使用的一个 PVC 的话就必须手动去创建一个 PV，我们也说过这种方式在很大程度上并不能满足我们的需求，比如我们有一个应用需要对存储的并发度要求比较高，而另外一个应用对读写速度又要求比较高，特别是对于 StatefulSet 类型的应用简单的来使用静态的 PV 就很不合适了，这种情况下我们就需要用到动态 PV，也就是我们今天要讲解的 StorageClass。</p>
+<h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><p>要使用 StorageClass，我们就得安装对应的自动配置程序，比如我们这里存储后端使用的是 nfs，那么我们就需要使用到一个 nfs-client 的自动配置程序，我们也叫它 Provisioner，这个程序使用我们已经配置好的 nfs 服务器，来自动创建持久卷，也就是自动帮我们创建 PV。</p>
+<ul>
+<li>自动创建的 PV 以<code>$&#123;namespace&#125;-$&#123;pvcName&#125;-$&#123;pvName&#125;</code>这样的命名格式创建在 NFS 服务器上的共享数据目录中</li>
+</ul>
+<p><strong>回收策略</strong></p>
+<p>通过persistentVolumeReclaimPolicy字段设置，默认是Delete</p>
+<p>◎ <code>Retain</code> 保留：保留数据，需要手工处理，解绑PVC后，PV保留，状态为<code>Available</code> </p>
+<p>◎ <code>Recycle</code> 回收空间：简单清除文件的操作（例如执行rm -rf /thevolume/* 命令），当这个 PV 被回收后会会清空实际存储数据</p>
+<p>◎ <code>Delete</code> 删除：与PV相连的后端存储完成Volume的删除操作，而当这个 PV 被回收后会以<code>archieved-$&#123;namespace&#125;-$&#123;pvcName&#125;-$&#123;pvName&#125;</code>这样的命名格式存在 NFS 服务器上。</p>
+<p><strong>第一步</strong>：配置 Deployment，将里面的对应的参数替换成我们自己的 nfs 配置（nfs-client.yaml），该pod控制自动创建pv。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">strategy:</span><br>    <span class="hljs-attr">type:</span> <span class="hljs-string">RollingUpdate</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">nfs-client-provisioner</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">nfs-client-provisioner</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">serviceAccountName:</span> <span class="hljs-string">nfs-client-provisioner</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">quay.io/external_storage/nfs-client-provisioner:latest</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-root</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/persistentvolumes</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">PROVISIONER_NAME</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">fuseim.pri/ifs</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">NFS_SERVER</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">NFS_PATH</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">/media/pv01</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-root</span><br>          <span class="hljs-attr">nfs:</span><br>            <span class="hljs-attr">server:</span> <span class="hljs-number">192.168</span><span class="hljs-number">.40</span><span class="hljs-number">.100</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/media/pv01</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>第二步</strong>：将环境变量 NFS_SERVER 和 NFS_PATH 替换，当然也包括下面的 nfs 配置，我们可以看到我们这里使用了一个名为 nfs-client-provisioner 的<code>serviceAccount</code>，所以我们也需要创建一个 sa，然后绑定上对应的权限：（nfs-client-sa.yaml）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner</span><br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner-runner</span><br><span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumeclaims&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;storage.k8s.io&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;storageclasses&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;events&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>, <span class="hljs-string">&quot;patch&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;endpoints&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>, <span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;patch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRoleBinding</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">run-nfs-client-provisioner</span><br><span class="hljs-attr">subjects:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner</span><br>    <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">roleRef:</span><br>  <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-client-provisioner-runner</span><br>  <span class="hljs-attr">apiGroup:</span> <span class="hljs-string">rbac.authorization.k8s.io</span><br></code></pre></td></tr></table></figure>
+
+<p>我们这里新建的一个名为 nfs-client-provisioner 的<code>ServiceAccount</code>，然后绑定了一个名为 nfs-client-provisioner-runner 的<code>ClusterRole</code>，而该<code>ClusterRole</code>声明了一些权限，其中就包括对<code>persistentvolumes</code>的增、删、改、查等权限，所以我们可以利用该<code>ServiceAccount</code>来自动创建 PV。</p>
+<p><strong>第三步</strong>：nfs-client 的 Deployment 声明完成后，我们就可以来创建一个<code>StorageClass</code>对象了：（nfs-client-class.yaml）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">storage.k8s.io/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">StorageClass</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">course-nfs-storage</span><br><span class="hljs-attr">provisioner:</span> <span class="hljs-string">fuseim.pri/ifs</span> <span class="hljs-comment"># or choose another name, must match deployment&#x27;s env PROVISIONER_NAME&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们声明了一个名为 course-nfs-storage 的<code>StorageClass</code>对象，注意下面的<code>provisioner</code>对应的值一定要和上面的<code>Deployment</code>下面的 PROVISIONER_NAME 这个环境变量的值一样。</p>
+<p>现在我们来创建这些资源对象吧：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl create -f nfs-client.yaml</span><br><span class="hljs-meta">$</span><span class="bash"> kubectl create -f nfs-client-sa.yaml</span><br><span class="hljs-meta">$</span><span class="bash"> kubectl create -f nfs-client-class.yaml</span><br></code></pre></td></tr></table></figure>
+
+<p>创建完成后查看下资源状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ kubectl get pods<br>NAME                                             READY     STATUS             RESTARTS   AGE<br>...<br>nfs-client-provisioner-7648b664bc-7f9pk          1/1       Running            0          7h<br>...<br>$ kubectl get storageclass<br>NAME                 PROVISIONER      AGE<br>course-nfs-storage   fuseim.pri/ifs   11s<br></code></pre></td></tr></table></figure>
+
+<h2 id="新建"><a href="#新建" class="headerlink" title="新建"></a>新建</h2><p>上面把<code>StorageClass</code>资源对象创建成功了，接下来我们来通过一个示例测试下动态 PV，首先创建一个 PVC 对象：(test-pvc.yaml)</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolumeClaim</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">test-pvc</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">accessModes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteMany</span><br>  <span class="hljs-attr">resources:</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">storage:</span> <span class="hljs-string">1Mi</span><br></code></pre></td></tr></table></figure>
+
+<p>我们这里声明了一个 PVC 对象，采用 ReadWriteMany 的访问模式，请求 1Mi 的空间，但是我们可以看到上面的 PVC 文件我们没有标识出任何和 StorageClass 相关联的信息，那么如果我们现在直接创建这个 PVC 对象能够自动绑定上合适的 PV 对象吗？显然是不能的(前提是没有合适的 PV)，我们这里有两种方法可以来利用上面我们创建的 StorageClass 对象来自动帮我们创建一个合适的 PV:</p>
+<ul>
+<li>第一种方法：在这个 PVC 对象中添加一个声明 StorageClass 对象的标识，这里我们可以利用一个 annotations 属性来标识，如下：</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolumeClaim</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">test-pvc</span><br>  <span class="hljs-attr">annotations:</span><br>    <span class="hljs-attr">volume.beta.kubernetes.io/storage-class:</span> <span class="hljs-string">&quot;course-nfs-storage&quot;</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">accessModes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteMany</span><br>  <span class="hljs-attr">resources:</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">storage:</span> <span class="hljs-string">1Mi</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>第二种方法：我们可以设置这个 course-nfs-storage 的 StorageClass 为 Kubernetes 的默认存储后端，我们可以用 kubectl patch 命令来更新：</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl patch storageclass course-nfs-storage -p <span class="hljs-string">&#x27;&#123;&quot;metadata&quot;: &#123;&quot;annotations&quot;:&#123;&quot;storageclass.kubernetes.io/is-default-class&quot;:&quot;true&quot;&#125;&#125;&#125;&#x27;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上面这两种方法都是可以的，当然为了不影响系统的默认行为，我们这里还是采用第一种方法，直接创建即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl create -f test-pvc.yaml</span><br>persistentvolumeclaim &quot;test-pvc&quot; created<br><span class="hljs-meta">$</span><span class="bash"> kubectl get pvc</span><br>NAME         STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE<br>...<br>test-pvc     Bound     pvc-73b5ffd2-8b4b-11e8-b585-525400db4df7   1Mi        RWX            course-nfs-storage    2m<br>...<br></code></pre></td></tr></table></figure>
+
+<p>我们可以看到一个名为 test-pvc 的 PVC 对象创建成功了，状态已经是 Bound 了，是不是也产生了一个对应的 VOLUME 对象，最重要的一栏是 STORAGECLASS，现在是不是也有值了，就是我们刚刚创建的 StorageClass 对象 course-nfs-storage。</p>
+<p>然后查看下 PV 对象呢：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get pv</span><br>NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                STORAGECLASS          REASON    AGE<br>...<br>pvc-73b5ffd2-8b4b-11e8-b585-525400db4df7   1Mi        RWX            Delete           Bound       default/test-pvc     course-nfs-storage              8m<br>...<br></code></pre></td></tr></table></figure>
+
+<p>可以看到是不是自动生成了一个关联的 PV 对象，访问模式是 RWX，回收策略是 Delete，这个 PV 对象并不是我们手动创建的吧，这是通过我们上面的 StorageClass 对象自动创建的。这就是 StorageClass 的创建方法。</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>接下来我们还是用一个简单的示例来测试下我们上面用 StorageClass 方式声明的 PVC 对象吧：(test-pod.yaml)</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">test-pod</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">test-pod</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">busybox</span><br>    <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>    <span class="hljs-attr">command:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;/bin/sh&quot;</span><br>    <span class="hljs-attr">args:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;-c&quot;</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1&quot;</span><br>    <span class="hljs-attr">volumeMounts:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-pvc</span><br>      <span class="hljs-attr">mountPath:</span> <span class="hljs-string">&quot;/mnt&quot;</span><br>  <span class="hljs-attr">restartPolicy:</span> <span class="hljs-string">&quot;Never&quot;</span><br>  <span class="hljs-attr">volumes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-pvc</span><br>    <span class="hljs-attr">persistentVolumeClaim:</span><br>      <span class="hljs-attr">claimName:</span> <span class="hljs-string">test-pvc</span><br></code></pre></td></tr></table></figure>
+
+<p>上面这个 Pod 非常简单，就是用一个 busybox 容器，在 /mnt 目录下面新建一个 SUCCESS 的文件，然后把 /mnt 目录挂载到上面我们新建的 test-pvc 这个资源对象上面了，要验证很简单，只需要去查看下我们 nfs 服务器上面的共享数据目录下面是否有 SUCCESS 这个文件即可：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl create -f test-pod.yaml</span><br>pod &quot;test-pod&quot; created<br></code></pre></td></tr></table></figure>
+
+<p>然后我们可以在 nfs 服务器的共享数据目录下面查看下数据：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> ls /media/pv01/</span><br>default-test-pvc-pvc-73b5ffd2-8b4b-11e8-b585-525400db4df7<br></code></pre></td></tr></table></figure>
+
+<p>我们可以看到下面有名字很长的文件夹，这个文件夹的命名方式是不是和我们上面的规则：**${namespace}-${pvcName}-${pvName}**是一样的，再看下这个文件夹下面是否有其他文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> ls /data/k8s/default-test-pvc-pvc-73b5ffd2-8b4b-11e8-b585-525400db4df7</span><br>SUCCESS<br></code></pre></td></tr></table></figure>
+
+<p>我们看到下面有一个 SUCCESS 的文件，是不是就证明我们上面的验证是成功的啊。</p>
+<p>另外我们可以看到我们这里是手动创建的一个 PVC 对象，在实际工作中，使用 StorageClass 更多的是 StatefulSet 类型的服务，StatefulSet 类型的服务我们也可以通过一个 volumeClaimTemplates 属性来直接使用 StorageClass，如下：(test-statefulset-nfs.yaml)</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">nfs-web</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">serviceName:</span> <span class="hljs-string">&quot;nginx&quot;</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">nfs-web</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">nfs-web</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">terminationGracePeriodSeconds:</span> <span class="hljs-number">10</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">nginx</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:1.7.9</span><br>        <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">containerPort:</span> <span class="hljs-number">80</span><br>          <span class="hljs-attr">name:</span> <span class="hljs-string">web</span><br>        <span class="hljs-attr">volumeMounts:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">www</span><br>          <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/usr/share/nginx/html</span><br>  <span class="hljs-attr">volumeClaimTemplates:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">www</span><br>      <span class="hljs-attr">annotations:</span><br>        <span class="hljs-attr">volume.beta.kubernetes.io/storage-class:</span> <span class="hljs-string">course-nfs-storage</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">accessModes:</span> [ <span class="hljs-string">&quot;ReadWriteOnce&quot;</span> ]<br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">requests:</span><br>          <span class="hljs-attr">storage:</span> <span class="hljs-string">10Mi</span><br></code></pre></td></tr></table></figure>
+
+<p>实际上 volumeClaimTemplates 下面就是一个 PVC 对象的模板，就类似于我们这里 StatefulSet 下面的 template，实际上就是一个 Pod 的模板，我们不单独创建成 PVC 对象，而用这种模板就可以动态的去创建了对象了，这种方式在 StatefulSet 类型的服务下面使用得非常多。</p>
+<p>直接创建上面的对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl create -f test-statefulset-nfs.yaml</span><br>statefulset.apps &quot;nfs-web&quot; created<br><span class="hljs-meta">$</span><span class="bash"> kubectl get pods</span><br>NAME                                             READY     STATUS              RESTARTS   AGE<br>...<br>nfs-web-0                                        1/1       Running             0          1m<br>nfs-web-1                                        1/1       Running             0          1m<br>nfs-web-2                                        1/1       Running             0          33s<br>...<br></code></pre></td></tr></table></figure>
+
+<p>创建完成后可以看到上面的3个 Pod 已经运行成功，然后查看下 PVC 对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get pvc</span><br>NAME            STATUS    VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS          AGE<br>...<br>www-nfs-web-0   Bound     pvc-cc36b3ce-8b50-11e8-b585-525400db4df7   1Gi        RWO            course-nfs-storage    2m<br>www-nfs-web-1   Bound     pvc-d38285f9-8b50-11e8-b585-525400db4df7   1Gi        RWO            course-nfs-storage    2m<br>www-nfs-web-2   Bound     pvc-e348250b-8b50-11e8-b585-525400db4df7   1Gi        RWO            course-nfs-storage    1m<br>...<br></code></pre></td></tr></table></figure>
+
+<p>我们可以看到是不是也生成了3个 PVC 对象，名称由模板名称 name 加上 Pod 的名称组合而成，这3个 PVC 对象也都是 绑定状态了，很显然我们查看 PV 也可以看到对应的3个 PV 对象：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> kubectl get pv</span><br>NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM                   STORAGECLASS          REASON    AGE<br>...                                                        1d<br>pvc-cc36b3ce-8b50-11e8-b585-525400db4df7   1Gi        RWO            Delete           Bound       default/www-nfs-web-0   course-nfs-storage              4m<br>pvc-d38285f9-8b50-11e8-b585-525400db4df7   1Gi        RWO            Delete           Bound       default/www-nfs-web-1   course-nfs-storage              4m<br>pvc-e348250b-8b50-11e8-b585-525400db4df7   1Gi        RWO            Delete           Bound       default/www-nfs-web-2   course-nfs-storage              4m<br>...<br></code></pre></td></tr></table></figure>
+
+<p>查看 nfs 服务器上面的共享数据目录：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta">$</span><span class="bash"> ls /media/pv01/</span><br>...<br>default-www-nfs-web-0-pvc-cc36b3ce-8b50-11e8-b585-525400db4df7<br>default-www-nfs-web-1-pvc-d38285f9-8b50-11e8-b585-525400db4df7<br>default-www-nfs-web-2-pvc-e348250b-8b50-11e8-b585-525400db4df7<br>...<br></code></pre></td></tr></table></figure>
+
+<p>是不是也有对应的3个数据目录，这就是我们的 StorageClass 的使用方法，对于 StorageClass 多用于 StatefulSet 类型的服务，在后面的课程中我们还学不断的接触到。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/06/04/k8s%E4%B9%8BconfigMap%E5%92%8Csercet/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">k8s之configMap和sercet</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/05/26/k8s%E4%B9%8Bpod%E6%8E%A7%E5%88%B6%E5%99%A8/">
+                        <span class="hidden-mobile">k8s之pod控制器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

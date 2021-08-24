@@ -1,0 +1,854 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 50vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="自在技术博客 专心一点">
+              
+            </span>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          >
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/05/19/registry%20%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E9%85%8D%E7%BD%AE/" target="_self">
+          registry 私有仓库配置
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/05/19/registry%20%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E9%85%8D%E7%BD%AE/" target="_self">
+          
+          
+            
+          
+          介绍Registry是一个几种存放image并对外提供上传下载以及一系列API的服务。可以很容易和本地源代码以及远端Git服务的关系相对应。
+搭建1234# 启动# -e REGISTRY_STORAGE_DELETE_ENABLED=true 开启允许删除# -v /data/registry:/var/lib/registry 持久化存储目录docker run --name docker-r
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-05-19 17:00" pubdate>
+              2020-05-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/kubernetes/">kubernetes</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/docker/">docker</a>
+            
+              <a href="/blog/tags/k8s/">k8s</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/05/14/docker%E4%BF%AE%E6%94%B9%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95%E5%92%8C%E8%BF%9E%E6%8E%A5%E7%A7%81%E5%BA%93/" target="_self">
+          docker修改存储目录和连接私库
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/05/14/docker%E4%BF%AE%E6%94%B9%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95%E5%92%8C%E8%BF%9E%E6%8E%A5%E7%A7%81%E5%BA%93/" target="_self">
+          
+          
+            
+          
+          两种方式：
+方式一：
+vim /etc/docker/daemon.json
+1234567891011121314151617&#123;  &quot;registry-mirrors&quot;: [     &quot;https://bxsfpjcb.mirror.aliyuncs.com&quot;  ],  &quot;max-concurrent-downloads&quot;: 
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-05-14 18:27" pubdate>
+              2020-05-14
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/kubernetes/">kubernetes</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/docker/">docker</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/30/openldap%20%E5%AE%89%E8%A3%85/" target="_self">
+          openldap 安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/30/openldap%20%E5%AE%89%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          介绍LDAP（Lightweight Directory Access Protocol）是基于X.500标准的轻量目录访问协议。它比X.500具有更快的查询速度和更低的资源消耗，精简灵活，支持TCP/IP协议。LDAP为用户管理提供了统一认证服务，解决了办公环境中多套用户认证和项目管理系统相互独立分散的难题，而OpenLDAP 是LDAP的开源实现。
+其实就是各个支持ldap协议的应用，统一账号
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-30 12:27" pubdate>
+              2020-04-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/ldap/">ldap</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/26/flink%20%E9%83%A8%E7%BD%B2/" target="_self">
+          flink 部署
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/26/flink%20%E9%83%A8%E7%BD%B2/" target="_self">
+          
+          
+            
+          
+          介绍Flink 是新的stream计算引擎，用java实现。既可以处理stream data也可以处理batch data，可以同时兼顾Spark以及Spark streaming的功能，与Spark不同的是，Flink本质上只有stream的概念，batch被认为是special stream。Flink在运行中主要有三个组件组成，JobClient，JobManager 和 TaskManag
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-26 13:00" pubdate>
+              2020-04-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/flink/">flink</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/21/CA%20%E8%AF%81%E4%B9%A6%E8%AF%A6%E8%A7%A3/" target="_self">
+          CA 证书详解
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/21/CA%20%E8%AF%81%E4%B9%A6%E8%AF%A6%E8%A7%A3/" target="_self">
+          
+          
+            
+          
+          介绍博客链接 该博客非常详细的讲解了数字证书及CA
+简单说明：
+
+CA：权威认证机构
+PKI：一种标准
+编码格式
+X.509 DER(Distinguished Encoding Rules)编码，后缀为：.der .cer .crt
+X.509 BASE64编码(PEM格式)，后缀为：.pem .cer .crt
+
+
+server.key：私钥，正式环境中，私钥一般都有权威认证机构提供。
+ser
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-21 20:00" pubdate>
+              2020-04-21
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/CA/">CA</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/02/java%E8%BF%9B%E7%A8%8Bcpu%E9%AB%98%E6%8E%92%E6%9F%A5/" target="_self">
+          java进程cpu高排查
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/02/java%E8%BF%9B%E7%A8%8Bcpu%E9%AB%98%E6%8E%92%E6%9F%A5/" target="_self">
+          
+          
+            
+          
+          方法一：
+1.jps 获取Java进程的PID。
+2.jstack pid &gt;&gt; java.txt 导出CPU占用高进程的线程栈。
+3.top -H -p PID 查看对应进程的哪个线程占用CPU过高。
+4.echo “obase=16; PID” | bc 将线程的PID转换为16进制,大写转换为小写。
+5.在第二步导出的Java.txt中查找转换成为16进制的线程PID。找到对应的
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-02 21:29" pubdate>
+              2020-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/java/">java</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/02/iptables%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
+          iptables常用命令
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/02/iptables%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
+          
+          
+            
+          
+          1、删除现有规则
+在开始建立新的规则之前，您可能需要清理所有默认规则和现有规则。使用iptables如下所示的命令来做这个。
+1234567iptables -F 　　　　　　#警告：当前命令后将切断linux对外的一切端口请求，请确保你还能连接到vnc或主机上(or)iptables --flush# 删除单条记录iptables -nL --line-numberiptables -D INP
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-02 21:29" pubdate>
+              2020-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/iptables/">iptables</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/04/02/mysql%208.0%20%E5%AE%89%E8%A3%85/" target="_self">
+          mysql8.0 安装
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/04/02/mysql%208.0%20%E5%AE%89%E8%A3%85/" target="_self">
+          
+          
+            
+          
+          介绍mysql8 安装，复制以下脚本执行即可
+脚本123456789101112131415161718192021222324#!/bin/bash# 安装mysql8.0rpm -qa|grep mysql|awk &#x27;&#123;print &quot;yum -y remove\t&quot; $1&#125;&#x27;|shrpm -qa|grep mariadb|awk &#
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-02 10:49" pubdate>
+              2020-04-02
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/mysql/">mysql</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/03/27/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E8%84%9A%E6%9C%AC/" target="_self">
+          简单的日志收集脚本
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/03/27/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E8%84%9A%E6%9C%AC/" target="_self">
+          
+          
+            
+          
+          介绍用于收集服务日志，显示到web浏览器中，使用于单台服务器，只是简单的日志收集脚本。
+该脚本是通过cgi-bin显示到web上，所有需要安装httpd服务，httpd服务天生支持cgi。
+运行环境httpd 安装1yum -y install httpd
+
+12vim /etc/httpd/conf/httpd.conf# 修改以下内容
+
+12345678910111213# 监听端口Liste
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-27 10:27" pubdate>
+              2020-03-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E8%84%9A%E6%9C%AC/">脚本</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/shell%E8%84%9A%E6%9C%AC/">shell脚本</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/blog/2020/03/26/zookeeper%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
+          zookeeper 集群搭建
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/blog/2020/03/26/zookeeper%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
+          
+          
+            
+          
+          介绍Zookeeper原理简介
+ZooKeeper是一个开放源码的分布式应用程序协调服务，它包含一个简单的原语集，分布式应用程序可以基于它实现同步服务，配置维护和命名服务等。
+Zookeeper设计目的
+
+最终一致性：client不论连接到那个Server，展示给它的都是同一个视图。
+可靠性：具有简单、健壮、良好的性能、如果消息m被到一台服务器接收，那么消息m将被所有服务器接收。
+实时性：Zook
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-03-26 15:27" pubdate>
+              2020-03-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/blog/tags/zookeeper/">zookeeper</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <a class="extend prev" rel="prev" href="/blog/page/4/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/blog/">1</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/3/#board">3</a><a class="page-number" href="/blog/page/4/#board">4</a><span class="page-number current">5</span><a class="page-number" href="/blog/page/6/#board">6</a><a class="page-number" href="/blog/page/7/#board">7</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/13/#board">13</a><a class="extend next" rel="next" href="/blog/page/6/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>openldap 安装 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="openldap 安装">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-04-30 12:27" pubdate>
+        2020年4月30日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.5k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      21
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">openldap 安装</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><font color='32CD32'>LDAP</font>（Lightweight Directory Access Protocol）是基于X.500标准的轻量目录访问协议。它比X.500具有更快的查询速度和更低的资源消耗，精简灵活，支持TCP/IP协议。LDAP为用户管理提供了统一认证服务，解决了办公环境中多套用户认证和项目管理系统相互独立分散的难题，而OpenLDAP 是LDAP的开源实现。</p>
+<p>其实就是各个支持ldap协议的应用，统一账号的地方，而不需要在每个应用上注册管理单独账号。</p>
+<p><font color='32CD32'>cn ：</font>common name 用户名</p>
+<p>对象的属性为CN，例如一个用户的名字为：张三，那么“张三”就是一个CN。</p>
+<p><font color='32CD32'>ou : </font>OrganizationUnit 组织单位</p>
+<p>o和ou都是ldap目录结构的一个属性，建立目录的时候可选新建o，ou 等。在配置我司交换设备ldap的时候具体是配置ou，o还是cn等，要具体看ldap服务器的相应目录是什么属性。</p>
+<p><font color='32CD32'>o：</font>organizationName 组织名</p>
+<p><font color='32CD32'>uid: </font>userid</p>
+<p>对象的属性为uid，例如我司一个员工的名字为：zsq，他的UID为：z02691，ldap查询的时候可以根据cn，也可以根据uid。配置ldap查询的时候需要考虑用何种查询方式。我司两种方式都支持，具体我司设备配置根据何种方式查询需要有ldap服务器的相关配置来决定。</p>
+<p><font color='32CD32'>dc：</font>域组件</p>
+<p>DC类似于dns中的每个元素，例如h3c.com，“.”符号分开的两个单词可以看成两个DC，</p>
+<p><font color='32CD32'>dn：</font>Distinguished Name</p>
+<p>类似于DNS，DN与DNS的区别是：组成DN的每个值都有一个属性类型，例如:H3c.com是一个dns，那么用dn表示为：dc=h3c,dc=com 级别越高越靠后。H3c和com的属性都是DC。DN可以表示为ldap的某个目录，也可以表示成目录中的某个对象，这个对象可以是用户等。</p>
+<blockquote>
+<p>例如：CN=test,OU=developer,DC=domainname,DC=com </p>
+<p>在上面的代码中 cn=test 可能代表一个用户名，ou=developer 代表一个 active directory 中的组织单位。这句话的含义可能就是说明 test 这个对象处在domainname.com 域的 developer 组织单元中。</p>
+</blockquote>
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p><font color='32CD32'>实验环境</font></p>
+<table>
+<thead>
+<tr>
+<th align="center">主机名</th>
+<th align="center">IP</th>
+<th align="center">安装服务</th>
+<th align="center">系统版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">server</td>
+<td align="center">192.168.40.100</td>
+<td align="center">openldap openldap-servers openldap-clients</td>
+<td align="center">centos7.4</td>
+</tr>
+<tr>
+<td align="center">client</td>
+<td align="center">192.168.40.101</td>
+<td align="center">openldap openldap-servers openldap-clients</td>
+<td align="center">centos7.4</td>
+</tr>
+</tbody></table>
+<p><font color='32CD32'>关闭防火墙和selinux</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl stop firewalld<br>systemctl <span class="hljs-built_in">disable</span> firewalld<br>setenforce 0<br>sed -i <span class="hljs-string">&quot;s/SELINUX=enforcing/SELINUX=disabled/g&quot;</span> /etc/selinux/config<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>配置epel源</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install epel-release -y<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>OpenLDAP安装</font></p>
+<p>注：以下操作没有特殊说明，均在server主机操作。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install openldap openldap-servers openldap-clients -y<br>cp /usr/share/openldap-servers/DB_CONFIG.example /var/lib/ldap/DB_CONFIG<br>systemctl start slapd<br>systemctl <span class="hljs-built_in">enable</span> slapd<br>systemctl status slapd<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>配置管理员密码</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">slappasswd -s 111111<br>&#123;SSHA&#125;AjIAg98NFvRRlhoBOvsfVqMeAGZwi5O9<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>生成的密码写入到 rootpwd.ldif 文件中</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat &lt;&lt;<span class="hljs-string">EOF&gt;rootpwd.ldif</span><br><span class="hljs-string">dn: olcDatabase=&#123;0&#125;config,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">add: olcRootPW</span><br><span class="hljs-string">olcRootPW: &#123;SSHA&#125;AjIAg98NFvRRlhoBOvsfVqMeAGZwi5O9</span><br><span class="hljs-string">EOF</span><br><br><span class="hljs-comment"># 相关参数说明：</span><br><span class="hljs-comment"># olcRootPW参数值为slappasswd命令的结果输出。</span><br><span class="hljs-comment"># olcRootPW: &#123;SSHA&#125;AjIAg98NFvRRlhoBOvsfVqMeAGZwi5O9指定了属性值。</span><br><span class="hljs-comment"># ldif文件是LDAP中数据交换的文件格式。文件内容采用的是key-value形式。注意value后面不能有空格。</span><br><span class="hljs-comment"># olc（OnlineConfiguration）表示写入LDAP后立即生效。</span><br><span class="hljs-comment"># changetype: modify表示修改entry，此外changetype的值也可以是add,delete等。</span><br><span class="hljs-comment"># add: olcRootPW表示对这个entry新增olcRootPW的属性。</span><br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>写入配置</font></p>
+<p>执行命令，添加 rootpwd.ldif 配置 到 openldap 中：ldap所有修改操作都需要编写单独的文件，切记不要直接去修改原有的配置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldapadd -Y EXTERNAL -H ldapi:/// -f rootpwd.ldif<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>导入schema</font></p>
+<p>schema包含支持特殊场景的相关属性，可选择性导入或全部导入</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ls /etc/openldap/schema/*.ldif | <span class="hljs-keyword">while</span> <span class="hljs-built_in">read</span> i; <span class="hljs-keyword">do</span> ldapadd -Y EXTERNAL -H ldapi:/// -f <span class="hljs-variable">$i</span>; <span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>新建默认域配置文件</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat &lt;&lt;<span class="hljs-string">EOF&gt; domain.ldif</span><br><span class="hljs-string">dn: olcDatabase=&#123;1&#125;monitor,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">replace: olcAccess</span><br><span class="hljs-string">olcAccess: &#123;0&#125;to * by dn.base=&quot;gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth&quot; read by dn.base=&quot;cn=Manager,dc=mydomain,dc=com&quot; read by * none</span><br><span class="hljs-string"></span><br><span class="hljs-string"># olcDatabase=&#123;2&#125;hdb，改配置名需要到/etc/openldap/slapd.d/cn\=config/目录查看，不是都一样的，需要修改</span><br><span class="hljs-string">dn: olcDatabase=&#123;2&#125;hdb,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">replace: olcSuffix</span><br><span class="hljs-string">olcSuffix: dc=mydomain,dc=com</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: olcDatabase=&#123;2&#125;hdb,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">replace: olcRootDN</span><br><span class="hljs-string">olcRootDN: cn=Manager,dc=mydomain,dc=com</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: olcDatabase=&#123;2&#125;hdb,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">add: olcRootPW</span><br><span class="hljs-string"># 上面生成的密码填写到这，或可以重新生成一个填写，与管理员密码区分</span><br><span class="hljs-string">olcRootPW: &#123;SSHA&#125;7AA7V1xy++LVZcUbBWYYM9/81wfODiIK</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: olcDatabase=&#123;2&#125;hdb,cn=config</span><br><span class="hljs-string">changetype: modify</span><br><span class="hljs-string">add: olcAccess</span><br><span class="hljs-string">olcAccess: &#123;0&#125;to attrs=userPassword,shadowLastChange by dn=&quot;cn=Manager,dc=mydomain,dc=com&quot; write by anonymous auth by self write by * none</span><br><span class="hljs-string">olcAccess: &#123;1&#125;to dn.base=&quot;&quot; by * read</span><br><span class="hljs-string">olcAccess: &#123;2&#125;to * by dn=&quot;cn=Manager,dc=mydomain,dc=com&quot; write by * read</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>写入配置</font></p>
+<p>执行命令，添加 domain.ldif 配置 到 openldap 中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldapmodify -Y EXTERNAL -H ldapi:/// -f domain.ldif<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>添加基本信息</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">cat &lt;&lt;<span class="hljs-string">EOF&gt; basedomain.ldif</span><br><span class="hljs-string">dn: dc=mydomain,dc=com</span><br><span class="hljs-string">objectClass: top</span><br><span class="hljs-string">objectClass: dcObject</span><br><span class="hljs-string">objectclass: organization</span><br><span class="hljs-string">o: mydomain com</span><br><span class="hljs-string">dc: mydomain</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: cn=Manager,dc=mydomain,dc=com</span><br><span class="hljs-string">objectClass: organizationalRole</span><br><span class="hljs-string">cn: Manager</span><br><span class="hljs-string">description: Directory Manager</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: ou=People,dc=mydomain,dc=com</span><br><span class="hljs-string">objectClass: organizationalUnit</span><br><span class="hljs-string">ou: People</span><br><span class="hljs-string"></span><br><span class="hljs-string">dn: ou=Group,dc=mydomain,dc=com</span><br><span class="hljs-string">objectClass: organizationalUnit</span><br><span class="hljs-string">ou: Group</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>写入</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldapadd -x -D cn=Manager,dc=mydomain,dc=com -W -f basedomain.ldif<br></code></pre></td></tr></table></figure>
+
+<p><font color='32CD32'>查看信息</font></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldapsearch -LLL -W -x -D <span class="hljs-string">&quot;cn=Manager,dc=mydomain,dc=com&quot;</span> -H ldap://localhost -b<span class="hljs-string">&quot;dc=mydomain,dc=com&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果没有报错，则openldap服务端安装成功。</p>
+<h1 id="安装-ldapadmin-web-管理"><a href="#安装-ldapadmin-web-管理" class="headerlink" title="安装 ldapadmin web 管理"></a>安装 ldapadmin web 管理</h1><p>在OpenLDAP运行节点安装ldapadmin工具包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y httpd php php-mbstring php-pear phpldapadmin<br></code></pre></td></tr></table></figure>
+
+<p>修改 /etc/httpd/httpd.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># line 86: 修改admin邮箱地址</span><br>ServerAdmin root@openldap.mydomain.world<br><br><span class="hljs-comment"># line 95: 修改主机域名</span><br>ServerName www.mydomain.com:80<br><br><span class="hljs-comment"># line 152: 修改成如下内容：</span><br>AllowOverride All<br><br><span class="hljs-comment"># line 165: 添加可访问目录名的文件名称</span><br>DirectoryIndex index.html index.cgi index.php<br><br><span class="hljs-comment"># 在文件末尾增加如下两部分内容</span><br><span class="hljs-comment"># server&#x27;s response header</span><br>ServerTokens Prod<br><br><span class="hljs-comment"># keepalive is ON</span><br>KeepAlive On<br></code></pre></td></tr></table></figure>
+
+<p>启动Apache服务并设置开机自启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl start httpd<br>systemctl <span class="hljs-built_in">enable</span> httpd<br></code></pre></td></tr></table></figure>
+
+<p>编辑 /etc/phpldapadmin/config.php</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#注释掉398行，并取消397行的注释，修改后内容如下：</span><br><span class="hljs-variable">$servers</span>-&gt;setValue(<span class="hljs-string">&#x27;login&#x27;</span>,<span class="hljs-string">&#x27;attr&#x27;</span>,<span class="hljs-string">&#x27;dn&#x27;</span>);<br>// <span class="hljs-variable">$servers</span>-&gt;setValue(<span class="hljs-string">&#x27;login&#x27;</span>,<span class="hljs-string">&#x27;attr&#x27;</span>,<span class="hljs-string">&#x27;uid&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<p>编辑 /etc/httpd/conf.d/phpldapadmin.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">&lt;Directory/usr/share/phpldapadmin/htdocs&gt;<br>  &lt;IfModule mod_authz_core.c&gt;<br>    <span class="hljs-comment"># Apache 2.4</span><br>    Require <span class="hljs-built_in">local</span><br>    Require all granted<br>  &lt;/IfModule&gt;<br></code></pre></td></tr></table></figure>
+
+<p>重启Apache服务使配置生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl restart httpd<br></code></pre></td></tr></table></figure>
+
+<p>访问</p>
+<p>账号：cn=Manager,dc=mydomain,dc=com</p>
+<p>密码：111111</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl http://192.168.40.100/ldapadmin/<br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/ldap/">ldap</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/05/14/docker%E4%BF%AE%E6%94%B9%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95%E5%92%8C%E8%BF%9E%E6%8E%A5%E7%A7%81%E5%BA%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">docker修改存储目录和连接私库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/04/26/flink%20%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">flink 部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

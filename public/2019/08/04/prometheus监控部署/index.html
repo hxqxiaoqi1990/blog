@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>prometheus+grafana监控部署 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="prometheus+grafana监控部署">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2019-08-04 11:00" pubdate>
+        2019年8月4日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      17
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">prometheus+grafana监控部署</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>Prometheus是一个开源监控系统，它前身是SoundCloud的警告工具包。从2012年开始，许多公司和组织开始使用Prometheus。该项目的开发人员和用户社区非常活跃，越来越多的开发人员和用户参与到该项目中。目前它是一个独立的开源项目，且不依赖与任何公司。为了强调这点和明确该项目治理结构，Prometheus在2016年继Kurberntes之后，加入了Cloud Native Computing Foundation。</p>
+<h1 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h1><p>监控机安装：192.168.1.24</p>
+<ol>
+<li>安装prometheus，监控服务</li>
+<li>安装node-exporter，节点数据收集服务</li>
+<li>安装alertmanager，报警服务</li>
+<li>安装grafana，图形化展示服务</li>
+</ol>
+<h2 id="一、监控机安装prometheus"><a href="#一、监控机安装prometheus" class="headerlink" title="一、监控机安装prometheus"></a>一、监控机安装prometheus</h2><h3 id="1、安装命令"><a href="#1、安装命令" class="headerlink" title="1、安装命令"></a>1、安装命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>wget https://github.com/prometheus/prometheus/releases/download/v2.12.0/prometheus-2.12.0.linux-amd64.tar.gz<br><br>tar xf prometheus-2.12.0.linux-amd64.tar.gz<br><span class="hljs-built_in">cd</span> prometheus-2.12.0.linux-amd64<br><br><span class="hljs-comment"># 根据下面yml配置文件配置需要信息</span><br>vim prometheus.yml<br><br><span class="hljs-comment"># 启动</span><br>nohup ./prometheus --config.file=./prometheus.yml &amp;<br><br><span class="hljs-comment"># 访问prometheus</span><br>http://192.168.1.24:9090<br></code></pre></td></tr></table></figure>
+
+<h3 id="2、配置修改：vim-prometheus-yml"><a href="#2、配置修改：vim-prometheus-yml" class="headerlink" title="2、配置修改：vim prometheus.yml"></a>2、配置修改：vim prometheus.yml</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">global:</span><br>  <span class="hljs-comment"># 每隔15秒向pushgateway采集一次指标数据</span><br>  <span class="hljs-attr">scrape_interval:</span>    <span class="hljs-string">15s</span> <br>  <span class="hljs-comment"># 每隔15秒根据所配置的规则集，进行规则计算</span><br>  <span class="hljs-attr">evaluation_interval:</span> <span class="hljs-string">15s</span> <br><br><span class="hljs-attr">alerting:</span><br>  <span class="hljs-attr">alertmanagers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">static_configs:</span><br>  <span class="hljs-comment"># 设置altermanager的地址，altermanager报警规则服务</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targets:</span> [<span class="hljs-string">&#x27;192.168.1.24:9093&#x27;</span>]<br><br>  <span class="hljs-comment"># 指定所配置报价模板文件，下面给出模板配置</span><br><span class="hljs-attr">rule_files:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;rules.yml&quot;</span><br><br><span class="hljs-attr">scrape_configs:</span><br>  <span class="hljs-comment"># 用于获取被控主机数据，可以添加多条</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">&#x27;测试-25&#x27;</span><br>    <span class="hljs-attr">static_configs:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">targets:</span> [<span class="hljs-string">&#x27;192.168.1.25:9100&#x27;</span>]<br> <br></code></pre></td></tr></table></figure>
+<h3 id="3、rules-yml报警模板配置"><a href="#3、rules-yml报警模板配置" class="headerlink" title="3、rules.yml报警模板配置"></a>3、rules.yml报警模板配置</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">groups:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">down</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">&quot;down报警&quot;</span><br>    <span class="hljs-attr">expr:</span> <span class="hljs-string">up</span> <span class="hljs-string">==</span> <span class="hljs-number">0</span><br>    <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">warning</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">summary:</span> <span class="hljs-string">&quot;down报警&quot;</span><br>      <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;报警时间:&quot;</span><br>      <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;已使用：<span class="hljs-template-variable">&#123;&#123; $value &#125;&#125;</span>&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">memory</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">&quot;内存报警&quot;</span><br>    <span class="hljs-attr">expr:</span> <span class="hljs-string">((node_memory_MemTotal_bytes</span> <span class="hljs-string">-(node_memory_MemFree_bytes+node_memory_Buffers_bytes+node_memory_Cached_bytes)</span> <span class="hljs-string">)/node_memory_MemTotal_bytes</span> <span class="hljs-string">)</span> <span class="hljs-string">*</span> <span class="hljs-number">100</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">90</span><br>    <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">warning</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">summary:</span> <span class="hljs-string">&quot;内存报警&quot;</span><br>      <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;报警时间:&quot;</span><br>      <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;已使用：<span class="hljs-template-variable">&#123;&#123; $value &#125;&#125;</span>%&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">cpu</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">&quot;cpu报警&quot;</span><br>    <span class="hljs-attr">expr:</span> <span class="hljs-number">100</span> <span class="hljs-bullet">-</span> <span class="hljs-string">((avg</span> <span class="hljs-string">by</span> <span class="hljs-string">(instance,job,env)(irate(node_cpu_seconds_total&#123;mode=&quot;idle&quot;&#125;[30s])))</span> <span class="hljs-string">*100)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">90</span><br>    <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">warning</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">summary:</span> <span class="hljs-string">&quot;cpu报警&quot;</span><br>      <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;报警时间:&quot;</span><br>      <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;已使用：<span class="hljs-template-variable">&#123;&#123; $value &#125;&#125;</span>%&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">disk</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">&quot;disk报警&quot;</span><br>    <span class="hljs-attr">expr:</span> <span class="hljs-number">100</span> <span class="hljs-bullet">-</span> <span class="hljs-string">(node_filesystem_avail_bytes&#123;fstype</span> <span class="hljs-type">!~</span> <span class="hljs-string">&quot;nfs|rpc_pipefs|rootfs|tmpfs&quot;</span><span class="hljs-string">,device!~&quot;/etc/auto.misc|/dev/mapper/centos-home&quot;,mountpoint</span> <span class="hljs-type">!~</span> <span class="hljs-string">&quot;/boot|/net|/selinux&quot;</span><span class="hljs-string">&#125;</span> <span class="hljs-string">/node_filesystem_size_bytes&#123;fstype</span> <span class="hljs-type">!~</span> <span class="hljs-string">&quot;nfs|rpc_pipefs|rootfs|tmpfs&quot;</span><span class="hljs-string">,device!~&quot;/etc/auto.misc|/dev/mapper/centos-home&quot;,mountpoint</span> <span class="hljs-type">!~</span> <span class="hljs-string">&quot;/boot|/net|/selinux&quot;</span><span class="hljs-string">&#125;</span> <span class="hljs-string">)</span> <span class="hljs-string">*</span> <span class="hljs-number">100</span>  <span class="hljs-string">&gt;</span> <span class="hljs-number">80</span><br>    <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">warning</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">summary:</span> <span class="hljs-string">&quot;disk报警&quot;</span><br>      <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;报警时间:&quot;</span><br>      <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;已使用：<span class="hljs-template-variable">&#123;&#123; $value &#125;&#125;</span>%&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">net</span><br>  <span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">alert:</span> <span class="hljs-string">&quot;net报警&quot;</span><br>    <span class="hljs-attr">expr:</span> <span class="hljs-string">(irate(node_network_transmit_bytes_total&#123;device!~&quot;lo&quot;&#125;[1m])</span> <span class="hljs-string">/</span> <span class="hljs-number">1000</span><span class="hljs-string">)</span> <span class="hljs-string">&gt;</span> <span class="hljs-number">80000</span><br>    <span class="hljs-attr">for:</span> <span class="hljs-string">1m</span><br>    <span class="hljs-attr">labels:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">warning</span><br>    <span class="hljs-attr">annotations:</span><br>      <span class="hljs-attr">summary:</span> <span class="hljs-string">&quot;net报警&quot;</span><br>      <span class="hljs-attr">description:</span> <span class="hljs-string">&quot;报警时间:&quot;</span><br>      <span class="hljs-attr">value:</span> <span class="hljs-string">&quot;已使用：<span class="hljs-template-variable">&#123;&#123; $value &#125;&#125;</span>KB&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="二、监控机安装node-exporter"><a href="#二、监控机安装node-exporter" class="headerlink" title="二、监控机安装node-exporter"></a>二、监控机安装node-exporter</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>wget https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz<br><br>tar xf node_exporter-0.18.1.linux-amd64.tar.gz<br><span class="hljs-built_in">cd</span> node_exporter-0.18.1.linux-amd64<br><br><span class="hljs-comment"># 启动</span><br>nohup ./node_exporter &amp;<br><br><span class="hljs-comment"># 访问</span><br>http://192.168.1.24:9100<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、监控机安装alertmanager"><a href="#三、监控机安装alertmanager" class="headerlink" title="三、监控机安装alertmanager"></a>三、监控机安装alertmanager</h2><h3 id="1、安装命令-1"><a href="#1、安装命令-1" class="headerlink" title="1、安装命令"></a>1、安装命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>wget https://github.com/prometheus/alertmanager/releases/download/v0.19.0/alertmanager-0.19.0.linux-amd64.tar.gz<br><br>tar xf alertmanager-0.19.0.linux-amd64.tar.gz<br><span class="hljs-built_in">cd</span> alertmanager-0.19.0.linux-amd64<br><br><span class="hljs-comment"># 修改配置，下面给出配置信息</span><br>vim alertmanager.yml<br><br><span class="hljs-comment"># 启动</span><br>nohup ./alertmanager --config.file=./alertmanager.yml &amp;<br><br><span class="hljs-comment"># 访问</span><br>http://192.168.1.24:9093<br></code></pre></td></tr></table></figure>
+<h3 id="2、alertmanager-yml报警规则配置"><a href="#2、alertmanager-yml报警规则配置" class="headerlink" title="2、alertmanager.yml报警规则配置"></a>2、alertmanager.yml报警规则配置</h3><p>以下是邮箱报警配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-attr">global:</span><br>  <span class="hljs-comment">#处理超时时间，默认为5min</span><br>  <span class="hljs-attr">resolve_timeout:</span> <span class="hljs-string">5m</span>   <br>  <span class="hljs-comment"># 邮箱smtp服务器代理</span><br>  <span class="hljs-attr">smtp_smarthost:</span> <span class="hljs-string">&#x27;smtp.163.com:25&#x27;</span>   <br>  <span class="hljs-comment"># 发送邮箱名称</span><br>  <span class="hljs-attr">smtp_from:</span> <span class="hljs-string">&#x27;hxqxiaoqi1990@163.com&#x27;</span>    <br>  <span class="hljs-comment"># 邮箱名称</span><br>  <span class="hljs-attr">smtp_auth_username:</span> <span class="hljs-string">&#x27;hxqxiaoqi1990@163.com&#x27;</span>   <br>  <span class="hljs-comment"># 邮箱密码或授权码</span><br>  <span class="hljs-attr">smtp_auth_password:</span> <span class="hljs-string">&#x27;Hxq7996026&#x27;</span>      <br>  <span class="hljs-attr">smtp_require_tls:</span> <span class="hljs-literal">false</span><br><br><span class="hljs-attr">route:</span><br>  <span class="hljs-comment"># 报警分组依据</span><br>  <span class="hljs-attr">group_by:</span> [<span class="hljs-string">&#x27;alertname&#x27;</span>]       <br>  <span class="hljs-comment"># 最初即第一次等待多久时间发送一组警报的通知</span><br>  <span class="hljs-attr">group_wait:</span> <span class="hljs-string">10s</span>       <br>  <span class="hljs-comment"># 在发送新警报前的等待时间</span><br>  <span class="hljs-attr">group_interval:</span> <span class="hljs-string">1h</span>    <br>  <span class="hljs-comment"># 发送重复警报的周期 对于email配置中，此项不可以设置过低，否则将会由于邮件发送太多频繁，被smtp服务器拒绝</span><br>  <span class="hljs-attr">repeat_interval:</span> <span class="hljs-string">1h</span>   <br>  <span class="hljs-comment"># 发送警报的接收者的名称，以下receivers name的名称</span><br>  <span class="hljs-attr">receiver:</span> <span class="hljs-string">&#x27;mail&#x27;</span>      <br><span class="hljs-attr">receivers:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">&#x27;mail&#x27;</span><br>  <span class="hljs-attr">email_configs:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">to:</span> <span class="hljs-string">&#x27;hxqxiaoqi1990@163.com&#x27;</span><br><span class="hljs-attr">inhibit_rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">source_match:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">&#x27;critical&#x27;</span><br>    <span class="hljs-attr">target_match:</span><br>      <span class="hljs-attr">severity:</span> <span class="hljs-string">&#x27;warning&#x27;</span><br>    <span class="hljs-attr">equal:</span> [<span class="hljs-string">&#x27;alertname&#x27;</span>, <span class="hljs-string">&#x27;dev&#x27;</span>, <span class="hljs-string">&#x27;instance&#x27;</span>]<br></code></pre></td></tr></table></figure>
+
+<h2 id="四、监控机安装grafana"><a href="#四、监控机安装grafana" class="headerlink" title="四、监控机安装grafana"></a>四、监控机安装grafana</h2><h3 id="1、安装命令-2"><a href="#1、安装命令-2" class="headerlink" title="1、安装命令"></a>1、安装命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://dl.grafana.com/oss/release/grafana-6.3.5.linux-amd64.tar.gz <br><br>tar xf grafana-6.3.5.linux-amd64.tar.gz <br><span class="hljs-built_in">cd</span> grafana-6.3.5.linux-amd64<br><br><span class="hljs-comment"># 启动</span><br>nohup ./alertmanager --config.file=./alertmanager.yml &amp;<br><br><span class="hljs-comment"># 访问</span><br>http://192.168.1.24:3000<br></code></pre></td></tr></table></figure>
+<h3 id="2、添加数据源"><a href="#2、添加数据源" class="headerlink" title="2、添加数据源"></a>2、添加数据源</h3><p>1.在设置中：Configuration–&gt;Date Sources<br>2.配置prometheus服务信息：<a target="_blank" rel="noopener" href="http://192.168.1.24:9090/">http://192.168.1.24:9090</a></p>
+<h3 id="3、添加仪表盘"><a href="#3、添加仪表盘" class="headerlink" title="3、添加仪表盘"></a>3、添加仪表盘</h3><p>1.在创建中：Create–&gt;Import<br>2.去下载：<a target="_blank" rel="noopener" href="https://grafana.com/grafana/dashboards">https://grafana.com/grafana/dashboards</a> 或复制模板ID号<br>3.填写ID号，或上传仪表盘模板</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%9B%91%E6%8E%A7/">监控</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/prometheus/">prometheus</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2019/08/08/elasticsearch-6.6.1%E5%AE%89%E8%A3%85/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">elasticsearch安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2019/08/01/%E5%B1%80%E5%9F%9F%E7%BD%91DNS%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/">
+                        <span class="hidden-mobile">局域网DNS搭建与使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

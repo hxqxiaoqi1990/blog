@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>iptables常用命令 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="iptables常用命令">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-04-02 21:29" pubdate>
+        2020年4月2日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      43
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">iptables常用命令</h1>
+            
+            <div class="markdown-body">
+              <p><strong>1、删除现有规则</strong></p>
+<p>在开始建立新的规则之前，您可能需要清理所有默认规则和现有规则。使用<strong>iptables</strong>如下所示的命令来做这个。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -F 　　　　　　<span class="hljs-comment">#警告：当前命令后将切断linux对外的一切端口请求，请确保你还能连接到vnc或主机上</span><br>(or)<br>iptables --flush<br><br><span class="hljs-comment"># 删除单条记录</span><br>iptables -nL --line-number<br>iptables -D INPUT 2<br></code></pre></td></tr></table></figure>
+
+<p><strong>2、设置默认链策略</strong></p>
+<p>默认的<strong>iptables</strong>策略是ACCEPT。将此更改为如下所示。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -P INPUT DROP<br>iptables -P FORWARD DROP<br>iptables -P OUTPUT DROP<br></code></pre></td></tr></table></figure>
+
+<p>当将INPUT和OUTPUT默认策略作为DROP时，对于每一个防火墙规则要求都应该定义两条规则。即一个INPUT和一个OUTPUT。<br>如果信任内部用户，则可以忽略上面OUTPUT的设置。默认情况下，不要丢弃所有OUTPUT的数据包。在这种情况下，对于每一个防火墙规则的要求，你只需要定义一个规则。即定义规则传入，因为传出是接受所有数据包。</p>
+<p><strong>3、阻止一个特定的IP地址</strong></p>
+<p>在我们做其他规则前，如果你想阻止一个特定的IP地址，你应该先做如下所示。当您在日志文件中找到特定的IP地址时发现一些奇怪的活动，并希望在进一步研究时暂时阻止该IP地址，这将很有帮助。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">BLOCK_THIS_IP=<span class="hljs-string">&quot;192.168.1.108&quot;</span><br>iptables -A INPUT -s <span class="hljs-string">&quot;<span class="hljs-variable">$BLOCK_THIS_IP</span>&quot;</span> -j DROP<br></code></pre></td></tr></table></figure>
+
+<p>你也可以使用下面的一种规则。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i eth0 -s <span class="hljs-string">&quot;<span class="hljs-variable">$BLOCK_THIS_IP</span>&quot;</span> -j DROP           //规则禁止这个IP地址对我们服务器eth0网卡的所有连接<br>iptables -A INPUT -i eth0 -p tcp -s <span class="hljs-string">&quot;<span class="hljs-variable">$BLOCK_THIS_IP</span>&quot;</span> -j DROP   //规则只禁止这个IP地址对我们服务器eth0网卡的tcp协议的连接<br></code></pre></td></tr></table></figure>
+
+<p><strong>4.允许所有传入SSH</strong></p>
+<p>以下规则允许eth0接口上的所有传入的SSH连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>5.只能从一个特定的网络允许传入的SSH</strong></p>
+<p>下面的规则只允许从网络192.168.100.X传入SSH连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp -s 192.168.100.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>6.允许传入的HTTP和HTTPS</strong></p>
+<p>以下规则允许所有传入的网络流量。即HTTP流量的端口80。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 80 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>下面的规则允许所有传入安全的网络流量。即HTTPS流量的端口443。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>7.相结合多个规则使用多端口</strong></p>
+<p>当你不是写为每个端口单独的规则，而是从外面的世界多个端口传入的连接，可以在一起使用多端口扩展。</p>
+<p>下面的示例允许所有传入SSH，HTTP和HTTPS流量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp -m multiport --dports 22,80,443 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp -m multiport --sports 22,80,443 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>8.允许OUTPUT SSH</strong></p>
+<p>以下规则允许传出ssh连接。也就是说当你从内ssh到外部服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A OUTPUT -o eth0 -p tcp --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT  <span class="hljs-comment">#允许双方新建立的OUTPUT链通信</span><br>iptables -A INPUT  -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT      <span class="hljs-comment">#只允许双方已经建立的INPUT链通信 </span><br></code></pre></td></tr></table></figure>
+
+<p><strong>9.允许拨出SSH到特定网络</strong></p>
+<p>下面的规则只允许特定的网络传出的ssh连接。即你的SSH只有从内部网络192.168.100.0/24。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A OUTPUT -o eth0 -p tcp -d 192.168.100.0/24 --dport 22 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A INPUT  -i eth0 -p tcp --sport 22 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>10.允许拨出HTTPS</strong></p>
+<p>以下规则允许传出安全的Web流量。当你想允许互联网流量的用户，这是很有帮助。在服务器上，当你想使用wget从外部下载一些文件，这些规则也有帮助。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A OUTPUT -o eth0 -p tcp --dport 443 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A INPUT  -i eth0 -p tcp --sport 443 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>注：对于传出HTTP Web流量，增加两个额外的规则就像上面，并改变443 80。</p>
+<p><strong>11.负载均衡传入的Web流量</strong></p>
+<p>您也可以加载使用<strong>iptables</strong>防火墙规则平衡传入的网络流量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">This uses the iptables nth extension. The following example load balances the HTTPS traffic to three different ip-address. For every 3th packet, it is load balanced to the appropriate server (using the counter 0).<br>iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 0 -j DNAT --to-destination 192.168.1.101:443<br>iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 1 -j DNAT --to-destination 192.168.1.102:443<br>iptables -A PREROUTING -i eth0 -p tcp --dport 443 -m state --state NEW -m nth --counter 0 --every 3 --packet 2 -j DNAT --to-destination 192.168.1.103:443<br></code></pre></td></tr></table></figure>
+
+<p><strong>12.允许从外部到内部Ping</strong></p>
+<p>以下规则允许外部用户能够ping您的服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -p icmp --icmp-type echo-request -j ACCEPT<br>iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>13.允许从内部到外部ping</strong></p>
+<p>以下规则允许您从内部ping到任何外部服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT<br>iptables -A INPUT  -p icmp --icmp-type echo-reply -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>14.允许环回访问</strong></p>
+<p>您应该允许在服务器上进行完全环回访问。即使用127.0.0.1访问</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i lo -j ACCEPT<br>iptables -A OUTPUT -o lo -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>15.允许内部网络到外部网络</strong></p>
+<p>在防火墙服务器上，一个以太网卡连接到外部网络，另一个以太网卡连接到内部服务器，请使用以下规则允许内部网络与外部网络通信。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#在此示例中，eth1连接到外部网络（互联网），eth0连接到内部网络（例如：192.168.1.x）。</span><br>iptables -A FORWARD -i eth0 -o eth1 -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>16.允许出站DNS</strong></p>
+<p>以下规则允许传出DNS连接。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A OUTPUT -p udp -o eth0 --dport 53 -j ACCEPT<br>iptables -A INPUT  -p udp -i eth0 --sport 53 -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>17.允许NIS连接</strong></p>
+<p>如果您正在运行NIS（网络信息服务）来管理您的用户帐户，您应该允许NIS连接。即使允许SSH连接，如果您不允许NIS相关的ypbind连接，用户将无法登录。</p>
+<p>NIS端口是动态的。即当ypbind启动时，它分配端口。（<em>ypbind</em>是定义NIS服务器的客户端进程。）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#首先做一个rpcinfo -p如下所示并获取端口号。在此示例中，它使用端口853和850。</span><br>rpcinfo -p | grep ypbind<br><br><span class="hljs-comment">#现在允许到端口111的入站连接，以及ypbind使用的端口。</span><br>iptables -A INPUT -p tcp --dport 111 -j ACCEPT<br>iptables -A INPUT -p udp --dport 111 -j ACCEPT<br>iptables -A INPUT -p tcp --dport 853 -j ACCEPT<br>iptables -A INPUT -p udp --dport 853 -j ACCEPT<br>iptables -A INPUT -p tcp --dport 850 -j ACCEPT<br>iptables -A INPUT -p udp --dport 850 -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>以上不会工作，当你重新启动ypbind，因为它在不同的时间会有不同的端口号。</p>
+<p>有两个解决方案：1）使用静态ip地址为您的NIS，或2）使用一些聪明的shell脚本技术来自动抓取动态端口号从“rpcinfo -p”命令输出，并使用上述<strong>iptables</strong>规则。</p>
+<p><strong>18.允许Rsync来自特定网络</strong></p>
+<p>以下规则仅允许来自特定网络的rsync。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp -s 192.168.101.0/24 --dport 873 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 873 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>19.仅允许来自特定网络的MySQL连接</strong></p>
+<p>如果你正在运行MySQL，通常你不想允许从外部直接连接。在大多数情况下，您可能在运行MySQL数据库的同一服务器上运行Web服务器。</p>
+<p>但是DBA和开发人员可能需要使用MySQL客户端从他们的笔记本电脑和桌面直接登录到MySQL。在这种情况下，您可能希望允许内部网络直接与MySQL通信，如下所示。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp -s 192.168.100.0/24 --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 3306 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>20.允许Sendmail或Postfix流量</strong></p>
+<p>以下规则允许邮件通信。它可以是sendmail或postfix。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 25 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 25 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>21.允许IMAP和IMAPS</strong></p>
+<p>以下规则允许IMAP / IMAP2流量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i eth0 -p tcp --dport 143 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 143 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>以下规则允许IMAPS流量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i eth0 -p tcp --dport 993 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 993 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>22.允许POP3和POP3S</strong></p>
+<p>以下规则允许POP3访问。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 110 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 110 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>以下规则允许POP3S访问。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 995 -m state --state NEW,ESTABLISHED -j ACCEPT<br>iptables -A OUTPUT -o eth0 -p tcp --sport 995 -m state --state ESTABLISHED -j ACCEPT <br></code></pre></td></tr></table></figure>
+
+<p><strong>23.防止DoS攻击</strong></p>
+<p>以下<strong>iptables</strong>规则将帮助您防止对您的Web服务器的拒绝服务（DoS）攻击。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -p tcp --dport 80 -m <span class="hljs-built_in">limit</span> --<span class="hljs-built_in">limit</span> 25/minute --limit-burst 100 -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p>在上面的例子中：<br>　　-m limit：这使用限制<strong>iptables</strong>扩展<br>　　-limit 25 /分钟：每分钟最多只能连接25个请求包。根据您的具体要求更改此值<br>　　-limit-burst 100：此值指示仅在连接的总数达到limit之后才实施限制/分钟</p>
+<p>注意“-m limit”只匹配数据包而不是连接，所以上方例子中你将匹配25包每分钟。</p>
+<p>如果是想限制每分钟下connect次数呢。限制连接数的解决方案是使用connlimit匹配。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -p tcp –syn –dport 80 -m connlimit –connlimit-above 15 –connlimit-mask 32 -j REJECT –reject-with tcp-reset<br></code></pre></td></tr></table></figure>
+
+<p>它将拒绝来自一个源IP的15以上的连接 - 一个很好的规则来保护Web服务器。</p>
+<p>此外，当与“hashlimit” 结合后在保护免受DDoS攻击时效果更好。</p>
+<p>使用“limit”匹配，您可以限制每个时间间隔的数据包的全局速率，但是使用“hashlimit”，您可以限制每个IP，每个组合IP +端口等。</p>
+<p>所以一个Web服务器的例子将是这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -p tcp –dport 80 -m hashlimit –hashlimit 45/sec –hashlimit-burst 60 –hashlimit-mode srcip–hashlimit-name DDOS –hashlimit-htable-size 32768 –hashlimit-htable-max 32768 –hashlimit-htable-gcinterval 1000 –hashlimit-htable-expire 100000 -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>24. 端口转发</strong></p>
+<p>例：将来自422端口的流量全部转到22端口。</p>
+<p>这意味着我们既能通过422端口又能通过22端口进行ssh连接。启用DNAT转发。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -t nat -A PREROUTING -p tcp -d 192.168.102.37 --dport 422 -j DNAT --to 192.168.102.37:22<br></code></pre></td></tr></table></figure>
+
+<p>除此之外，还需要允许连接到422端口的请求</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i eth0 -p tcp --dport 422 -m state --state NEW,ESTABLISHED -j ACCEPTiptables -A OUTPUT                   -o eth0 -p tcp --sport 422 -m state --state ESTABLISHED -j ACCEPT<br></code></pre></td></tr></table></figure>
+
+<p><strong>25. 记录丢弃的数据表</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -N LOGGING   <span class="hljs-comment">#1.新建名为LOGGING的链</span><br>iptables -A INPUT -j LOGGING  <span class="hljs-comment">#2.将所有来自INPUT链中的数据包跳转到LOGGING链中</span><br>iptables -A LOGGING -m <span class="hljs-built_in">limit</span> --<span class="hljs-built_in">limit</span> 2/min -j LOG --log-prefix <span class="hljs-string">&quot;IPTables Packet Dropped: &quot;</span> --log-level 7  <span class="hljs-comment">#3.为这些包自定义个前缀，命名为”IPTables Packet Dropped”</span><br>iptables -A LOGGING -j DROP   <span class="hljs-comment">#4.丢弃这些数据包 </span><br></code></pre></td></tr></table></figure>
+
+<p><strong>26. 例子</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@iZ233pgwujzZ ~]<span class="hljs-comment"># iptables-save</span><br><span class="hljs-comment"># Generated by iptables-save v1.4.7 on Wed May  6 14:27:04 2020</span><br>*filter<br>:INPUT ACCEPT [0:0]<br>:FORWARD ACCEPT [0:0]<br>:OUTPUT ACCEPT [670583527:153247221001]<br><span class="hljs-comment"># 允许指定IP访问所有服务</span><br>-A INPUT -s 172.16.30.0/24 -p tcp -j ACCEPT<br><span class="hljs-comment"># 访问端口范围</span><br>-A INPUT -s 192.168.40.1/32 -p tcp -m tcp --dport 1:65535 -j ACCEPT<br><span class="hljs-comment"># 意思是允许进入的数据包只能是刚刚我发出去的数据包的回应，ESTABLISHED：已建立的链接状态。RELATED：该数据包与本机发出的数据包有关。</span><br>-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT <br><span class="hljs-comment"># 允许所有IP访问22端口</span><br>-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT<br><span class="hljs-comment"># 允许icmp和io</span><br>-A INPUT -p icmp -j ACCEPT <br>-A INPUT -i lo -j ACCEPT <br><span class="hljs-comment"># 这两内条的意思是在INPUT表和FORWARD表中拒绝所有其他不符合上述任何一条规则的容数据包。并且发送一条host prohibited的消息给被拒绝的主机。</span><br>-A INPUT -j REJECT --reject-with icmp-host-prohibited <br>-A FORWARD -j REJECT --reject-with icmp-host-prohibited <br>COMMIT<br><span class="hljs-comment"># Completed on Wed May  6 14:27:04 2020</span><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/iptables/">iptables</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2020/04/02/java%E8%BF%9B%E7%A8%8Bcpu%E9%AB%98%E6%8E%92%E6%9F%A5/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java进程cpu高排查</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2020/04/02/mysql%208.0%20%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">mysql8.0 安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
