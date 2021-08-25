@@ -107,6 +107,7 @@ git diff 命令显示已写入缓存与已修改但尚未写入缓存的改动�
  使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。
  m: 提交更新说明
  a: add的使用
+
 ``` bash
 $ git commit -am
 ```
@@ -178,10 +179,44 @@ git mv 命令用于移动或重命名一个文件、目录、软连接。
 <font color=DarkTurquoise>**git remote -v**</font>
 查看当前配置有哪些远程仓库
 
+<font color=DarkTurquoise>**git branch -vv**</font>
+
+查看远程与本地查看关系
+
 <font color=DarkTurquoise>**git fetch**</font>
 从远程仓库下载新分支与数据
 该命令执行完后需要执行git merge 远程分支到你所在的分支。
 
 <font color=DarkTurquoise>**git push [alias] [branch]**</font>
 以上命令将你的 [branch] 分支推送成为 [alias] 远程仓库上的 [branch] 分支
+
+# 回滚
+
+```bash
+# 查看分支 
+git branch
+
+# 切换分支 
+git checkout master
+
+# 查看标签(tag版本) 
+git tag
+
+# 查看某个标签的详情 
+git show v2.22.0
+
+commit d53dcc2287899e95cfd44a294ca3e5068e63022b
+
+# 通过commit的id回退
+git reset --hard fb479960c0cec5549463ae123d70bdd72ccf6be7
+
+# 查看状态
+git status
+
+# 提交
+git push origin master
+
+# 或者加入-f参数，强制提交，远程端将强制跟新到reset版本
+git push -f origin master
+```
 

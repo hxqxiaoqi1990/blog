@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.5k 字
+      1.6k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      19
        分钟
     </span>
   
@@ -295,8 +295,12 @@
 <p><font color=DarkTurquoise><strong>git remote add [shortname] [url]</strong></font><br>添加远程库</p>
 <p><font color=DarkTurquoise><strong>git remote rm [别名]</strong></font><br>删除远程仓库</p>
 <p><font color=DarkTurquoise><strong>git remote</strong></font><br><font color=DarkTurquoise><strong>git remote -v</strong></font><br>查看当前配置有哪些远程仓库</p>
+<p><font color=DarkTurquoise><strong>git branch -vv</strong></font></p>
+<p>查看远程与本地查看关系</p>
 <p><font color=DarkTurquoise><strong>git fetch</strong></font><br>从远程仓库下载新分支与数据<br>该命令执行完后需要执行git merge 远程分支到你所在的分支。</p>
 <p><font color=DarkTurquoise><strong>git push [alias] [branch]</strong></font><br>以上命令将你的 [branch] 分支推送成为 [alias] 远程仓库上的 [branch] 分支</p>
+<h1 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看分支 </span><br>git branch<br><br><span class="hljs-comment"># 切换分支 </span><br>git checkout master<br><br><span class="hljs-comment"># 查看标签(tag版本) </span><br>git tag<br><br><span class="hljs-comment"># 查看某个标签的详情 </span><br>git show v2.22.0<br><br>commit d53dcc2287899e95cfd44a294ca3e5068e63022b<br><br><span class="hljs-comment"># 通过commit的id回退</span><br>git reset --hard fb479960c0cec5549463ae123d70bdd72ccf6be7<br><br><span class="hljs-comment"># 查看状态</span><br>git status<br><br><span class="hljs-comment"># 提交</span><br>git push origin master<br><br><span class="hljs-comment"># 或者加入-f参数，强制提交，远程端将强制跟新到reset版本</span><br>git push -f origin master<br></code></pre></td></tr></table></figure>
+
 
             </div>
             <hr>
