@@ -199,10 +199,7 @@
         <a href="/blog/2020/03/25/kafka%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
           
           
-            
           
-          介绍kafka 是一个分布式的消息队列系统，消息以topic分类传输，生产者往topic发送消息时，消息会被分散到topic的不同分区中，消费者以组的形式消费topic中的数据，一个topic的一个分区，只能被同一个组里的一个消费者消费，但同一个消费者，可以消费多个分区数据，每个组自己维护topic每个分区的消费偏移量。
-kafka 不能保证不同分区消息的消费顺序，因此若对于消息消费顺序有要求，必
         </a>
       </p>
 
@@ -250,11 +247,7 @@ kafka 不能保证不同分区消息的消费顺序，因此若对于消息消�
         <a href="/blog/2020/03/20/hbash%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%AD%E5%BB%BA/" target="_self">
           
           
-            
           
-          介绍HBase 简介
-1、HBase是Apache Hadoop的数据库，能够对大型数据提供随机、实时的读写访问，是Google的BigTable的开源实现。
-2、HBase的目标是存储并处理大型的数据，更具体地说仅用普通的硬件配置，能够处理成千上万的行和列所组成的大型数据库。3、HBase是一个开源的、分布式的、多版本的、面向列的存储模型。可以直接使用本地文件系统，也可使用Hadoop的HDFS
         </a>
       </p>
 
@@ -302,10 +295,7 @@ kafka 不能保证不同分区消息的消费顺序，因此若对于消息消�
         <a href="/blog/2020/03/20/hadoop%20%E5%AE%8C%E5%85%A8%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%AD%E5%BB%BA/" target="_self">
           
           
-            
           
-          介绍HadoopHadoop是一个由Apache基金会所开发的分布式系统基础架构。
-Hadoop实现了一个分布式文件系统（Hadoop Distributed File System），简称HDFS。HDFS有高容错性的特点，并且设计用来部署在低廉的（low-cost）硬件上；而且它提供高吞吐量（high throughput）来访问应用程序的数据，适合那些有着超大数据集（large data s
         </a>
       </p>
 
@@ -353,12 +343,7 @@ Hadoop实现了一个分布式文件系统（Hadoop Distributed File System）�
         <a href="/blog/2020/03/18/nginx%E9%87%8D%E5%86%99%E4%B8%8E%E9%87%8D%E5%AE%9A%E5%90%91/" target="_self">
           
           
-            
           
-          介绍重写与重定向功能是现在大多数Web服务器都支持的一项功能，相对于其他产品而言,Nginx中的rewrite模块提供的功能在配置上更加的灵活自由,可定制性非常的高。它的实现方式也非常的简单,只需要通过rewrite指令根据Nginx提供的全局变量或自定义的变量,结合正则表达式以及进一步处理的标识就可以完成URL重写或重定向。
-rewrite参数：
-
-last 本条规则匹配完成后继续向下匹配新的l
         </a>
       </p>
 
@@ -406,23 +391,7 @@ last 本条规则匹配完成后继续向下匹配新的l
         <a href="/blog/2020/03/18/canal%20adapter%EF%BC%88%E5%90%8C%E6%AD%A5%E5%88%B0es%EF%BC%89%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8/" target="_self">
           
           
-            
           
-          介绍canal 1.1.1版本之后, 增加客户端数据落地的适配及启动功能, 目前支持功能:
-
-客户端启动器
-同步管理REST接口
-日志适配器, 作为DEMO
-关系型数据库的数据同步(表对表同步), ETL功能
-HBase的数据同步(表对表同步), ETL功能
-ElasticSearch多表数据同步,ETL功能
-
-安装请先安装以下服务：
-
-安装高可用教程
-安装elasticsearch教程
-
-安装c
         </a>
       </p>
 
@@ -470,19 +439,7 @@ ElasticSearch多表数据同步,ETL功能
         <a href="/blog/2020/03/14/redis%E5%A4%87%E4%BB%BD%E7%AD%96%E7%95%A5%E8%AF%A6%E8%A7%A3/" target="_self">
           
           
-            
           
-          介绍redis有三种不同的数据持久化机制：
-
-rdb
-aof
-混合持久化
-
-rdb 持久化RDB 持久化可以在指定的时间间隔内生成数据集的时间点快照（point-in-time snapshot）。
-RDB 的优点： 
-
-RDB 是一个非常紧凑的文件，也就是数据保存的非常小，它保存了 Redis 在某个时间点上的数据集。
-RDB 可以最大化 Redis 的性能：父进程在保存 RDB 文件时唯一要做
         </a>
       </p>
 
@@ -530,11 +487,7 @@ RDB 可以最大化 Redis 的性能：父进程在保存 RDB 文件时唯一要�
         <a href="/blog/2020/02/28/SkyWalking%E5%8D%95%E7%82%B9%E5%AE%89%E8%A3%85/" target="_self">
           
           
-            
           
-          介绍随着微服务架构的流行，一些微服务架构下的问题也会越来越突出，比如一个请求会涉及多个服务，而服务本身可能也会依赖其他服务，整个请求路径就构成了一个网状的调用链，而在整个调用链中一旦某个节点发生异常，整个调用链的稳定性就会受到影响。
-面对以上情况， 我们就需要一些可以帮助理解系统行为、用于分析性能问题的工具，以便发生故障的时候，能够快速定位和解决问题。这时候分布式追踪系统就该闪亮登场了。
-SkyW
         </a>
       </p>
 
@@ -582,11 +535,7 @@ SkyW
         <a href="/blog/2020/02/28/route%E4%BD%BF%E7%94%A8/" target="_self">
           
           
-            
           
-          linux:主机路由
-主机路由是路由选择表中指向单个IP地址或主机名的路由记录。主机路由的Flags字段为H。例如，在下面的示例中，本地主机通过IP地址192.168.1.1的路由器到达IP地址为10.0.0.10的主机。
-1234567# 添加route add -host 192.168.1.2 dev eth0   route add -host 10.20.30.148 gw 10.20.
         </a>
       </p>
 
@@ -634,10 +583,7 @@ SkyW
         <a href="/blog/2020/01/23/%E7%9B%91%E6%8E%A7redis%E5%AD%98%E6%B4%BB%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          介绍redis监控状态脚本
-脚本12345678910111213141516171819202122232425262728293031323334353637#!/bin/bash#redis主从切换报警脚本#sendEmail命令下载链接：http://caspian.dotconf.net/menu/Software/SendEmail/sendEmail-v1.56.tar.gz#获取r
         </a>
       </p>
 
@@ -685,11 +631,7 @@ SkyW
         <a href="/blog/2020/01/23/%E9%80%9A%E7%94%A8%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          介绍日志备份通用脚本
-脚本以下脚本添加到定时任务即可
-12345678910111213141516171819#!/usr/bin/bash# 通用备份脚本# 日志目录dir=&quot;/root/.pm2/logs&quot;# 保存日志的时间Tday=`date --date=&quot;1 days ago&quot; &quot;+%Y_%m_%d&quot;`# 删除日志的时间Tda
         </a>
       </p>
 

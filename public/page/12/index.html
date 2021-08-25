@@ -199,23 +199,7 @@
         <a href="/blog/2019/06/09/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          命令大全
-ls 显示目录文件      选项：
-     -d 显示当前目录
-     -i    显示inode号
-     -h    常见单位显示
-     -a    显示所有文件包括隐藏文件
-
-
-cd 切换目录（shell内置命令）     cd - 进入上一次目录
-     cd ~ 进入家目录
-     cd .. 进入上级目录
-
-
-   pwd 显示当前路径
-mkdir    建立
         </a>
       </p>
 
@@ -263,19 +247,7 @@ mkdir    建立
         <a href="/blog/2019/06/09/%E7%BD%91%E7%BB%9C%E9%A1%B6%E7%BA%A7%E5%9F%9F%E5%90%8D%E6%9F%A5%E7%9C%8B%E8%A1%A8/" target="_self">
           
           
-            
           
-          国际域名　　.com：商业机构，任何人都可以注册;
-　　.edu：教育机构;
-　　.gov：政府部门;
-　　.int：国际组织;
-　　.mil：美国军事部门;
-　　.net：网络组织，例如因特网服务商和维修商，现在任何人都可以注册;
-　　.org：非盈利组织，任何人都可以注册;
-　　.biz：商业;
-　　.info：网络信息服务组织;
-　　.pro：用于会计、律师和医生。;
-　　.name：用于个
         </a>
       </p>
 
@@ -323,9 +295,7 @@ mkdir    建立
         <a href="/blog/2019/06/07/%E8%AE%B0%E4%B8%80%E6%AC%A1nginx%E8%B6%85%E6%97%B6%E8%BF%9E%E6%8E%A5%E9%94%99%E8%AF%AF/" target="_self">
           
           
-            
           
-          连接错误代码1232019/06/05 17:15:05 [error] 10560#0: *7830037 connect() failed (110: Connection timed out) while connecting to upstream, client: 192.168.1.100, server: 123.abc.com, request: &quot;OPTIONS //t
         </a>
       </p>
 
@@ -373,20 +343,7 @@ mkdir    建立
         <a href="/blog/2019/06/05/nfs%20%E7%9B%AE%E5%BD%95%E5%85%B1%E4%BA%AB/" target="_self">
           
           
-            
           
-          介绍NFS 是Network File System的缩写，即网络文件系统。一种使用于分散式文件系统的协定，由Sun公司开发，于1984年向外公布。功能是通过网络让不同的机器、不同的操作系统能够彼此分享个别的数据，让应用程序在客户端通过网络访问位于服务器磁盘中的数据，是在类Unix系统间实现磁盘文件共享的一种方法。
-安装实验环境
-
-
-
-服务器IP
-安装服务
-
-
-
-192.168.40.100
-nf
         </a>
       </p>
 
@@ -434,11 +391,7 @@ nf
         <a href="/blog/2019/06/04/nginx%E6%97%A5%E5%BF%97%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          定时任务配置12#定时任务#30 0 * * * /usr/bin/bash /usr/local/nginx/logs/nginx-log.sh &amp;&gt; /dev/null
-
-备份脚本配置123456789101112131415161718192021222324252627#!/bin/bash#此脚本用于自动分割Nginx的日志，包括access.log和error.log#将
         </a>
       </p>
 
@@ -486,17 +439,7 @@ nf
         <a href="/blog/2019/06/04/linux%20ssh%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95%E8%AE%BE%E7%BD%AE/" target="_self">
           
           
-            
           
-          什么是sshSSH是一种网络协议，用于计算机之间的加密登录。相比传统的账户密码登录，SSH提供了一种更便捷安全的登录方式。
-设置思路本博客中一律以：A电脑为登录机，IP为192.168.1.101，B电脑为被登录机，IP为192.168.1.100，也就是A登录到B是免密的。
-
-在A电脑生成免密的公钥和私钥
-把A电脑的公钥传到B电脑上
-验证
-总结
-
-1. 生成免密的公钥和私钥在A电脑上执行以下命令
         </a>
       </p>
 
@@ -544,9 +487,7 @@ nf
         <a href="/blog/2019/06/04/JDK1.8%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85-linux/" target="_self">
           
           
-            
           
-          什么是JDKJDK  (Java Development Kit) 是 Java 语言的软件开发工具包(SDK)。在JDK的安装目录下有一个jre目录，里面有两个文件夹bin和lib，在这里可以认为bin里的就是jvm，lib中则是jvm工作所需要的类库，而jvm和 lib合起来就称为jre。JRE（Java Runtime Environment，Java运行环境），包含JVM标准实现及Java
         </a>
       </p>
 
@@ -594,16 +535,7 @@ nf
         <a href="/blog/2019/06/04/nginx-1.14.2%E8%87%AA%E5%8A%A8%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          安装方法前提服务器需要联网
-
-在服务器上新建文件：nginx.sh
-把代码复制到文件中
-赋予执行权限：chmod 755 nginx.sh
-执行脚本：./nginx.sh
-
-脚本代码12345678910111213141516#!/bin/bash# 安装目录dir=/usr/local#安装依赖yum -y install gcc gcc-c++ pcre pcre-devel zlib zl
         </a>
       </p>
 
@@ -653,16 +585,7 @@ nf
         <a href="/blog/2019/06/04/%E6%97%A0%E5%85%AC%E7%BD%91IP%EF%BC%8C%E5%AE%9E%E7%8E%B0%E4%BA%91%E4%B8%8A%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%AA%E5%85%81%E8%AE%B8%E5%85%AC%E5%8F%B8%E8%AE%BF%E9%97%AE/" target="_self">
           
           
-            
           
-          实验效果随着云服务的普及，现在小公司大都没有购买公网IP，这对于运维人员来说，无法限制ssh远程登录的IP是一个很不爽的事，这篇博客就是为了实现公司无公网IP，也可现在ssh连接IP方法。
-实验思路
-注册动态域名
-把动态域名绑定到公司路由器的DDNS服务上
-在服务器上，使用shell脚本定时解析动态域名，获取公司IP，并与服务器白名单匹配
-配置定时任务
-
-1. 注册动态域名登录花生壳官网：http
         </a>
       </p>
 
@@ -710,12 +633,7 @@ nf
         <a href="/blog/2019/06/03/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84linux%E8%B7%B3%E6%9D%BF%E6%9C%BA%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          实现效果前提需要设置ssh免密登录，这个跳板机脚本可以快速的切换登录服务器，通过脚本登录服务器之后，退出服务器，依然会返回跳板机菜单，因为只是个简单的脚本没有安全防护，推荐内网使用，或在跳板机脚本的服务器上设置安全策略。
-服务器设置
-上传脚本到服务器/home/test/
-修改/etc/profile.d/jump.sh，这个文件是连接服务器时执行的脚本，匹配你要登录的用户UID12#!/bin/
         </a>
       </p>
 

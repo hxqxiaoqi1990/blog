@@ -199,10 +199,7 @@
         <a href="/blog/2020/05/19/registry%20%E7%A7%81%E6%9C%89%E4%BB%93%E5%BA%93%E9%85%8D%E7%BD%AE/" target="_self">
           
           
-            
           
-          介绍Registry是一个几种存放image并对外提供上传下载以及一系列API的服务。可以很容易和本地源代码以及远端Git服务的关系相对应。
-搭建1234# 启动# -e REGISTRY_STORAGE_DELETE_ENABLED=true 开启允许删除# -v /data/registry:/var/lib/registry 持久化存储目录docker run --name docker-r
         </a>
       </p>
 
@@ -252,12 +249,7 @@
         <a href="/blog/2020/05/14/docker%E4%BF%AE%E6%94%B9%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95%E5%92%8C%E8%BF%9E%E6%8E%A5%E7%A7%81%E5%BA%93/" target="_self">
           
           
-            
           
-          两种方式：
-方式一：
-vim /etc/docker/daemon.json
-1234567891011121314151617&#123;  &quot;registry-mirrors&quot;: [     &quot;https://bxsfpjcb.mirror.aliyuncs.com&quot;  ],  &quot;max-concurrent-downloads&quot;: 
         </a>
       </p>
 
@@ -305,10 +297,7 @@ vim /etc/docker/daemon.json
         <a href="/blog/2020/04/30/openldap%20%E5%AE%89%E8%A3%85/" target="_self">
           
           
-            
           
-          介绍LDAP（Lightweight Directory Access Protocol）是基于X.500标准的轻量目录访问协议。它比X.500具有更快的查询速度和更低的资源消耗，精简灵活，支持TCP/IP协议。LDAP为用户管理提供了统一认证服务，解决了办公环境中多套用户认证和项目管理系统相互独立分散的难题，而OpenLDAP 是LDAP的开源实现。
-其实就是各个支持ldap协议的应用，统一账号
         </a>
       </p>
 
@@ -356,9 +345,7 @@ vim /etc/docker/daemon.json
         <a href="/blog/2020/04/26/flink%20%E9%83%A8%E7%BD%B2/" target="_self">
           
           
-            
           
-          介绍Flink 是新的stream计算引擎，用java实现。既可以处理stream data也可以处理batch data，可以同时兼顾Spark以及Spark streaming的功能，与Spark不同的是，Flink本质上只有stream的概念，batch被认为是special stream。Flink在运行中主要有三个组件组成，JobClient，JobManager 和 TaskManag
         </a>
       </p>
 
@@ -406,20 +393,7 @@ vim /etc/docker/daemon.json
         <a href="/blog/2020/04/21/CA%20%E8%AF%81%E4%B9%A6%E8%AF%A6%E8%A7%A3/" target="_self">
           
           
-            
           
-          介绍博客链接 该博客非常详细的讲解了数字证书及CA
-简单说明：
-
-CA：权威认证机构
-PKI：一种标准
-编码格式
-X.509 DER(Distinguished Encoding Rules)编码，后缀为：.der .cer .crt
-X.509 BASE64编码(PEM格式)，后缀为：.pem .cer .crt
-
-
-server.key：私钥，正式环境中，私钥一般都有权威认证机构提供。
-ser
         </a>
       </p>
 
@@ -467,14 +441,7 @@ ser
         <a href="/blog/2020/04/02/java%E8%BF%9B%E7%A8%8Bcpu%E9%AB%98%E6%8E%92%E6%9F%A5/" target="_self">
           
           
-            
           
-          方法一：
-1.jps 获取Java进程的PID。
-2.jstack pid &gt;&gt; java.txt 导出CPU占用高进程的线程栈。
-3.top -H -p PID 查看对应进程的哪个线程占用CPU过高。
-4.echo “obase=16; PID” | bc 将线程的PID转换为16进制,大写转换为小写。
-5.在第二步导出的Java.txt中查找转换成为16进制的线程PID。找到对应的
         </a>
       </p>
 
@@ -522,11 +489,7 @@ ser
         <a href="/blog/2020/04/02/iptables%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          1、删除现有规则
-在开始建立新的规则之前，您可能需要清理所有默认规则和现有规则。使用iptables如下所示的命令来做这个。
-1234567iptables -F 　　　　　　#警告：当前命令后将切断linux对外的一切端口请求，请确保你还能连接到vnc或主机上(or)iptables --flush# 删除单条记录iptables -nL --line-numberiptables -D INP
         </a>
       </p>
 
@@ -574,10 +537,7 @@ ser
         <a href="/blog/2020/04/02/mysql%208.0%20%E5%AE%89%E8%A3%85/" target="_self">
           
           
-            
           
-          介绍mysql8 安装，复制以下脚本执行即可
-脚本123456789101112131415161718192021222324#!/bin/bash# 安装mysql8.0rpm -qa|grep mysql|awk &#x27;&#123;print &quot;yum -y remove\t&quot; $1&#125;&#x27;|shrpm -qa|grep mariadb|awk &#
         </a>
       </p>
 
@@ -625,15 +585,7 @@ ser
         <a href="/blog/2020/03/27/%E6%97%A5%E5%BF%97%E6%94%B6%E9%9B%86%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          介绍用于收集服务日志，显示到web浏览器中，使用于单台服务器，只是简单的日志收集脚本。
-该脚本是通过cgi-bin显示到web上，所有需要安装httpd服务，httpd服务天生支持cgi。
-运行环境httpd 安装1yum -y install httpd
-
-12vim /etc/httpd/conf/httpd.conf# 修改以下内容
-
-12345678910111213# 监听端口Liste
         </a>
       </p>
 
@@ -681,15 +633,7 @@ ser
         <a href="/blog/2020/03/26/zookeeper%20%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" target="_self">
           
           
-            
           
-          介绍Zookeeper原理简介
-ZooKeeper是一个开放源码的分布式应用程序协调服务，它包含一个简单的原语集，分布式应用程序可以基于它实现同步服务，配置维护和命名服务等。
-Zookeeper设计目的
-
-最终一致性：client不论连接到那个Server，展示给它的都是同一个视图。
-可靠性：具有简单、健壮、良好的性能、如果消息m被到一台服务器接收，那么消息m将被所有服务器接收。
-实时性：Zook
         </a>
       </p>
 

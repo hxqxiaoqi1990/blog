@@ -199,10 +199,7 @@
         <a href="/blog/2021/08/24/dockerfile%E5%87%A0%E4%B8%AA%E5%AE%9E%E4%BE%8B/" target="_self">
           
           
-            
           
-          实例说明本章会写两个dockerfile实例和一个shell脚本调用dockerfile实例，重点在于shell和dockerfile中环境变量的调用以及调用系统变量，这里有些坑会重点说明。
-dockerfile封装jdk以下代码存为名为Dockerfile的文件，把下载好的jdk包放在Dockerfile同一目录中，运行dockerfile，即可生成拥有jdk环境的系统镜像，我把镜像上传到阿里云
         </a>
       </p>
 
@@ -250,10 +247,7 @@ dockerfile封装jdk以下代码存为名为Dockerfile的文件，把下载好的
         <a href="/blog/2021/08/20/kubeadm%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/" target="_self">
           
           
-            
           
-          介绍运行以下脚本init.sh，初始化环境，主要修改版本号与主机名
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878
         </a>
       </p>
 
@@ -301,12 +295,7 @@ dockerfile封装jdk以下代码存为名为Dockerfile的文件，把下载好的
         <a href="/blog/2021/08/13/ELK%E4%B9%8Blog-pilot%E9%83%A8%E7%BD%B2/" target="_self">
           
           
-            
           
-          介绍本文档介绍一款新的 Docker 日志收集工具：log-pilot。log-pilot 是阿里提供的日志收集镜像。可以在每台机器上部署一个 log-pilot 实例，就可以收集机器上所有 Docker 应用日志。(注意：只支持Linux版本的Docker，不支持Windows/Mac版)
-log-pilot 具有如下特性：
-
-一个单独的 log 进程收集机器上所有容器的日志。不需要为每个容器启
         </a>
       </p>
 
@@ -354,20 +343,7 @@ log-pilot 具有如下特性：
         <a href="/blog/2021/08/13/Archery-Sql%E5%AE%A1%E8%AE%A1%E5%B9%B3%E5%8F%B0/" target="_self">
           
           
-            
           
-          介绍Archery是archer的分支开源项目，定位于SQL审核查询平台，旨在提升DBA的工作效率，支持多数据库的SQL上线和查询，同时支持丰富的MySQL运维功能，所有功能都兼容手机端操作。
-支持数据库：
-
-MySQL
-MsSQL
-Redis
-PgSQL
-Oracle
-MongoDB
-
-部署下载
-1wget https://github.com/hhyo/Archery/archive/refs
         </a>
       </p>
 
@@ -415,18 +391,7 @@ MongoDB
         <a href="/blog/2021/06/28/etcd%E9%9B%86%E7%BE%A4/" target="_self">
           
           
-            
           
-          介绍ETCD是用于共享配置和服务发现的分布式，一致性的KV存储系统。作为一个受到ZooKeeper与doozer启发而催生的项目，除了拥有与之类似的功能外，更专注于以下四点。
-
-简单：基于HTTP+JSON的API让你用curl就可以轻松使用。
-安全：可选SSL客户认证机制。
-快速：每个实例每秒支持一千次写操作。
-可信：使用Raft算法充分实现了分布式。
-
-应用场景有如下几类： 
-
-服务发现（Se
         </a>
       </p>
 
@@ -474,9 +439,7 @@ MongoDB
         <a href="/blog/2021/06/24/dnsmasq%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE/" target="_self">
           
           
-            
           
-          介绍Dnsmasq 提供 DNS 缓存和 DHCP 服务功能。作为域名解析服务器(DNS)，dnsmasq可以通过缓存 DNS 请求来提高对访问过的网址的连接速度。作为DHCP 服务器，dnsmasq 可以用于为局域网电脑分配内网ip地址和提供路由。DNS和DHCP两个功能可以同时或分别单独实现。dnsmasq轻量且易配置，适用于个人用户或少于50台主机的网络。此外它还自带了一个 PXE 服务器。
         </a>
       </p>
 
@@ -524,10 +487,7 @@ MongoDB
         <a href="/blog/2021/05/27/nginx%20location%E6%96%9C%E6%9D%86%E5%8C%BA%E5%88%AB/" target="_self">
           
           
-            
           
-          介绍最新在配置nginx时,意外发现location中目录斜线有和没有的区别，百度了找找发现没有几个人说的清楚，最后找到一个兄弟写的还比较实用，再次谢过（https://blog.csdn.net/ruihaol/article/details/79526749?from=timeline）。
-nginx代理后端服务nginx 服务器及端口 127.0.0.1:80后端服务:127.0.0.1:8
         </a>
       </p>
 
@@ -575,10 +535,7 @@ nginx代理后端服务nginx 服务器及端口 127.0.0.1:80后端服务:127.0.0
         <a href="/blog/2021/05/20/postgre%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          介绍常用命令
-1234567891011121314# 登录psql -U postgres# 查询库postgres=# \l# 切换库postgres=# \c test# 查询所有表postgres=# \dt# 创建库postgres=# create database test# 删除库postgres=# drop database test# 删除表postgres=# drop t
         </a>
       </p>
 
@@ -626,13 +583,7 @@ nginx代理后端服务nginx 服务器及端口 127.0.0.1:80后端服务:127.0.0
         <a href="/blog/2021/05/18/k8s%20%E8%AF%81%E4%B9%A6%E7%BB%AD%E7%AD%BE/" target="_self">
           
           
-            
           
-          介绍安装k8s集群时，kubelet组件默认是1年，如果到期，需要手动更新该证书，1.8版本之后也可配置自动更新。
-手动更新删除原证书
-12# 进入到ssl配置目录，删除 kubelet 证书rm -f kubelet-client-current.pem kubelet-client-2019-05-10-09-57-21.pem kubelet.key kubelet.crt
-
-重启kubel
         </a>
       </p>
 
@@ -680,9 +631,7 @@ nginx代理后端服务nginx 服务器及端口 127.0.0.1:80后端服务:127.0.0
         <a href="/blog/2020/12/03/nginx%E4%B9%8Blua/" target="_self">
           
           
-            
           
-          123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081worker_processes  1;events &#123;    worker_con
         </a>
       </p>
 

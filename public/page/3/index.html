@@ -199,13 +199,7 @@
         <a href="/blog/2020/07/20/nginx%E4%B9%8B%E6%B7%BB%E5%8A%A0%E6%A8%A1%E5%9D%97/" target="_self">
           
           
-            
           
-          查看模块
-123456# 查看可用模块及已安装模块cd nginx-1.14.2cat auto/options | grep YES# 查看已安装模块./nginx -V
-
-添加模块
-1234567891011121314151617# 到安装包cd nginx-1.14.2# 编译，别make install，会覆盖原配置./configure --prefix=/opt/nginx --us
         </a>
       </p>
 
@@ -253,15 +247,7 @@
         <a href="/blog/2020/07/20/nginx%E4%B9%8B%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5/" target="_self">
           
           
-            
           
-          介绍nginx健康检查分为：
-
-被动：ngx_http_proxy_module 模块和ngx_http_upstream_module模块，会有失败的连接。（自带）
-主动：nginx 模块 nginx_upstream_check_module，通过它可以用来检测后端 realserver 的健康状态。（淘宝第三方）
-
-配置被动检查
-1234567upstream name &#123;    
         </a>
       </p>
 
@@ -309,14 +295,7 @@
         <a href="/blog/2020/07/13/seata%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" target="_self">
           
           
-            
           
-          介绍角色介绍：
-
-XID：一个全局事务的唯一标识，由ip:port:sequence组成
-Transaction Coordinator (TC)： 事务协调器，维护全局事务的运行状态，负责协调并驱动全局事务的提交或回滚。
-Transaction Manager （TM）： 控制全局事务的边界，负责开启一个全局事务，并最终发起全局提交或全局回滚的决议。
-Resource Manager (RM)：
         </a>
       </p>
 
@@ -364,12 +343,7 @@ Resource Manager (RM)：
         <a href="/blog/2020/07/09/k8s%E4%B9%8Bingress-nginx/" target="_self">
           
           
-            
           
-          介绍Ingress是什么？
-ingress 是除了 hostport  nodeport  clusterIP以及云环境专有的负载均衡器外的访问方式,官方提供了Nginx ingress controller。ingress-nginx本身就是nodeport模式
-Ingress能做什么？
-k8s中，不管是哪种类型的svc，不管是用iptables还是ipvs实现端口转发实现负载均衡，也只是实现了
         </a>
       </p>
 
@@ -417,15 +391,7 @@ k8s中，不管是哪种类型的svc，不管是用iptables还是ipvs实现端�
         <a href="/blog/2020/07/07/%E8%AE%B0%E4%B8%80%E6%AC%A1%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3%E9%97%AE%E9%A2%98/" target="_self">
           
           
-            
           
-          问题
-使用df -ha查看/分区容量占满
-但使用du -sh /*却没有占用大的目录
-lsof |grep delete也没有占用deleted状态的大容量进程
-find / -type f -size +100M -exec ls -lh {} ;查找大文件，也没有找到
-find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
-重启服务器没有效果，依然显示
         </a>
       </p>
 
@@ -473,9 +439,7 @@ find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
         <a href="/blog/2020/07/04/k8s%E7%9B%91%E6%8E%A7%E8%84%9A%E6%9C%AC/" target="_self">
           
           
-            
           
-          12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747576777879808182838485868788899091929394959697989910010110210
         </a>
       </p>
 
@@ -523,9 +487,7 @@ find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
         <a href="/blog/2020/06/09/centos8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          网络配置1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192# 查看ip（类似于ifconfig、ip
         </a>
       </p>
 
@@ -573,10 +535,7 @@ find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
         <a href="/blog/2020/06/06/openvpn%E6%90%AD%E5%BB%BA%E9%85%8D%E7%BD%AE/" target="_self">
           
           
-            
           
-          https://www.cnblogs.com/lemon-le/p/6266921.html
-
         </a>
       </p>
 
@@ -624,10 +583,7 @@ find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
         <a href="/blog/2020/06/05/flink%E4%B9%8BREST%20API%E8%B0%83%E7%94%A8/" target="_self">
           
           
-            
           
-          介绍监视API由作为Dispatcher一部分运行的Web服务器支持。默认情况下，此服务器在post侦听8081，可以flink-conf.yaml通过via 进行配置rest.port。请注意，监视API Web服务器和Web仪表板Web服务器当前是相同的，因此可以在同一端口一起运行。但是，它们会响应不同的HTTP URL。
-如果有多个Dispatcher（用于高可用性），则每个Dispatch
         </a>
       </p>
 
@@ -675,9 +631,7 @@ find / -name “.*” -exec ls -lh {} ;查找隐藏文件，也没有太大的
         <a href="/blog/2020/06/04/nginx%E4%B9%8Bproxy_pass%E8%A7%84%E5%88%99/" target="_self">
           
           
-            
           
-          介绍在两个模块中，两个proxy_pass都是用来做后端代理的指令。ngx_stream_proxy_module模块的proxy_pass指令只能在server段使用使用, 只需要提供域名或ip地址和端口。可以理解为端口转发，可以是tcp端口，也可以是udp端口。ngx_http_proxy_module模块的proxy_pass指令需要在location段，location中的if段，limi
         </a>
       </p>
 

@@ -199,23 +199,7 @@
         <a href="/blog/2019/10/27/ssh%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/" target="_self">
           
           
-            
           
-          介绍ssh端口转发作用：
-
-转发对应的端口请求到目标服务器的对应端口服务（在本地生成监听端口）
-转发对应的端口请求到目标服务器的对应端口服务（在跳板机生成监听端口）
-
-使用ssh参数说明：
-
--L    # 本地转发
--R    # 远程转发
--N    # 不打开远程shell，处于等待状态（不加-N则直接登录进去
--f    # 后台启用
-
-实验环境：
-
-192.168.40.100（发起请求
         </a>
       </p>
 
@@ -263,10 +247,7 @@
         <a href="/blog/2019/10/26/node.js%E5%92%8CPM2%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/" target="_self">
           
           
-            
           
-          介绍Node.js： 就是运行在服务端的 JavaScript。Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。
-NPM： 是随同NodeJS一起安装的包管理工具，能解决NodeJS代码部署上的很多问题，常见的使
         </a>
       </p>
 
@@ -314,13 +295,7 @@ NPM： 是随同NodeJS一起安装的包管理工具，能解决NodeJS代码部�
         <a href="/blog/2019/10/26/kvm%E5%AE%89%E8%A3%85%E4%B8%8E%E4%BD%BF%E7%94%A8/" target="_self">
           
           
-            
           
-          介绍kvm： 全称“基于内核的虚拟机”，是一个开源的软件，基于内核的虚拟化技术，实际是嵌入系统的一个虚拟化模块，通过优化内核来使用虚拟技术，该内核模块使得Linux变成一个hypervisor，虚拟机使用Linux自身的调度器进行管理。（就是说Linux要部署一个kvm模块，他才能变成hypervisor层）。
-kvm是基于CPU的类型进行管理。
-
-用户空间：指的是用户得到一个虚拟机。
-内核空间：
         </a>
       </p>
 
@@ -368,13 +343,7 @@ kvm是基于CPU的类型进行管理。
         <a href="/blog/2019/10/23/centos7%E5%AE%89%E8%A3%85mariadb/" target="_self">
           
           
-            
           
-          介绍使用yum安装mariadb，方便快捷。
-安装安装并启动
-12345yum install mariadb-serversystemctl start mariadb systemctl enable mariadb
-初始化
-12345678910111213141516171819202122232425# 初始化命令，进入交互式界面mysql_secure_installation# 输入
         </a>
       </p>
 
@@ -422,10 +391,7 @@ kvm是基于CPU的类型进行管理。
         <a href="/blog/2019/10/19/redis%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          介绍方便自己查询使用
-常用命令登录查询命令1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859# 登录redis./redis-cli -h 主机IP -a 密码 -p 端口 [可执行命令]# 查看redis信息info# 查看集群身
         </a>
       </p>
 
@@ -473,10 +439,7 @@ kvm是基于CPU的类型进行管理。
         <a href="/blog/2019/10/19/redis%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
           
           
-            
           
-          介绍源码包安装的redis中redis.conf和sentinel.conf的配置文件详解
-redis.conf配置详解12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273747
         </a>
       </p>
 
@@ -524,15 +487,7 @@ redis.conf配置详解1234567891011121314151617181920212223242526272829303132333
         <a href="/blog/2019/10/18/redis%E4%B8%BB%E4%BB%8E%E4%B8%8E%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E6%90%AD%E5%BB%BA/" target="_self">
           
           
-            
           
-          主从介绍主从：主节点负责写数据，从节点负责读数据，主节点定期把数据同步到从节点保证数据的一致性
-哨兵机制介绍主要功能如下
-
-集群监控：负责监控redis master和slave进程是否正常工作 
-消息通知：如果某个redis实例有故障，那么哨兵负责发送消息作为报警通知给管理员 
-故障转移：如果master node挂掉了，会自动转移到slave node上 
-配置中心：如果故障转移发生了，通知c
         </a>
       </p>
 
@@ -580,9 +535,7 @@ redis.conf配置详解1234567891011121314151617181920212223242526272829303132333
         <a href="/blog/2019/09/18/nginx%E9%85%8D%E7%BD%AE%E5%A4%A7%E5%85%A8/" target="_self">
           
           
-            
           
-          全局配置12345678910111213141516171819# nginx启动的进程数worker_processes 2; 	# 让不同的进程使用不同的cpuworker_cpu_affinity 01 10;  # 一个进程打开的最多文件描述符，不大于ulimit的限制worker_rlimit_nofile 65535;events &#123;	#epoll事件模型,处理效率高	us
         </a>
       </p>
 
@@ -630,26 +583,7 @@ redis.conf配置详解1234567891011121314151617181920212223242526272829303132333
         <a href="/blog/2019/09/18/k8s%E4%B9%8B%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           
           
-            
           
-          获取节点相应服务的信息
-1kubectl get pods
-
-
-查看集群信息
-1kubectl cluster-info
-
-查看各组件信息
-1kubectl get cs
-
-查看pods所在的运行节点
-1kubectl get pods -o wide
-
-查看pods定义的详细信息
-1kubectl get pods -o yaml
-
-查看运行的pod的环境变量
-1kubectl exec pod
         </a>
       </p>
 
@@ -697,10 +631,7 @@ redis.conf配置详解1234567891011121314151617181920212223242526272829303132333
         <a href="/blog/2019/09/17/k8s%E9%83%A8%E7%BD%B2/" target="_self">
           
           
-            
           
-          介绍 Kubernetes是当今最流行的开源容器管理平台，它就是大名鼎鼎的Google Borg的开源版本。Google在2014年推出了Kubernetes，本文发布时最新的版本是1.11。
-Kubernetes源于希腊语，意为舵手，K8S是一个简称，因为首尾字母中间正好有8个字母。基于容器技术，Kubernetes可以方便的进行集群应用的部署、扩容、缩容、自愈机制、服务发现、负载均衡、日志、监
         </a>
       </p>
 
