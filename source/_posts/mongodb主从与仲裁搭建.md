@@ -179,8 +179,15 @@ mongo -u test_user -p abc123 --authenticationDatabase testdb
 修改密码，权限
 
 ```bash
+# 登录admin
 mongo -u admin -p 123123 --authenticationDatabase admin
+
+# 切换到对应库
 use testdb
+
+# 查看用户
+show users
+
 # 修改密码
 db.changeUserPassword('test_user','123123');
 
