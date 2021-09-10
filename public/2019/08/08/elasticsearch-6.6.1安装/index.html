@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      613 字
+      693 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      10
        分钟
     </span>
   
@@ -265,12 +265,20 @@
 
 <h2 id="安装中文分词"><a href="#安装中文分词" class="headerlink" title="安装中文分词"></a>安装中文分词</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>wget https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.6.1/elasticsearch-analysis-ik-6.6.1.zip<br><br><span class="hljs-comment"># 创建ik目录</span><br>mkdir /data/elasticsearch-6.6.1/plugins/ik<br><br>mv elasticsearch-analysis-ik-6.6.1.zip elasticsearch-6.6.1/plugins/ik<br><br><span class="hljs-built_in">cd</span> /data/elasticsearch-6.6.1/plugins/ik<br><br>unzip elasticsearch-analysis-ik-6.6.1.zip<br></code></pre></td></tr></table></figure>
 
+<h2 id="配置密码"><a href="#配置密码" class="headerlink" title="配置密码"></a>配置密码</h2><p>添加配置<code>elasticsearch.yml</code> </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">http.cors.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">http.cors.allow-origin:</span> <span class="hljs-string">&quot;*&quot;</span><br><span class="hljs-attr">http.cors.allow-headers:</span> <span class="hljs-string">Authorization</span><br><span class="hljs-attr">xpack.security.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">xpack.security.transport.ssl.enabled:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+<p>重启es，配置密码</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 手动配置密码</span><br>bin/elasticsearch-setup-passwords interactive<br><br><span class="hljs-comment"># 自动生成密码</span><br>bin/elasticsearch-setup-passwords auto<br></code></pre></td></tr></table></figure>
+
 <h1 id="docker部署"><a href="#docker部署" class="headerlink" title="docker部署"></a>docker部署</h1><p>elasticsearch部署</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -d --name elasticsearch  -p 9200:9200 -p 9300:9300 -e <span class="hljs-string">&quot;discovery.type=single-node&quot;</span> elasticsearch:6.4.0<br></code></pre></td></tr></table></figure>
 
 <p>kibana部署</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker run -p 5601:5601 --name kibana  -e <span class="hljs-string">&quot;elasticsearch.hosts=http://localhost:9200&quot;</span> -d kibana:6.4.0<br></code></pre></td></tr></table></figure>
 
+<p>测试连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl --user elastic:123123 -XGET https://192.168.40.100:9200/_cat/indices?v<br></code></pre></td></tr></table></figure>
 
             </div>
             <hr>

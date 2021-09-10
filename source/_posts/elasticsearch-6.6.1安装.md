@@ -126,6 +126,28 @@ cd /data/elasticsearch-6.6.1/plugins/ik
 unzip elasticsearch-analysis-ik-6.6.1.zip
 ```
 
+## 配置密码
+
+添加配置`elasticsearch.yml` 
+
+```yaml
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-headers: Authorization
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+```
+
+重启es，配置密码
+
+```bash
+# 手动配置密码
+bin/elasticsearch-setup-passwords interactive
+
+# 自动生成密码
+bin/elasticsearch-setup-passwords auto
+```
+
 # docker部署
 
 elasticsearch部署
@@ -140,3 +162,8 @@ kibana部署
 docker run -p 5601:5601 --name kibana  -e "elasticsearch.hosts=http://localhost:9200" -d kibana:6.4.0
 ```
 
+测试连接
+
+```bash
+curl --user elastic:123123 -XGET https://192.168.40.100:9200/_cat/indices?v
+```

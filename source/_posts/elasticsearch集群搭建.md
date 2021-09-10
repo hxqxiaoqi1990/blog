@@ -258,3 +258,41 @@ POST /_snapshot/my_backup/snapshot_1/_restore
 
 这个会恢复 `index_1` 到你及群里，但是重命名成了 `restored_index_1` 。
 
+# 配置集群密码
+
+生成证书，之后把证书复制到其它节点的config目录下
+
+```bash
+bin/elasticsearch-certutil cert -out config/elastic-certificates.p12 -pass ""
+mv elastic-certificates.p12 config/
+```
+
+添加配置`elasticsearch.yml` 
+
+```yaml
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-headers: Authorization
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+```
+
+重启es，配置密码
+
+```bash
+# 手动配置密码
+bin/elasticsearch-setup-passwords interactive
+
+# 自动生成密码
+bin/elasticsearch-setup-passwords auto
+```
+
+测试连接
+
+```bash
+curl --user elastic:123123 -XGET https://192.168.40.100:9200/_cat/indices?v
+```
+
