@@ -166,11 +166,11 @@ global:
   # 邮箱smtp服务器代理
   smtp_smarthost: 'smtp.163.com:25'   
   # 发送邮箱名称
-  smtp_from: 'hxqxiaoqi1990@163.com'    
+  smtp_from: '123123@163.com'    
   # 邮箱名称
-  smtp_auth_username: 'hxqxiaoqi1990@163.com'   
+  smtp_auth_username: '123123@163.com'   
   # 邮箱密码或授权码
-  smtp_auth_password: 'Hxq7996026'      
+  smtp_auth_password: '123123'      
   smtp_require_tls: false
 
 route:
@@ -187,7 +187,7 @@ route:
 receivers:
 - name: 'mail'
   email_configs:
-  - to: 'hxqxiaoqi1990@163.com'
+  - to: '123123@163.com'
 inhibit_rules:
   - source_match:
       severity: 'critical'
