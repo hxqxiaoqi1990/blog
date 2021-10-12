@@ -168,6 +168,9 @@ rabbitmqctl cluster_status
 # 查看所有用户
 rabbitmqctl list_users
 
+# 删除用户
+rabbitmqctl delete_user Username
+
 # 设置 hechunping 用户对 hechunping 的 vhost 有读写权限，三个点分别表示配置正则、读和写
 rabbitmqctl set_permissions -p hechunping hechunping ".*" ".*" ".*"
 
@@ -180,4 +183,3 @@ rabbitmqctl  list_user_permissions  User
 # 清除用户的权限信息
 rabbitmqctl  clear_permissions  [-p VHostPath]  User
 ```
-
