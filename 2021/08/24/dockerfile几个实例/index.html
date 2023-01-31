@@ -1,0 +1,466 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>dockerfile几个实例 - 自在博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 40vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>HXQ</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/link/">
+                <i class="iconfont icon-link-fill"></i>
+                链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="dockerfile几个实例">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-24 20:49" pubdate>
+        2021年8月24日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">dockerfile几个实例</h1>
+            
+            <div class="markdown-body">
+              <h1 id="实例说明"><a href="#实例说明" class="headerlink" title="实例说明"></a>实例说明</h1><p>本章会写两个dockerfile实例和一个shell脚本调用dockerfile实例，重点在于shell和dockerfile中环境变量的调用以及调用系统变量，这里有些坑会重点说明。</p>
+<h1 id="dockerfile封装jdk"><a href="#dockerfile封装jdk" class="headerlink" title="dockerfile封装jdk"></a>dockerfile封装jdk</h1><p>以下代码存为名为<code>Dockerfile</code>的文件，把下载好的jdk包放在Dockerfile同一目录中，运行dockerfile，即可生成拥有jdk环境的系统镜像，我把镜像上传到阿里云仓库中，方便可以随时使用。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment">#依赖镜像名称和ID</span><br><span class="hljs-keyword">FROM</span> centos<br><br><span class="hljs-comment">#切换工作目录</span><br><span class="hljs-keyword">WORKDIR</span><span class="bash"> /usr</span><br><span class="hljs-keyword">RUN</span><span class="bash"> mkdir  /usr/<span class="hljs-built_in">local</span>/java</span><br><br><span class="hljs-comment">#ADD 是相对路径jar,把java添加到容器中</span><br><span class="hljs-keyword">ADD</span><span class="bash"> jdk-8u191-linux-x64.tar.gz /usr/<span class="hljs-built_in">local</span>/java/</span><br><br><span class="hljs-comment">#配置java环境变量</span><br><span class="hljs-keyword">ENV</span> JAVA_HOME /usr/local/java/jdk1.<span class="hljs-number">8.0</span>_191<br><span class="hljs-keyword">ENV</span> JRE_HOME $JAVA_HOME/jre<br><span class="hljs-keyword">ENV</span> CLASSPATH $JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib:$CLASSPATH<br><span class="hljs-keyword">ENV</span> PATH $JAVA_HOME/bin:$PATH<br><span class="hljs-comment">#配置系统语言</span><br><span class="hljs-keyword">ENV</span> LANG en_US.UTF-<span class="hljs-number">8</span><br><br><span class="hljs-comment">#运行</span><br><span class="hljs-keyword">ENTRYPOINT</span><span class="bash"> tail -f /anaconda-post.log</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="dockerfile封装jar包服务"><a href="#dockerfile封装jar包服务" class="headerlink" title="dockerfile封装jar包服务"></a>dockerfile封装jar包服务</h1><p>以下代码存为名为Dockerfile的文件，跟下面shell脚本配合使用，注意：dockerfile中的变量只是容器中的变量，系统变量无法在dockerfile中生效，只有通过ARG向dockerfile中传入系统变量，ARG指令需要在<code>docker build</code>时指定其变量。</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile"><span class="hljs-comment">#依赖镜像名称和ID</span><br><span class="hljs-comment">#阿里云内网</span><br><span class="hljs-keyword">FROM</span> registry-vpc.cn-hangzhou.aliyuncs.com/znknow/page:<span class="hljs-number">1.8</span><br><span class="hljs-comment">#阿里云外网</span><br><span class="hljs-comment">#FROM registry.cn-hangzhou.aliyuncs.com/znknow/page:1.8</span><br><br><span class="hljs-comment">#系统环境变量</span><br><span class="hljs-keyword">ARG</span> pagej<br><span class="hljs-keyword">ARG</span> pagep<br><br><span class="hljs-comment">#dockerfile环境变量</span><br><span class="hljs-keyword">ENV</span> jar $pagej<br><span class="hljs-keyword">ENV</span> port $pagep<br><span class="hljs-keyword">ENV</span> LANG en_US.UTF-<span class="hljs-number">8</span><br><br><span class="hljs-keyword">COPY</span><span class="bash"> ./<span class="hljs-variable">$jar</span> /usr/<span class="hljs-built_in">local</span>/</span><br><span class="hljs-keyword">EXPOSE</span> $port<br><br><span class="hljs-keyword">ENTRYPOINT</span><span class="bash"> java -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=12000,server=y,<span class="hljs-built_in">suspend</span>=n  -jar /usr/<span class="hljs-built_in">local</span>/<span class="hljs-variable">$jar</span> -Djava.io.tmpdir=/data/tmp &amp;&gt; /var/<span class="hljs-built_in">log</span>/<span class="hljs-variable">$jar</span>.<span class="hljs-built_in">log</span></span><br></code></pre></td></tr></table></figure>
+
+<h1 id="shell启动dockerfile"><a href="#shell启动dockerfile" class="headerlink" title="shell启动dockerfile"></a>shell启动dockerfile</h1><p>该shell脚本为运行dockerfile并向dockerfile中传入相应变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br><span class="hljs-comment">#定义shell环境变量</span><br><span class="hljs-built_in">export</span> pagedir=`<span class="hljs-built_in">pwd</span>`<br><span class="hljs-built_in">export</span> pagejar=<span class="hljs-variable">$1</span><br><span class="hljs-built_in">export</span> pageport=<span class="hljs-variable">$2</span><br><span class="hljs-built_in">export</span> pageport3=<span class="hljs-variable">$3</span><br><span class="hljs-built_in">export</span> pagetag=<span class="hljs-string">&quot;1.0&quot;</span><br><span class="hljs-built_in">export</span> pageago=`docker ps -a | grep <span class="hljs-variable">$pagejar</span> | cut -d <span class="hljs-string">&quot; &quot;</span> -f1`<br><span class="hljs-built_in">export</span> pageagoim=`docker images | grep <span class="hljs-variable">$pagejar</span> |awk -F <span class="hljs-string">&quot; &quot;</span> <span class="hljs-string">&#x27;&#123;print $3&#125;&#x27;</span>`<br><br><span class="hljs-comment">#删除原镜像和容器，这里不像生成多个相同镜像，也可以使用标签生成多个镜像</span><br>/usr/bin/docker rm -f <span class="hljs-variable">$pageago</span><br>/usr/bin/docker rmi -f <span class="hljs-variable">$pageagoim</span><br><br><span class="hljs-comment">#运行dockerfile指令，--build-arg为传入dockerfile中的环境变量</span><br>/usr/bin/docker build --build-arg pagej=<span class="hljs-variable">$pagejar</span> --build-arg pagep=<span class="hljs-variable">$pageport3</span> -t <span class="hljs-variable">$pagejar</span>:<span class="hljs-variable">$pagetag</span> .<br><br><span class="hljs-comment">#启动容器</span><br>/usr/bin/docker run --restart always -v <span class="hljs-variable">$pagedir</span>:/var/<span class="hljs-built_in">log</span>/  -v /etc/localtime:/etc/localtime -v /etc/timezone:/etc/timezone -p <span class="hljs-variable">$pageport</span>:<span class="hljs-variable">$pageport3</span> --name <span class="hljs-variable">$pagejar</span>-<span class="hljs-variable">$pagetag</span> -d <span class="hljs-variable">$pagejar</span>:<span class="hljs-variable">$pagetag</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="docker-zkui"><a href="#docker-zkui" class="headerlink" title="docker-zkui"></a>docker-zkui</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM registry.cn-hangzhou.aliyuncs.com/mmh/jdk:1.8.0<br><br>ENV LANG en_US.UTF-8<br>ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64<br>ENV CLASSPATH .:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64/dt.jar:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64/lib/tools.jar<br><br>ADD ./zkui-2.0-SNAPSHOT-jar-with-dependencies.jar /opt/zkui/zkui-2.0-SNAPSHOT-jar-with-dependencies.jar<br>ADD ./config.cfg /opt/zkui/config.cfg<br><br>RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>RUN yum -y install vim net-tools telnet<br><br><span class="hljs-comment"># $zkcluster变量可以在启动镜像时指定</span><br>ENTRYPOINT sed -i <span class="hljs-string">&#x27;s/zkServer=.*/zkServer=&#x27;</span><span class="hljs-variable">$zkcluster</span><span class="hljs-string">&#x27;/&#x27;</span> /opt/zkui/config.cfg &amp;&amp; <span class="hljs-built_in">cd</span> /opt/zkui/ &amp;&amp; java -Xms512m -Xmx512m -XX:PermSize=128m -jar /opt/zkui/zkui-2.0-SNAPSHOT-jar-with-dependencies.jar<br></code></pre></td></tr></table></figure>
+
+<h1 id="docker-zipkin"><a href="#docker-zipkin" class="headerlink" title="docker-zipkin"></a>docker-zipkin</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM registry.cn-hangzhou.aliyuncs.com/mmh/jdk:1.8.0<br><br>ENV LANG en_US.UTF-8<br>ENV JAVA_HOME /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64<br>ENV CLASSPATH .:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64/dt.jar:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.232.b09-0.el7_7.x86_64/lib/tools.jar<br><br>ADD ./zipkin.tar.gz /data/<br><br>RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br>RUN yum -y install vim net-tools<br><br>ENTRYPOINT <span class="hljs-built_in">cd</span> /data/zipkin &amp;&amp; java -Xms512m -Xmx512m -XX:PermSize=128m -jar /data/zipkin/zipkin.jar<br></code></pre></td></tr></table></figure>
+
+<h1 id="docker-disconf"><a href="#docker-disconf" class="headerlink" title="docker-disconf"></a>docker-disconf</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM centos:7.4.1708<br><br>ENV LANG en_US.UTF-8<br>ENV JAVA_HOME /opt/jdk1.8.0_221<br>ENV JRE_HOME <span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/jre<br>ENV CLASSPATH .:<span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="hljs-variable">$&#123;JRE_HOME&#125;</span>/lib<br>ENV PATH <span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="hljs-variable">$PATH</span><br>ENV MAVEN_HOME /opt/apache-maven-3.3.9<br>ENV PATH <span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$JAVA_HOME</span>/bin:<span class="hljs-variable">$MAVEN_HOME</span>/bin<br>ENV ONLINE_CONFIG_PATH /usr/<span class="hljs-built_in">local</span>/disconf/resource<br>ENV WAR_ROOT_PATH /usr/<span class="hljs-built_in">local</span>/disconf/war<br><br>ADD ./jdk-8u221-linux-x64.tar.gz /opt/<br>ADD ./apache-maven-3.3.9-bin.tar.gz /opt/<br>ADD ./apache-tomcat-8.5.47.tar.gz /opt/<br>ADD ./disconf.tar.gz /usr/<span class="hljs-built_in">local</span>/<br>ADD ./nginx.sh /opt/<br>ADD ./redis.sh /opt/<br>ADD ./redis-stable.tar.gz /opt/<br>ADD	./nginx-1.14.2.tar.gz /opt/<br>ADD	./start.sh /opt/<br>ADD	./nginx.conf /opt/<br>ADD	./server.xml /opt/<br>ADD	./nginx.service /lib/systemd/system/<br><br>RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;Asia/Shanghai&#x27;</span> &gt;/etc/timezone<br>RUN yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel wget vim net-tools telnet<br>RUN sh /opt/nginx.sh<br>RUN sh /opt/redis.sh<br>RUN \mv /opt/nginx.conf /opt/nginx/conf/<br>RUN \mv /opt/server.xml /opt/apache-tomcat-8.5.47/conf/<br>RUN <span class="hljs-built_in">cd</span> /opt/ &amp;&amp; rm -rf nginx-1.14.2  nginx.sh  redis.sh <br><br>ENTRYPOINT <span class="hljs-built_in">cd</span> /opt/redis-stable/ &amp;&amp; ./src/redis-server ./redis.conf &amp;&amp; bash /opt/apache-tomcat-8.5.47/bin/startup.sh &amp;&amp; /opt/nginx/sbin/nginx -g <span class="hljs-string">&quot;daemon off;&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/docker/">docker</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2021/08/27/rabbitmq%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">rabbitmq集群部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2021/08/20/kubeadm%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">kubeadm高可用集群安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

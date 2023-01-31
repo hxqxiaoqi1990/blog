@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>elk之docker-compose部署 - 自在博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 40vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>HXQ</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/link/">
+                <i class="iconfont icon-link-fill"></i>
+                链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="elk之docker-compose部署">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-19 13:10" pubdate>
+        2021年12月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.1k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">elk之docker-compose部署</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>单纯记录elk的docker-compose部署模版，用于笔记</p>
+<h2 id="elk模版"><a href="#elk模版" class="headerlink" title="elk模版"></a>elk模版</h2><p>需要持久化的配置文件可以先启动容器，从容器中拷贝默认配置文件</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">elasticsearch:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">elasticsearch:7.7.0</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">elasticsearch</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;cluster.name=elasticsearch&quot;</span> <span class="hljs-comment">#设置集群名称为elasticsearch</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;discovery.type=single-node&quot;</span> <span class="hljs-comment">#以单一节点模式启动</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ES_JAVA_OPTS=-Xms7168m -Xmx7168m&quot;</span> <span class="hljs-comment">#设置使用jvm内存大小</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/elasticsearch/plugins:/usr/share/elasticsearch/plugins</span> <span class="hljs-comment">#插件文件挂载</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/elasticsearch/data:/usr/share/elasticsearch/data</span> <span class="hljs-comment">#数据文件挂载</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/elasticsearch/config:/usr/share/elasticsearch/config</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">9200</span><span class="hljs-string">:9200</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">9300</span><span class="hljs-string">:9300</span><br>  <span class="hljs-attr">kibana:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">kibana:7.7.0</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">kibana</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch</span> <span class="hljs-comment">#kibana在elasticsearch启动之后再启动</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;elasticsearch.hosts=http://127.0.0.1:9200&quot;</span> <span class="hljs-comment">#设置访问elasticsearch的地址</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">i18n.locale=zh-CN</span>   <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/kibana/kibana.yaml:/usr/share/kibana/config/kibana.yml</span> <span class="hljs-comment">#配置文件挂载</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">5601</span><span class="hljs-string">:5601</span><br>  <span class="hljs-attr">logstash:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">logstash:7.7.0</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">logstash</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">5044</span><span class="hljs-string">:5044</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/logstash/pipeline:/usr/share/logstash/pipeline</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">elasticsearch</span><br><span class="hljs-comment"># 日志钉钉报警组件</span><br>  <span class="hljs-attr">elastalert:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">anjia0532/elastalert-docker:v0.2.4</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">elastalert</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTICSEARCH_HOST=192.168.1.100&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTICSEARCH_USER=elastic&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTICSEARCH_PASSWORD=es密码&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;CONTAINER_TIMEZONE=Asia/Shanghai&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;TZ=Asia/Shanghai&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTALERT_DINGTALK_SECURITY_TYPE:keyword&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTALERT_DINGTALK_MSGTYPE:text&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTALERT_BUFFER_TIME=10&quot;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;ELASTALERT_RUN_EVERY=3&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/elastalert/rules:/opt/elastalert/rules</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/elastalert/config.yaml:/opt/elastalert/config.yaml</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="elasticsearch配置"><a href="#elasticsearch配置" class="headerlink" title="elasticsearch配置"></a>elasticsearch配置</h2><p>elasticsearch.yml </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">cluster<span class="hljs-selector-class">.name</span>: <span class="hljs-string">&quot;docker-cluster&quot;</span><br>network<span class="hljs-selector-class">.host</span>: <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span><br><br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.enabled</span>: true<br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.allow-origin</span>: <span class="hljs-string">&quot;*&quot;</span><br>http<span class="hljs-selector-class">.cors</span><span class="hljs-selector-class">.allow-headers</span>: Authorization<br>xpack<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.enabled</span>: true<br>xpack<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.transport</span><span class="hljs-selector-class">.ssl</span><span class="hljs-selector-class">.enabled</span>: true<br>xpack<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.transport</span><span class="hljs-selector-class">.ssl</span><span class="hljs-selector-class">.verification_mode</span>: certificate<br>xpack<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.transport</span><span class="hljs-selector-class">.ssl</span><span class="hljs-selector-class">.keystore</span><span class="hljs-selector-class">.path</span>: elastic-certificates<span class="hljs-selector-class">.p12</span><br>xpack<span class="hljs-selector-class">.security</span><span class="hljs-selector-class">.transport</span><span class="hljs-selector-class">.ssl</span><span class="hljs-selector-class">.truststore</span><span class="hljs-selector-class">.path</span>: elastic-certificates.p12<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="kibana配置"><a href="#kibana配置" class="headerlink" title="kibana配置"></a>kibana配置</h2><p>kibana.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">server.name:</span> <span class="hljs-string">kibana</span><br><span class="hljs-attr">server.host:</span> <span class="hljs-string">&quot;0&quot;</span><br><span class="hljs-attr">elasticsearch.hosts:</span> [ <span class="hljs-string">&quot;http://elasticsearch:9200&quot;</span> ]<br><span class="hljs-attr">i18n.locale:</span> <span class="hljs-string">&quot;zh-CN&quot;</span><br><span class="hljs-attr">kibana.index:</span> <span class="hljs-string">&quot;.kibana&quot;</span><br><span class="hljs-attr">xpack.monitoring.ui.container.elasticsearch.enabled:</span> <span class="hljs-literal">true</span><br><span class="hljs-attr">elasticsearch.username:</span> <span class="hljs-string">&#x27;es用户&#x27;</span><br><span class="hljs-attr">elasticsearch.password:</span> <span class="hljs-string">&#x27;es密码&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="logstash配置"><a href="#logstash配置" class="headerlink" title="logstash配置"></a>logstash配置</h2><p>logstash.yml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">http.host:</span> <span class="hljs-string">&quot;0.0.0.0&quot;</span><br><span class="hljs-attr">xpack.monitoring.elasticsearch.hosts:</span> [ <span class="hljs-string">&quot;http://192.168.1.100:9200&quot;</span> ]<br><span class="hljs-attr">xpack.monitoring.elasticsearch.username:</span> <span class="hljs-string">&quot;es用户&quot;</span><br><span class="hljs-attr">xpack.monitoring.elasticsearch.password:</span> <span class="hljs-string">&quot;es密码&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>logstash收集日志示例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs bash">input &#123;<br>  beats &#123;<br>    port =&gt; 5044<br>  &#125;<br>&#125;<br>filter&#123;<br>  <span class="hljs-comment"># 正则过滤日志，定义日志字段，针对匹配到的日志做处理</span><br>  grok&#123;<br>    match =&gt; [ <span class="hljs-string">&quot;message&quot;</span>,<span class="hljs-string">&quot;(?&lt;logtime&gt;\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;\s\d&#123;2&#125;:\d&#123;2&#125;:\d&#123;2&#125;\.\d&#123;3&#125;)\|#\|(?&lt;level&gt;.*)\|#\|(?&lt;event&gt;.*)\|#\|(?&lt;text&gt;.*)\|#\|message: (?&lt;msg&gt;.*)&quot;</span> ]<br>    remove_field =&gt; <span class="hljs-string">&quot;message&quot;</span><br>  &#125;<br>  <span class="hljs-comment"># 替换默认时间@timestamp为日志中的时间，格式化输出</span><br>  date &#123;<br>    match =&gt; [ <span class="hljs-string">&quot;logtime&quot;</span>, <span class="hljs-string">&quot;YYYY-MM-dd HH:mm:ss.SSS&quot;</span>, <span class="hljs-string">&quot;ISO8601&quot;</span> ]<br>    target =&gt; <span class="hljs-string">&quot;@timestamp&quot;</span><br>    timezone =&gt; <span class="hljs-string">&quot;Asia/Shanghai&quot;</span><br>  &#125;<br>  <span class="hljs-comment"># 移除字段</span><br>  mutate&#123;<br>    remove_field =&gt; [ <span class="hljs-string">&quot;@version&quot;</span>,<span class="hljs-string">&quot;[beat][hostname]&quot;</span>,<span class="hljs-string">&quot;[beat][name]&quot;</span>,<span class="hljs-string">&quot;[beat][version]&quot;</span>,<span class="hljs-string">&quot;[agent][ephemeral_id]&quot;</span>,<span class="hljs-string">&quot;[agent][hostname]&quot;</span>,<span class="hljs-string">&quot;[agent][id]&quot;</span>,<span class="hljs-string">&quot;[agent][type]&quot;</span>,<span class="hljs-string">&quot;[agent][version]&quot;</span>,<span class="hljs-string">&quot;[cloud][availability_zone]&quot;</span>,<span class="hljs-string">&quot;[cloud][instance][id]&quot;</span>,<span class="hljs-string">&quot;[cloud][instance][name]&quot;</span>,<span class="hljs-string">&quot;[cloud][machine][type]&quot;</span>,<span class="hljs-string">&quot;[cloud][provider]&quot;</span>,<span class="hljs-string">&quot;[ecs][version]&quot;</span>,<span class="hljs-string">&quot;tags&quot;</span>,<span class="hljs-string">&quot;[host][name]&quot;</span> ]<br>  &#125;<br>&#125;<br>output &#123;<br>    <span class="hljs-keyword">if</span> [fields][net] &#123;<br>        elasticsearch &#123;<br>        hosts =&gt; [<span class="hljs-string">&quot;192.168.1.100:9200&quot;</span>]<br>        <span class="hljs-comment"># 定义到es的索引名称</span><br>        index =&gt; <span class="hljs-string">&quot;%&#123;[fields][net]&#125;-%&#123;[fields][app]&#125;-%&#123;+YYYY-MM&#125;&quot;</span><br>        user =&gt; es用户<br>        password =&gt; es密码<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        elasticsearch &#123;<br>        hosts =&gt; [<span class="hljs-string">&quot;192.168.1.100:9200&quot;</span>]<br>        index =&gt; <span class="hljs-string">&quot;%&#123;index&#125;-%&#123;+YYYY-MM&#125;&quot;</span><br>        user =&gt; es用户<br>        password =&gt; es密码<br>        &#125;<br>    &#125;<br><br><span class="hljs-comment">#   stdout &#123; codec =&gt; rubydebug &#125;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="elastalert配置"><a href="#elastalert配置" class="headerlink" title="elastalert配置"></a>elastalert配置</h2><p>test.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">name:</span> <span class="hljs-string">日志告警（level：error</span> <span class="hljs-string">or</span> <span class="hljs-string">fatal）</span><br><span class="hljs-attr">type:</span> <span class="hljs-string">blacklist</span><br><span class="hljs-attr">index:</span> <span class="hljs-string">es索引（模糊匹配）</span><br><br><span class="hljs-attr">timeframe:</span><br>    <span class="hljs-attr">minutes:</span> <span class="hljs-number">5</span><br>    <br><span class="hljs-attr">compare_key:</span> <span class="hljs-string">level</span><br><span class="hljs-attr">blacklist:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">error</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">fatal</span><br><br><span class="hljs-comment">#只需要的字段 https://elastalert.readthedocs.io/en/latest/ruletypes.html#include</span><br><span class="hljs-comment">#include: [&quot;text&quot;,&quot;event&quot;,&quot;msg&quot;]</span><br><span class="hljs-comment"># 告警模版格式化</span><br><span class="hljs-attr">alert_text:</span> <span class="hljs-string">&quot;</span><br><span class="hljs-string">告警时间: &#123;&#125;\n</span><br><span class="hljs-string">告警索引: &#123;&#125;\n</span><br><span class="hljs-string">告警事件: &#123;&#125;\n</span><br><span class="hljs-string">告警等级: &#123;&#125;\n</span><br><span class="hljs-string">告警ID  : &#123;&#125;\n</span><br><span class="hljs-string">告警信息: &#123;&#125;</span><br><span class="hljs-string">&quot;</span><br><br><span class="hljs-attr">alert_text_type:</span> <span class="hljs-string">alert_text_only</span><br><br><span class="hljs-attr">alert_text_args:</span> <br><span class="hljs-bullet">-</span> <span class="hljs-string">&quot;logtime&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">&quot;_index&quot;</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">event</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">level</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">text</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">msg</span><br><br><span class="hljs-attr">alert:</span><br><span class="hljs-bullet">-</span> <span class="hljs-string">&quot;elastalert_modules.dingtalk_alert.DingTalkAlerter&quot;</span><br><span class="hljs-comment"># 测试钉钉地址</span><br><span class="hljs-attr">dingtalk_access_token:</span> <span class="hljs-string">&quot;bb039c2d098a3515dd6f2c61bdawelknfkawenf731a004cf31c994735bad5&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="filebeat日志收集配置"><a href="#filebeat日志收集配置" class="headerlink" title="filebeat日志收集配置"></a>filebeat日志收集配置</h2><p>收集主机日志</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;3&quot;</span><br><span class="hljs-attr">services:</span><br>    <span class="hljs-attr">filebeat:</span><br>      <span class="hljs-attr">container_name:</span> <span class="hljs-string">filebeat</span><br>      <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>      <span class="hljs-attr">user:</span> <span class="hljs-string">root</span><br>      <span class="hljs-attr">environment:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">docker.elastic.co/beats/filebeat:7.7.0</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/root/.pm2/logs:/var/log/pm2</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/filebeat/data:/usr/share/filebeat/data</span><br></code></pre></td></tr></table></figure>
+
+<p>filebeat.yml配置</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">filebeat.inputs:</span><br><span class="hljs-bullet">-</span> <span class="hljs-attr">input_type:</span> <span class="hljs-string">log</span><br>  <span class="hljs-attr">enabled:</span> <span class="hljs-literal">true</span><br>  <span class="hljs-attr">paths:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/var/log/pm2/MasterCluster-*.log</span><br>  <span class="hljs-comment"># 自定义字段     </span><br>  <span class="hljs-attr">fields:</span><br>    <span class="hljs-attr">net:</span> <span class="hljs-string">intranet</span><br>    <span class="hljs-attr">server:</span> <span class="hljs-string">&quot;10.0.0.10&quot;</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">mastercluster</span><br><br><span class="hljs-attr">filebeat.config:</span><br>  <span class="hljs-attr">modules:</span><br>    <span class="hljs-attr">path:</span> <span class="hljs-string">$&#123;path.config&#125;/modules.d/*.yml</span><br>    <span class="hljs-attr">reload.enabled:</span> <span class="hljs-literal">false</span><br><br><span class="hljs-attr">processors:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">add_cloud_metadata:</span> <span class="hljs-string">~</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">add_docker_metadata:</span> <span class="hljs-string">~</span><br><br><span class="hljs-attr">output.logstash:</span><br>  <span class="hljs-attr">hosts:</span> [<span class="hljs-string">&quot;logstash地址和端口&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E7%9B%91%E6%8E%A7/">监控</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/elk/">elk</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2022/03/22/nginxwebui%E9%83%A8%E7%BD%B2/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">nginxwebui部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2021/12/05/harboor%20docker%20compose%20%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">harbor docker compose 安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>

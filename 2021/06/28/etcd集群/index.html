@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>etcd集群 - 自在博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 40vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>HXQ</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/link/">
+                <i class="iconfont icon-link-fill"></i>
+                链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="etcd集群">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-06-28 16:00" pubdate>
+        2021年6月28日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      36
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">etcd集群</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><code>ETCD</code>是用于共享配置和服务发现的分布式，一致性的KV存储系统。作为一个受到ZooKeeper与doozer启发而催生的项目，除了拥有与之类似的功能外，更专注于以下四点。</p>
+<ol>
+<li>简单：基于HTTP+JSON的API让你用curl就可以轻松使用。</li>
+<li>安全：可选SSL客户认证机制。</li>
+<li>快速：每个实例每秒支持一千次写操作。</li>
+<li>可信：使用Raft算法充分实现了分布式。</li>
+</ol>
+<p>应用场景有如下几类： </p>
+<ul>
+<li>服务发现（Service Discovery） </li>
+<li>消息发布与订阅 </li>
+<li>负载均衡 </li>
+<li>分布式通知与协调 </li>
+<li>分布式锁、分布式队列 </li>
+<li>集群监控与Leader竞选</li>
+</ul>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><h2 id="安装cfssl"><a href="#安装cfssl" class="headerlink" title="安装cfssl"></a>安装cfssl</h2><p>cfssl是证书生成和签发工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://pkg.cfssl.org/R1.2/cfssl_linux-amd64<br>mv cfssl_linux-amd64 /usr/bin/cfssl<br><br>wget https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64<br>mv cfssljson_linux-amd64 /usr/bin/cfssljson<br><br>wget https://pkg.cfssl.org/R1.2/cfssl-certinfo_linux-amd64<br>mv cfssl-certinfo_linux-amd64 /usr/bin/cfssl-certinfo<br></code></pre></td></tr></table></figure>
+
+<h2 id="制作etcd证书"><a href="#制作etcd证书" class="headerlink" title="制作etcd证书"></a>制作etcd证书</h2><p>搭建环境，三台虚拟机，192.168.40.100，192.168.40.101，192.168.40.102</p>
+<p>在所有虚拟机上执行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mkdir /etc/etcd/ssl -p<br></code></pre></td></tr></table></figure>
+
+<p>在192.168.40.100机器执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载</span><br>curl -L https://github.com/etcd-io/etcd/releases/download/v3.5.0/etcd-v3.5.0-linux-amd64.tar.gz -o /root/etcd-v3.5.0-linux-amd64.tar.gz<br><br><span class="hljs-comment"># 解压安装</span><br>tar xf /root/etcd-v3.5.0-linux-amd64.tar.gz<br><span class="hljs-built_in">cd</span> /root/etcd-v3.5.0-linux-amd64<br><br>cp etcd etcdctl etcdutl /usr/bin/<br>scp etcd etcdctl etcdutl 192.168.40.101:/usr/bin/<br>scp etcd etcdctl etcdutl 192.168.40.102:/usr/bin/<br><br>mkdir /root/kubernetes/resources/cert/etcd -p<br><span class="hljs-built_in">cd</span> /root/kubernetes/resources/cert/etcd<br></code></pre></td></tr></table></figure>
+
+<p>编辑ca-config.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim ca-config.json<br></code></pre></td></tr></table></figure>
+
+<p>写入文件内容如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  <span class="hljs-attr">&quot;signing&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;default&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;expiry&quot;</span>: <span class="hljs-string">&quot;87600h&quot;</span><br>    &#125;,<br>    <span class="hljs-attr">&quot;profiles&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;etcd&quot;</span>: &#123;<br>         <span class="hljs-attr">&quot;expiry&quot;</span>: <span class="hljs-string">&quot;87600h&quot;</span>,<br>         <span class="hljs-attr">&quot;usages&quot;</span>: [<br>            <span class="hljs-string">&quot;signing&quot;</span>,<br>            <span class="hljs-string">&quot;key encipherment&quot;</span>,<br>            <span class="hljs-string">&quot;server auth&quot;</span>,<br>            <span class="hljs-string">&quot;client auth&quot;</span><br>        ]<br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>编辑ca-csr.json：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim ca-csr.json<br></code></pre></td></tr></table></figure>
+
+<p>写入文件内容如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;CN&quot;</span>: <span class="hljs-string">&quot;etcd ca&quot;</span>,<br>    <span class="hljs-attr">&quot;key&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;algo&quot;</span>: <span class="hljs-string">&quot;rsa&quot;</span>,<br>        <span class="hljs-attr">&quot;size&quot;</span>: <span class="hljs-number">2048</span><br>    &#125;,<br>    <span class="hljs-attr">&quot;names&quot;</span>: [<br>        &#123;<br>            <span class="hljs-attr">&quot;C&quot;</span>: <span class="hljs-string">&quot;CN&quot;</span>,<br>            <span class="hljs-attr">&quot;L&quot;</span>: <span class="hljs-string">&quot;Hunan&quot;</span>,<br>            <span class="hljs-attr">&quot;ST&quot;</span>: <span class="hljs-string">&quot;Changsha&quot;</span><br>        &#125;<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>生成ca证书和密钥：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">cfssl gencert -initca ca-csr.json | cfssljson -bare ca<br></code></pre></td></tr></table></figure>
+
+<p>编辑server-csr.json：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim server-csr.json<br></code></pre></td></tr></table></figure>
+
+<p>写入文件内容如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>    <span class="hljs-attr">&quot;CN&quot;</span>: <span class="hljs-string">&quot;etcd&quot;</span>,<br>    <span class="hljs-attr">&quot;hosts&quot;</span>: [<br>        <span class="hljs-string">&quot;192.168.40.100&quot;</span>,<br>        <span class="hljs-string">&quot;192.168.40.101&quot;</span>,<br>        <span class="hljs-string">&quot;192.168.40.102&quot;</span><br>        ],<br>    <span class="hljs-attr">&quot;key&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;algo&quot;</span>: <span class="hljs-string">&quot;rsa&quot;</span>,<br>        <span class="hljs-attr">&quot;size&quot;</span>: <span class="hljs-number">2048</span><br>    &#125;,<br>    <span class="hljs-attr">&quot;names&quot;</span>: [<br>        &#123;<br>            <span class="hljs-attr">&quot;C&quot;</span>: <span class="hljs-string">&quot;CN&quot;</span>,<br>            <span class="hljs-attr">&quot;L&quot;</span>: <span class="hljs-string">&quot;Hunan&quot;</span>,<br>            <span class="hljs-attr">&quot;ST&quot;</span>: <span class="hljs-string">&quot;Changsha&quot;</span><br>        &#125;<br>    ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>hosts中配置所有Master和Node的IP列表。</p>
+</blockquote>
+<p>生成etcd证书和密钥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs text">cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=etcd server-csr.json | cfssljson -bare server<br># 此时目录下会生成7个文件<br>ls<br>ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  server.csr  server-csr.json  server-key.pem  server.pem<br></code></pre></td></tr></table></figure>
+
+<p>拷贝证书</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">cp ca.pem server-key.pem  server.pem /etc/etcd/ssl<br>scp ca.pem server-key.pem  server.pem 192.168.40.101:/etc/etcd/ssl<br>scp ca.pem server-key.pem  server.pem 192.168.40.102:/etc/etcd/ssl<br></code></pre></td></tr></table></figure>
+
+<h2 id="配置etcd"><a href="#配置etcd" class="headerlink" title="配置etcd"></a>配置etcd</h2><p>这里开始命令需要分别在Master和Node机器执行，配置etcd.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs text">vim /etc/etcd/etcd.conf<br></code></pre></td></tr></table></figure>
+
+<p>k8s-master01写入文件内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Member]</span><br><span class="hljs-attr">ETCD_NAME</span>=<span class="hljs-string">&quot;etcd01&quot;</span><br><span class="hljs-attr">ETCD_DATA_DIR</span>=<span class="hljs-string">&quot;/var/lib/etcd/default.etcd&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.100:2380&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://127.0.0.1:2379&quot;</span><br><br><span class="hljs-section">[Clustering]</span><br><span class="hljs-attr">ETCD_INITIAL_ADVERTISE_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.100:2380&quot;</span><br><span class="hljs-attr">ETCD_ADVERTISE_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.100:2379&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER</span>=<span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_TOKEN</span>=<span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_STATE</span>=<span class="hljs-string">&quot;new&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>k8s-node01写入文件内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Member]</span><br><span class="hljs-attr">ETCD_NAME</span>=<span class="hljs-string">&quot;etcd02&quot;</span><br><span class="hljs-attr">ETCD_DATA_DIR</span>=<span class="hljs-string">&quot;/var/lib/etcd/default.etcd&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.101:2380&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.101:2379,https://127.0.0.1:2379&quot;</span><br><br><span class="hljs-section">[Clustering]</span><br><span class="hljs-attr">ETCD_INITIAL_ADVERTISE_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.101:2380&quot;</span><br><span class="hljs-attr">ETCD_ADVERTISE_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.101:2379&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER</span>=<span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_TOKEN</span>=<span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_STATE</span>=<span class="hljs-string">&quot;new&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>k8s-node02写入文件内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Member]</span><br><span class="hljs-attr">ETCD_NAME</span>=<span class="hljs-string">&quot;etcd03&quot;</span><br><span class="hljs-attr">ETCD_DATA_DIR</span>=<span class="hljs-string">&quot;/var/lib/etcd/default.etcd&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.102:2380&quot;</span><br><span class="hljs-attr">ETCD_LISTEN_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.102:2379,https://127.0.0.1:2379&quot;</span><br><br><span class="hljs-section">[Clustering]</span><br><span class="hljs-attr">ETCD_INITIAL_ADVERTISE_PEER_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.102:2380&quot;</span><br><span class="hljs-attr">ETCD_ADVERTISE_CLIENT_URLS</span>=<span class="hljs-string">&quot;https://192.168.40.102:2379&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER</span>=<span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_TOKEN</span>=<span class="hljs-string">&quot;etcd-cluster&quot;</span><br><span class="hljs-attr">ETCD_INITIAL_CLUSTER_STATE</span>=<span class="hljs-string">&quot;new&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>这里开始在所有机器执行，设置etcd服务配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">mkdir -p /var/lib/etcd<br>vim /usr/lib/systemd/system/etcd.service<br></code></pre></td></tr></table></figure>
+
+<p>执行上行命令，写入文件内容如下：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[Unit]</span><br><span class="hljs-attr">Description</span>=Etcd Server<br><span class="hljs-attr">After</span>=network.target<br><span class="hljs-attr">After</span>=network-<span class="hljs-literal">on</span>line.target<br><span class="hljs-attr">Wants</span>=network-<span class="hljs-literal">on</span>line.target<br><br><span class="hljs-section">[Service]</span><br><span class="hljs-attr">Type</span>=notify<br><span class="hljs-attr">EnvironmentFile</span>=/etc/etcd/etcd.conf<br><span class="hljs-attr">ExecStart</span>=/usr/bin/etcd \<br>        <span class="hljs-attr">--cert-file</span>=/etc/etcd/ssl/server.pem \<br>        <span class="hljs-attr">--key-file</span>=/etc/etcd/ssl/server-key.pem \<br>        <span class="hljs-attr">--peer-cert-file</span>=/etc/etcd/ssl/server.pem \<br>        <span class="hljs-attr">--peer-key-file</span>=/etc/etcd/ssl/server-key.pem \<br>        <span class="hljs-attr">--trusted-ca-file</span>=/etc/etcd/ssl/ca.pem \<br>        <span class="hljs-attr">--peer-trusted-ca-file</span>=/etc/etcd/ssl/ca.pem<br><span class="hljs-attr">Restart</span>=<span class="hljs-literal">on</span>-failure<br><span class="hljs-attr">LimitNOFILE</span>=<span class="hljs-number">65536</span><br><br><span class="hljs-section">[Install]</span><br><span class="hljs-attr">WantedBy</span>=multi-user.target<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>etcd3.4版本会自动EnvironmentFile文件中的环境变量，不需要再ExecStart的命令参数重复设置，否则会报：”xxx” is shadowed by corresponding command-line flag的错误信息。</p>
+</blockquote>
+<p>启动etcd，并且设置开机自动运行etcd</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl daemon-reload<br>systemctl start etcd.service<br>systemctl <span class="hljs-built_in">enable</span> etcd.service<br></code></pre></td></tr></table></figure>
+
+<p>检查etcd集群的健康状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">etcdctl endpoint health --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>输出如下，说明etcd集群已经部署成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">https://192.168.40.102:2379 is healthy: successfully committed proposal: took = 15.805605ms<br>https://192.168.40.101:2379 is healthy: successfully committed proposal: took = 22.127986ms<br>https://192.168.40.100:2379 is healthy: successfully committed proposal: took = 24.829669ms<br></code></pre></td></tr></table></figure>
+
+<p>etcd集群搭建完毕，如果不需要集群ssl证书认证，只需修改<code>etcd.conf</code>文件，把所有地址改为http，再修改<code>etcd.service</code>，去除证书相关参数即可。</p>
+<h2 id="集群备份"><a href="#集群备份" class="headerlink" title="集群备份"></a>集群备份</h2><p>etcd3版本，备份只需要单节点执行，恢复需要在每个节点上执行恢复操作，恢复时需要停止集群，最好把原来的etcd目录备份后删除，否则报错目录已存在。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 备份集群</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379&quot;</span> snapshot save snapshot.db<br><br><span class="hljs-comment"># 恢复集群</span><br><br><span class="hljs-comment"># 192.168.40.100 机器上操作</span><br><br>ETCDCTL_API=3 etcdctl snapshot restore /mnt/snapshot.db \<br>  --name etcd01 \<br>  --initial-cluster <span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span> \<br>  --initial-cluster-token etcd-cluster \<br>  --initial-advertise-peer-urls https://192.168.40.100:2380 \<br>  --data-dir=/var/lib/etcd/default.etcd<br><br><span class="hljs-comment"># 192.168.40.101 机器上操作</span><br><br>ETCDCTL_API=3 etcdctl snapshot restore /mnt/snapshot.db \<br>  --name etcd02 \<br>  --initial-cluster <span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span>  \<br>  --initial-cluster-token etcd-cluster \<br>  --initial-advertise-peer-urls https://192.168.40.101:2380 \<br>  --data-dir=/var/lib/etcd/default.etcd<br><br><span class="hljs-comment"># 192.168.40.102 机器上操作</span><br><br>ETCDCTL_API=3 etcdctl snapshot restore /mnt/snapshot.db \<br>  --name etcd03 \<br>  --initial-cluster <span class="hljs-string">&quot;etcd01=https://192.168.40.100:2380,etcd02=https://192.168.40.101:2380,etcd03=https://192.168.40.102:2380&quot;</span>  \<br>  --initial-cluster-token etcd-cluster \<br>  --initial-advertise-peer-urls https://192.168.40.102:2380 \<br>  --data-dir=/var/lib/etcd/default.etcd<br></code></pre></td></tr></table></figure>
+
+<h2 id="添加节点"><a href="#添加节点" class="headerlink" title="添加节点"></a>添加节点</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看节点列表，输出ID</span><br>etcdctl member list --write-out=table<br><span class="hljs-comment"># 根据ID删除节点</span><br>etcdctl member remove 297faf509a025173<br><span class="hljs-comment"># 添加节点，状态为unstarted，如果新节点有数据，需删除数据目录，配置文件从其它节点拷贝，添加新节点配置，ETCD_INITIAL_CLUSTER_STATE配置为existing，之后重启新节点etcd即可</span><br>etcdctl member add etcd03 --peer-urls=http://192.168.40.102:2380<br></code></pre></td></tr></table></figure>
+
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 得到所有的key</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> --prefix --keys-only=<span class="hljs-literal">true</span> get /<br><br><span class="hljs-comment"># 添加key</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> put /school/class/name helios<br><br><span class="hljs-comment"># 删除key</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> del /foo/bar<br><br><span class="hljs-comment"># 查看集群健康状态</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> endpoint health <br><br><span class="hljs-comment"># 查看集群状态</span><br>etcdctl --write-out=table --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> endpoint status<br><br><span class="hljs-comment"># 切换leader</span><br><span class="hljs-comment"># 先看状态</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> endpoint --cluster=<span class="hljs-literal">true</span> status  -w table<br><span class="hljs-comment"># move-leader</span><br>etcdctl --cacert=/etc/etcd/ssl/ca.pem --cert=/etc/etcd/ssl/server.pem --key=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://192.168.40.100:2379,https://192.168.40.101:2379,https://192.168.40.102:2379&quot;</span> move-leader d6414a7c7c550d29<br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/etcd/">etcd</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2021/08/13/Archery-Sql%E5%AE%A1%E8%AE%A1%E5%B9%B3%E5%8F%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Archery-Sql审计平台</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2021/06/24/dnsmasq%E4%BD%BF%E7%94%A8%E9%85%8D%E7%BD%AE/">
+                        <span class="hidden-mobile">dnsmasq使用配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
