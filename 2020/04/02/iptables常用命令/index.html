@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      43
+      44
        分钟
     </span>
   
@@ -255,6 +255,9 @@
 
 <p>你也可以使用下面的一种规则。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT -i eth0 -s <span class="hljs-string">&quot;<span class="hljs-variable">$BLOCK_THIS_IP</span>&quot;</span> -j DROP           //规则禁止这个IP地址对我们服务器eth0网卡的所有连接<br>iptables -A INPUT -i eth0 -p tcp -s <span class="hljs-string">&quot;<span class="hljs-variable">$BLOCK_THIS_IP</span>&quot;</span> -j DROP   //规则只禁止这个IP地址对我们服务器eth0网卡的tcp协议的连接<br></code></pre></td></tr></table></figure>
+
+<h5 id="4、放行端口"><a href="#4、放行端口" class="headerlink" title="4、放行端口"></a>4、放行端口</h5><p>放行服务器8080端口</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -A INPUT  -i eth0 -p tcp --dport 8080 -j ACCEPT<br></code></pre></td></tr></table></figure>
 
 <p><strong>4.允许所有传入SSH</strong></p>
 <p>以下规则允许eth0接口上的所有传入的SSH连接。</p>

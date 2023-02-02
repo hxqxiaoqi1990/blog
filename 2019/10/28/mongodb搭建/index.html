@@ -262,8 +262,12 @@
 <p>单位M查看<br>db.stats(1048576);</p>
 <p>单位G查看<br>db.stats(1073741824);</p>
 <p><strong>查看表大小(单位字节)</strong><br>db.tables.stats()</p>
+<p><strong>查看sites集合索引</strong></p>
+<p> db.sites.getIndexes() </p>
+<p><strong>查看当前数据库的所有索引</strong></p>
+<p> db.system.indexes.find() </p>
 <p><strong>查看全部数据库</strong><br>show dbs;                  </p>
-<p><strong>显示当前数据库中的集合</strong>（类似关系数据库中的表）<br>show collections;  </p>
+<p><strong>显示当前数据库中的集合</strong>（类似关系数据库中的表）<br>show tables;  </p>
 <p><strong>查看当前数据库的用户信息</strong><br>show users;                </p>
 <p> <strong>切换数据库跟mysql一样</strong> （如果没用库，则创建，需要有数据才能生成库）<br>use <db name>;            </p>
 <p><strong>查看当前所在数据库</strong><br>db;<br>db.getName(); </p>
@@ -274,7 +278,6 @@
 <p> <strong>删除用户</strong><br>db.removeUser(“userName”);      </p>
 <p><strong>显示当前所有用户</strong><br>show users;   </p>
 <p><strong>删除当前所在库</strong><br>db.dropDatabase();</p>
-<p><strong>查看当前库状态</strong><br>db.stats();</p>
 <p><strong>查看当前连接数和最大连接数</strong><br>db.serverStatus().connections</p>
 <p><strong>实时查运行状态</strong><br>mongostat</p>
 <p><strong>查看压力</strong><br>mongotop</p>

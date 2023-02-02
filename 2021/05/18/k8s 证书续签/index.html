@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      478 字
+      534 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7
+      8
        分钟
     </span>
   
@@ -276,6 +276,8 @@
 
 <p>测试</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 进入到ssl配置目录，删除 kubelet 证书</span><br>rm -f kubelet-client-current.pem kubelet-client-2019-05-10-09-57-21.pem kubelet.key kubelet.crt<br><br><span class="hljs-comment"># 重启启动，启动正常后会颁发有效期10年的ssl证书</span><br>systemctl restart kubelet<br><br><span class="hljs-comment"># 进入到ssl配置目录，查看证书有效期</span><br>openssl x509 -<span class="hljs-keyword">in</span> kubelet-client-current.pem -noout -text | grep <span class="hljs-string">&quot;Not&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="kubeadm证书续签"><a href="#kubeadm证书续签" class="headerlink" title="kubeadm证书续签"></a>kubeadm证书续签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看证书时间</span><br>kubeadm alpha certs check-expiration<br><span class="hljs-comment"># 更新证书</span><br>kubeadm alpha certs renew all<br><span class="hljs-comment"># 重启组件</span><br>docker ps |grep -E <span class="hljs-string">&#x27;k8s_kube-apiserver|k8s_kube-controller-manager|k8s_kube-scheduler|k8s_etcd_etcd&#x27;</span> | awk -F <span class="hljs-string">&#x27; &#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> |xargs docker restart<br></code></pre></td></tr></table></figure>
 
 
             </div>

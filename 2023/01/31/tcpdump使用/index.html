@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - 自在博客</title>
+  <title>tcpdump使用 - 自在博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -159,9 +175,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="tcpdump使用">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-01-31 15:20" pubdate>
+        2023年1月31日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      159 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      2
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -174,82 +227,101 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 129 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2020</p>
-    
-    <a href="/blog/2020/06/09/centos8%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">centos8操作命令</span>
-      <time style="float: right;">06-09</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/06/openvpn%E6%90%AD%E5%BB%BA%E9%85%8D%E7%BD%AE/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">openvpn搭建配置</span>
-      <time style="float: right;">06-06</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/05/flink%E4%B9%8BREST%20API%E8%B0%83%E7%94%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">flink之REST API调用</span>
-      <time style="float: right;">06-05</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/04/nginx%E4%B9%8Bproxy_pass%E8%A7%84%E5%88%99/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx之proxy_pass规则</span>
-      <time style="float: right;">06-04</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/04/nginx%E4%B9%8Bphp-fpm/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx之php-fpm</span>
-      <time style="float: right;">06-04</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/04/nginx%E4%B9%8B%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%8E%B7%E5%8F%96%E6%BA%90IP/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">nginx之反向代理获取源IP</span>
-      <time style="float: right;">06-04</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/04/k8s%E4%B9%8BconfigMap%E5%92%8Csercet/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">k8s之configMap和sercet</span>
-      <time style="float: right;">06-04</time>
-    </a>
-  
-    
-    <a href="/blog/2020/06/04/k8s%E4%B9%8B%E5%AD%98%E5%82%A8/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">k8s之存储</span>
-      <time style="float: right;">06-04</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">tcpdump使用</h1>
+            
+            <div class="markdown-body">
+              <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>tcpdump是linux抓包工具</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">yum -y install tcpdump<br></code></pre></td></tr></table></figure>
 
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 按ip抓包</span><br>tcpdump host 192.168.1.2<br><br><span class="hljs-comment"># 按端口抓包</span><br>tcpdump port 8080<br><br><span class="hljs-comment"># 按网卡抓包</span><br>tcpdump -i eht0<br><br><span class="hljs-comment"># 多条件抓包</span><br>tcpdump -i eht0 host 192.168.168.18 and tcp port 8081<br><br><span class="hljs-comment"># 导出为cap文件</span><br>tcpdump -i eht0  -w file.cap host 192.168.168.18 and tcp port 8081<br><br><span class="hljs-comment"># 在宿主机抓取容器内的包</span><br><span class="hljs-comment">#获取容器pid</span><br>docker inspect –format “&#123;&#123; .State.Pid &#125;&#125;” f6b48371b16d<br><span class="hljs-comment">#使用容器pid抓包</span><br>nsenter -n -t 25235 tcpdump -i eth0 -w /var/tmp/test.cap<br></code></pre></td></tr></table></figure>
 
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>tcpdump抓包保存的cap文件可以使用<code>wireshark</code>软件分析</p>
+<p><code>wireshark</code>工具中<code>统计</code>标签中的<code>会话</code>可以统计cap文件的概况</p>
 
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/linux/">linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/blog/2023/02/02/logrotate%E6%97%A5%E5%BF%97%E8%BD%AE%E6%9B%BF/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">logrotate日志轮替</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2023/01/30/TIME_WAIT%E8%AF%A6%E8%A7%A3/">
+                        <span class="hidden-mobile">TIME_WAIT详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -329,9 +401,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 
