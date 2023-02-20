@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>logrotate日志轮替 - 自在博客</title>
+  <title>k8s之helm安装和使用 - 自在博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="logrotate日志轮替">
+            <span class="h2" id="subtitle" title="k8s之helm安装和使用">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2023-02-02 16:48" pubdate>
-        2023年2月2日 下午
+      <time datetime="2023-02-14 17:58" pubdate>
+        2023年2月14日 下午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      911 字
+      342 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      11
+      4
        分钟
     </span>
   
@@ -237,27 +237,51 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">logrotate日志轮替</h1>
+            <h1 style="display: none">k8s之helm安装和使用</h1>
             
             <div class="markdown-body">
-              <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p> Logrotate 是linux系统内置的日志轮替工具，可以定时备份，分割日志，没必要自己编写日志脚本。</p>
-<p>logrotate工具参数</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@localhost ~]# logrotate --help<br>logrotate [OPTION...] &lt;configfile&gt;<br>-d, --debug ：debug模式，测试配置文件是否有错误。<br>-f, --force ：强制转储文件。<br>-m, --mail=command ：压缩日志后，发送日志到指定邮箱。<br>-s, --state=statefile ：使用指定的状态文件。<br>-v, --verbose ：显示转储过程。<br></code></pre></td></tr></table></figure>
+              <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><code>helm</code> 是基于 kubernetes 的包管理器。它之于 kubernetes 就如 yum 之于 centos，pip 之于 python，npm 之于javascript</p>
+<ol>
+<li>更方便地部署基础设施，如 <code>gitlab</code>，<code>postgres</code>，<code>prometheus</code>，<code>grafana</code> 等</li>
+<li>更方便地部署自己的应用，为公司内部的项目配置 Chart，使用 <code>helm</code> 结合 CI，在 k8s 中部署应用一行命令般简单</li>
+</ol>
+<p>官网： <a target="_blank" rel="noopener" href="https://helm.sh/docs/intro/install/">舵|安装 Helm</a> </p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>在线部署</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3<br>chmod +x get_helm.sh<br>./get_helm.sh<br>helm<br></code></pre></td></tr></table></figure>
 
-<p>目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">/etc/logrotate.conf <span class="hljs-comment">#主配置文件</span><br>/etc/logrotate.d/	<span class="hljs-comment">#自定义配置文件，新增的日志配置可放到该目录下</span><br></code></pre></td></tr></table></figure>
+<p>离线部署</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs shell">https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz<br>tar -zxvf helm-v3.11.1-linux-amd64.tar.gz<br>cp linux-amd64/helm /usr/local/bin<br>helm version<br></code></pre></td></tr></table></figure>
 
-<p>手动执行日志轮替</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">logrotate -vf /etc/logrotate.d/nginx<br></code></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>查看源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm repo list<br></code></pre></td></tr></table></figure>
 
-<h2 id="配置示例"><a href="#配置示例" class="headerlink" title="配置示例"></a>配置示例</h2><p>使用nginx实验</p>
-<p>轮替access.log日志</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">/var/<span class="hljs-built_in">log</span>/nginx/access.log &#123;<br>	daily<br>	rotate 7<br>    dateext<br>	missingok<br>	notifempty<br>	create 0755 www www<br>	compress<br>   	sharedscripts<br>    postrotate<br>        <span class="hljs-keyword">if</span> [ -f /var/run/nginx.pid ]; <span class="hljs-keyword">then</span><br>            <span class="hljs-built_in">kill</span> -USR1 `cat /var/run/nginx.pid`<br>        <span class="hljs-keyword">fi</span><br>    endscript<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>添加源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#微软源</span><br>helm repo add azure http://mirror.azure.cn/kubernetes/charts/<br><span class="hljs-comment">#阿里云源</span><br>helm repo add ali https://apphub.aliyuncs.com<br></code></pre></td></tr></table></figure>
 
-<p>轮替目录下所有日志</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash">/var/<span class="hljs-built_in">log</span>/nginx/*.<span class="hljs-built_in">log</span> &#123;<br>	daily<br>	rotate 7<br>    dateext<br>	missingok<br>	notifempty<br>	create 0755 www www<br>	compress<br>   	sharedscripts<br>    postrotate<br>        <span class="hljs-keyword">if</span> [ -f /var/run/nginx.pid ]; <span class="hljs-keyword">then</span><br>            <span class="hljs-built_in">kill</span> -USR1 `cat /var/run/nginx.pid`<br>        <span class="hljs-keyword">fi</span><br>    endscript<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>删除源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">helm repo remove ali https://apphub.aliyuncs.com<br></code></pre></td></tr></table></figure>
 
-<h3 id="配置参数说明"><a href="#配置参数说明" class="headerlink" title="配置参数说明"></a>配置参数说明</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs bash">compress					<span class="hljs-comment">#通过gzip 压缩转储以后的日志</span><br>nocompress					<span class="hljs-comment">#不做gzip压缩处理</span><br>copytruncate				<span class="hljs-comment">#用于还在打开中的日志文件，把当前日志备份并截断；是先拷贝再清空的方式，拷贝和清空之间有一个时间差，可能会丢失部分日志数据。</span><br>nocopytruncate				<span class="hljs-comment">#备份日志文件不过不截断</span><br>create mode owner group		<span class="hljs-comment">#轮转时指定创建新文件的属性，如create 0777 nobody nobody</span><br>nocreate					<span class="hljs-comment">#不建立新的日志文件</span><br>delaycompress				<span class="hljs-comment">#和compress 一起使用时，转储的日志文件到下一次转储时才压缩</span><br>nodelaycompress				<span class="hljs-comment">#覆盖 delaycompress 选项，转储同时压缩。</span><br>missingok					<span class="hljs-comment">#如果日志丢失，不报错继续滚动下一个日志</span><br>errors address				<span class="hljs-comment">#专储时的错误信息发送到指定的Email 地址</span><br>ifempty						<span class="hljs-comment">#即使日志文件为空文件也做轮转，这个是logrotate的缺省选项。</span><br>notifempty					<span class="hljs-comment">#当日志文件为空时，不进行轮转</span><br>mail address				<span class="hljs-comment">#把转储的日志文件发送到指定的E-mail 地址</span><br>nomail						<span class="hljs-comment">#转储时不发送日志文件</span><br>olddir directory			<span class="hljs-comment">#转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统</span><br>noolddir					<span class="hljs-comment">#转储后的日志文件和当前日志文件放在同一个目录下</span><br>sharedscripts				<span class="hljs-comment">#运行postrotate脚本，作用是在所有日志都轮转后统一执行一次脚本。如果没有配置这个，那么每个日志轮转后都会执行一次脚本</span><br>prerotate					<span class="hljs-comment">#在logrotate转储之前需要执行的指令，例如修改文件的属性等动作；必须独立成行</span><br>postrotate					<span class="hljs-comment">#在logrotate转储之后需要执行的指令，例如重新启动 (kill -HUP) 某个服务！必须独立成行</span><br>daily						<span class="hljs-comment">#指定转储周期为每天</span><br>weekly						<span class="hljs-comment">#指定转储周期为每周</span><br>monthly						<span class="hljs-comment">#指定转储周期为每月</span><br>rotate count				<span class="hljs-comment">#指定日志文件删除之前转储的次数，0 指没有备份，5 指保留5 个备份</span><br>dateext						<span class="hljs-comment">#使用当期日期作为命名格式</span><br>dateformat .%s				<span class="hljs-comment">#配合dateext使用，紧跟在下一行出现，定义文件切割后的文件名，必须配合dateext使用，只支持 %Y %m %d %s 这四个参数</span><br>size(或minsize) log-size		<span class="hljs-comment">#当日志文件到达指定的大小时才转储，log-size能指定bytes(缺省)及KB (sizek)或MB(sizem).</span><br>当日志文件 &gt;= log-size 的时候就转储。 以下为合法格式：（其他格式的单位大小写没有试过）<br>size = 5 或 size 5 （&gt;= 5 个字节就转储）<br>size = 100k 或 size 100k<br>size = 100M 或 size 100M<br></code></pre></td></tr></table></figure>
+<p>查询chart</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">helm search repo mysql</span><br></code></pre></td></tr></table></figure>
+
+<p>下载chart包</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">helm</span> pull azure/mysql --version=<span class="hljs-number">1</span>.<span class="hljs-number">6</span>.<span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+
+<p><code>yaml文件</code>            描述<br><code>Chart.yaml</code>      用于描述Chart信息的YAML文件,版本定义等<br><code>README.md</code>        可选: README文件<br><code>values.yaml</code>    默认的配置值，即把可变的值抽离出来。<br><code>templates</code>        可选:即模板，结合values.yaml,能够生成Kubernetes的manifest文件</p>
+<p>直接安装chart（不下载包）</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">helm</span> install db azure/mysql --version=<span class="hljs-number">1</span>.<span class="hljs-number">6</span>.<span class="hljs-number">4</span><br></code></pre></td></tr></table></figure>
+
+<p>重新打包chart</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">helm <span class="hljs-keyword">package</span>  <span class="hljs-title">mysql/</span><br></code></pre></td></tr></table></figure>
+
+<p>本地chart包运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> mysql/<br>helm install mydb .<br></code></pre></td></tr></table></figure>
+
+<p> 查看当前运行的chart</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">helm ls</span><br></code></pre></td></tr></table></figure>
+
+<p>删除当前运行的chart</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">helm uninstall mydb</span><br></code></pre></td></tr></table></figure>
 
 
             </div>
@@ -268,7 +292,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                      <a class="hover-with-bg" href="/blog/categories/kubernetes/">kubernetes</a>
                     
                   </div>
                 
@@ -276,7 +300,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/blog/tags/linux/">linux</a>
+                      <a class="hover-with-bg" href="/blog/tags/k8s/">k8s</a>
                     
                   </div>
                 
@@ -293,18 +317,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2023/02/14/k8s%E4%B9%8Bprometheus%E9%83%A8%E7%BD%B2/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">k8s之prometheus部署</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2023/01/31/tcpdump%E4%BD%BF%E7%94%A8/">
-                        <span class="hidden-mobile">tcpdump使用</span>
+                      <a href="/blog/2023/02/14/k8s%E4%B9%8Bprometheus%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">k8s之prometheus部署</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
