@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      2k 字
+      1.9k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      37
+      35
        分钟
     </span>
   
@@ -265,7 +265,9 @@
 <p>执行以下命令，解决组件健康检查报错问题</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -i <span class="hljs-string">&#x27;/--port=0/d&#x27;</span> /etc/kubernetes/manifests/kube-controller-manager.yaml<br>sed -i <span class="hljs-string">&#x27;/--port=0/d&#x27;</span> /etc/kubernetes/manifests/kube-scheduler.yaml<br>systemctl restart kubelet<br></code></pre></td></tr></table></figure>
 
-<h2 id="新增master"><a href="#新增master" class="headerlink" title="新增master"></a>新增master</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">USER=root<br>CONTROL_PLANE_IPS=<span class="hljs-string">&quot;master1 master2&quot;</span><br><span class="hljs-keyword">for</span> host <span class="hljs-keyword">in</span> <span class="hljs-variable">$&#123;CONTROL_PLANE_IPS&#125;</span>; <span class="hljs-keyword">do</span><br>ssh <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span> <span class="hljs-string">&quot;mkdir -p /etc/kubernetes/pki/etcd&quot;</span><br>scp /etc/kubernetes/pki/ca.* <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span>:/etc/kubernetes/pki/<br>scp /etc/kubernetes/pki/sa.* <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span>:/etc/kubernetes/pki/<br>scp /etc/kubernetes/pki/front-proxy-ca.* <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span>:/etc/kubernetes/pki/<br>scp /etc/kubernetes/pki/etcd/ca.* <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span>:/etc/kubernetes/pki/etcd/<br>scp /etc/kubernetes/admin.conf <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;USER&#125;</span>&quot;</span>@<span class="hljs-variable">$host</span>:/etc/kubernetes/<br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+<h2 id="新增node"><a href="#新增node" class="headerlink" title="新增node"></a>新增node</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 生成token命令</span><br>kubeadm token create --print-join-command<br></code></pre></td></tr></table></figure>
+
+
 
 <h2 id="添加web管理界面"><a href="#添加web管理界面" class="headerlink" title="添加web管理界面"></a>添加web管理界面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl apply -f https://kuboard.cn/install-script/kuboard.yaml<br>kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.yaml<br><span class="hljs-built_in">echo</span> $(kubectl -n kube-system get secret $(kubectl -n kube-system get secret | grep kuboard-user | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>) -o go-template=<span class="hljs-string">&#x27;&#123;&#123;.data.token&#125;&#125;&#x27;</span> | base64 -d)<br></code></pre></td></tr></table></figure>
 
