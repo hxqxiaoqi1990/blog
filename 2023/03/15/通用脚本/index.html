@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>通用脚本 - 自在博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 40vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>HXQ</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/link/">
+                <i class="iconfont icon-link-fill"></i>
+                链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="通用脚本">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-03-15 16:57" pubdate>
+        2023年3月15日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      41
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">通用脚本</h1>
+            
+            <div class="markdown-body">
+              <h3 id="域名证书到期时间"><a href="#域名证书到期时间" class="headerlink" title="域名证书到期时间"></a>域名证书到期时间</h3><p>监控证书到期时间并告警发送到飞书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">export</span> LANG=<span class="hljs-string">&quot;en_US.UTF-8&quot;</span><br><br><span class="hljs-function"><span class="hljs-title">CheckDate</span></span> () &#123;<br>    caEnd=`curl -v -s -o /dev/null --stderr - <span class="hljs-variable">$1</span> | grep expire|awk -F <span class="hljs-string">&#x27;: &#x27;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>`<br>    epochCa=`date +%s -d <span class="hljs-string">&quot;<span class="hljs-variable">$caEnd</span>&quot;</span>`<br>    epochNow=`date +%s`<br><br>    seconds_to_expire=`expr <span class="hljs-variable">$epochCa</span> - <span class="hljs-variable">$epochNow</span>`<br>    days_to_expire=`expr <span class="hljs-variable">$seconds_to_expire</span> / 86400`<br>    <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$days_to_expire</span> -lt 15 ];<span class="hljs-keyword">then</span><br>        curl -X POST <span class="hljs-string">&#x27;https://open.feishu.cn/open-apis/bot/v2/hook/1d4ec947-141d-4b39-a2ab-8f4cxxxxxx&#x27;</span> -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -d  <span class="hljs-string">&#x27;&#123;&quot;msg_type&quot;:&quot;text&quot;,&quot;content&quot;:&#123;&quot;text&quot;:&quot;告警：&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span><span class="hljs-string">&#x27;域名证书不足&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$days_to_expire</span>&quot;</span><span class="hljs-string">&#x27;天&quot;&#125;&#125;&#x27;</span><br>    <span class="hljs-keyword">fi</span><br>&#125;<br><br>CheckDate https://www.baidu.com/<br></code></pre></td></tr></table></figure>
+
+<h3 id="获取Harbor镜像仓库tag"><a href="#获取Harbor镜像仓库tag" class="headerlink" title="获取Harbor镜像仓库tag"></a>获取Harbor镜像仓库tag</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment">#获取harbor镜像tag</span><br> <br>USER=<span class="hljs-string">&quot;admin&quot;</span><br>PASS=<span class="hljs-string">&quot;Harbor12345&quot;</span><br>HURL=<span class="hljs-string">&quot;http://10.0.1.120:8000&quot;</span><br>MTAG=<span class="hljs-string">&quot;moxi-pre/&quot;</span><span class="hljs-variable">$1</span><span class="hljs-string">&quot;&quot;</span><br> <br>ttoken=$(curl -iksL -X GET -u <span class="hljs-variable">$USER</span>:<span class="hljs-variable">$PASS</span> <span class="hljs-variable">$HURL</span>/service/token?account=<span class="hljs-variable">$&#123;USER&#125;</span>\&amp;service=harbor-registry\&amp;scope=repository:<span class="hljs-variable">$&#123;MTAG&#125;</span>:pull|grep <span class="hljs-string">&quot;token&quot;</span> |awk -F <span class="hljs-string">&#x27;&quot;&#x27;</span> <span class="hljs-string">&#x27;&#123;print $4&#125;&#x27;</span>)<br> <br><span class="hljs-comment">#echo $ttoken</span><br> <br>tlist=$(curl -ksL -X GET -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -H <span class="hljs-string">&quot;Authorization: Bearer <span class="hljs-variable">$ttoken</span>&quot;</span> <span class="hljs-variable">$&#123;HURL&#125;</span>/v2/<span class="hljs-variable">$&#123;MTAG&#125;</span>/tags/list|awk -F <span class="hljs-string">&#x27;[&#x27;</span> <span class="hljs-string">&#x27;&#123;print $2&#125;&#x27;</span>|awk -F <span class="hljs-string">&#x27;]&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>|sed <span class="hljs-string">&#x27;s/&quot;//g&#x27;</span>)<br> <br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$tlist</span>|sed <span class="hljs-string">&#x27;s/,/\n/g&#x27;</span>|sort -nr|head -n 10<br></code></pre></td></tr></table></figure>
+
+<h3 id="nginx自动获取k8s-svc创建规则"><a href="#nginx自动获取k8s-svc创建规则" class="headerlink" title="nginx自动获取k8s svc创建规则"></a>nginx自动获取k8s svc创建规则</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment"># 自动生成nginx配置,代理k8s中的svc</span><br><span class="hljs-built_in">source</span> /etc/profile<br>desconf=<span class="hljs-string">&quot;/etc/nginx/conf.d/k8s-extend&quot;</span><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&quot;</span> &gt; <span class="hljs-variable">$desconf</span><br>IFS=$<span class="hljs-string">&#x27;\n\n&#x27;</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> `/usr/bin/kubectl get svc -A|egrep -v <span class="hljs-string">&quot;(kube-system)|(default)|(istio-system)|(None)|(center)|(grpc-game)&quot;</span>|awk <span class="hljs-string">&#x27;&#123;print $1&quot; &quot;$2&quot; &quot;$4&quot; &quot;$6&#125;&#x27;</span>|awk -F <span class="hljs-string">&#x27;/&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>|awk -F <span class="hljs-string">&#x27;:&#x27;</span> <span class="hljs-string">&#x27;NR&gt;1&#123;print $1&#125;&#x27;</span>`<br><span class="hljs-keyword">do</span><br>    namespace=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|cut -d <span class="hljs-string">&#x27; &#x27;</span> -f1`<br>    name=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|cut -d <span class="hljs-string">&#x27; &#x27;</span> -f2`<br>    ip=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|cut -d <span class="hljs-string">&#x27; &#x27;</span> -f3`<br>    port=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|cut -d <span class="hljs-string">&#x27; &#x27;</span> -f4`<br>    <br>cat &gt;&gt;<span class="hljs-variable">$desconf</span>&lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">location /$namespace-$name/&#123;</span><br><span class="hljs-string">    proxy_pass http://$ip:$port/;</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">EOF</span><br><span class="hljs-keyword">done</span><br><br>nginx -t<br>[ $? -eq 0 ] &amp;&amp; nginx -s reload || <span class="hljs-built_in">exit</span> 502<br></code></pre></td></tr></table></figure>
+
+<h3 id="k8s证书到期"><a href="#k8s证书到期" class="headerlink" title="k8s证书到期"></a>k8s证书到期</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><br>Days=`kubeadm alpha certs check-expiration|grep admin.conf|awk <span class="hljs-string">&#x27;&#123;print $7&#125;&#x27;</span>|awk -F <span class="hljs-string">&#x27;d&#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>`<br><span class="hljs-keyword">if</span> [ <span class="hljs-variable">$Days</span> -lt 30 ];<span class="hljs-keyword">then</span><br>    curl -X POST <span class="hljs-string">&#x27;https://open.feishu.cn/open-apis/bot/v2/hook/1d4ec947-141d-4b39-a2ab-xxxxxx&#x27;</span> -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -d <span class="hljs-string">&#x27;&#123;&quot;msg_type&quot;:&quot;text&quot;,&quot;content&quot;:&#123;&quot;text&quot;:&quot;告警：k8s证书不足&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$Days</span>&quot;</span><span class="hljs-string">&#x27;天&quot;&#125;&#125;&#x27;</span><br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="k8s节点内存监控"><a href="#k8s节点内存监控" class="headerlink" title="k8s节点内存监控"></a>k8s节点内存监控</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">set</span> -xe<br>node_ip=<span class="hljs-string">&quot;192.168.0.53 192.168.0.128 192.168.0.238 192.168.0.176&quot;</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-variable">$node_ip</span><br><span class="hljs-keyword">do</span><br>	num=`ssh root@<span class="hljs-variable">$i</span> free -b|awk <span class="hljs-string">&#x27;NR=1&#123;printf $7&#125;&#x27;</span>`<br>	<span class="hljs-keyword">if</span> [ <span class="hljs-variable">$num</span> -lt 5368709120 ];<span class="hljs-keyword">then</span><br>		/usr/<span class="hljs-built_in">local</span>/bin/kubectl cordon <span class="hljs-variable">$i</span><br>	<span class="hljs-keyword">elif</span> [ <span class="hljs-variable">$num</span> -gt 8589934592 ];<span class="hljs-keyword">then</span><br>		/usr/<span class="hljs-built_in">local</span>/bin/kubectl uncordon <span class="hljs-variable">$i</span><br>	<span class="hljs-keyword">fi</span><br><span class="hljs-keyword">done</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="k8s定时扩容"><a href="#k8s定时扩容" class="headerlink" title="k8s定时扩容"></a>k8s定时扩容</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-built_in">source</span> /etc/profile<br>/usr/<span class="hljs-built_in">local</span>/bin/kubectl scale deployment/play-mall --replicas=<span class="hljs-variable">$1</span> -n moxi-center<br></code></pre></td></tr></table></figure>
+
+<h3 id="zabbix性能报表"><a href="#zabbix性能报表" class="headerlink" title="zabbix性能报表"></a>zabbix性能报表</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment">#每周报表生成脚本</span><br><br>time=`date <span class="hljs-string">&#x27;+%Y%m%d%H%M%S&#x27;</span>`<br>ntime=$(date <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S&#x27;</span>)<br>wtime=$(date -d <span class="hljs-string">&quot;-1 week&quot;</span> <span class="hljs-string">&#x27;+%Y-%m-%d %H:%M:%S&#x27;</span>)<br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;</span><br><span class="hljs-string">&lt;!DOCTYPE html&gt;</span><br><span class="hljs-string">&lt;html&gt;</span><br><span class="hljs-string">&lt;head&gt;</span><br><span class="hljs-string">&lt;meta charset=&quot;</span>utf-8<span class="hljs-string">&quot;&gt;</span><br><span class="hljs-string">&lt;title&gt;资源报表&lt;/title&gt;</span><br><span class="hljs-string">&lt;/head&gt;</span><br><span class="hljs-string">&lt;body&gt;</span><br><span class="hljs-string">&lt;h1 align=&quot;</span>center<span class="hljs-string">&quot;&gt;&quot;</span><span class="hljs-variable">$wtime</span><span class="hljs-string">&quot; to &quot;</span><span class="hljs-variable">$ntime</span><span class="hljs-string">&quot;&lt;/h1&gt;</span><br><span class="hljs-string">&quot;</span> &gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br>SAVEIFS=<span class="hljs-variable">$IFS</span>  <br>IFS=$(<span class="hljs-built_in">echo</span> -en <span class="hljs-string">&quot;\n&quot;</span>)  <br><br><span class="hljs-comment"># cpu</span><br>cpu=`zabbix_api --report <span class="hljs-string">&quot;CPU utilization&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$wtime</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$ntime</span>&quot;</span> --table --sort 5 --desc --hostgroupid <span class="hljs-string">&quot;Linux servers&quot;</span>|egrep <span class="hljs-string">&quot;[0-9]&#123;5&#125;&quot;</span>|sed <span class="hljs-string">&quot;s/|//g&quot;</span>|sed <span class="hljs-string">&quot;s/\.[0-9]*//g&quot;</span>`<br><br><span class="hljs-comment">#cpu=`cat /root/test|egrep &quot;[0-9]&#123;5&#125;&quot;|sed &quot;s/|//g&quot;|sed &quot;s/\.[0-9]*//g&quot;`</span><br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;div&gt;&lt;h1&gt;CPU使用率&lt;/h1&gt;&lt;table border=1 cellspacing=0 style=&#x27;width:100%;font-size: 40px;&#x27;&gt;&lt;tr&gt;&lt;td&gt;主机&lt;/td&gt;&lt;td&gt;最小值&lt;/td&gt;&lt;td&gt;最大值&lt;/td&gt;&lt;td&gt;平均值&lt;/td&gt;&lt;/tr&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-variable">$cpu</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|awk <span class="hljs-string">&#x27;&#123;print &quot;&lt;tr&gt;&lt;td&gt;&quot;$2&quot;&lt;/td&gt;&lt;td&gt;&quot;$5&quot; %&lt;/td&gt;&lt;td&gt;&quot;$7&quot; %&lt;/td&gt;&lt;td&gt;&quot;$9&quot; %&lt;/td&gt;&lt;/tr&gt;&quot;&#125;&#x27;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><span class="hljs-keyword">done</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;/table&gt;&lt;/div&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br><span class="hljs-comment"># mem</span><br>mem=`zabbix_api --report <span class="hljs-string">&quot;Memory utilization&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$wtime</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-variable">$ntime</span>&quot;</span> --table --sort 5 --desc --hostgroupid <span class="hljs-string">&quot;Linux servers&quot;</span>|egrep <span class="hljs-string">&quot;[0-9]&#123;5&#125;&quot;</span>|sed <span class="hljs-string">&quot;s/|//g&quot;</span>|sed <span class="hljs-string">&quot;s/\.[0-9]*//g&quot;</span>`<br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;div&gt;&lt;h1&gt;内存使用率&lt;/h1&gt;&lt;table border=1 cellspacing=0 style=&#x27;width:100%;font-size: 40px;&#x27;&gt;&lt;tr&gt;&lt;td&gt;主机&lt;/td&gt;&lt;td&gt;最小值&lt;/td&gt;&lt;td&gt;最大值&lt;/td&gt;&lt;td&gt;平均值&lt;/td&gt;&lt;/tr&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-variable">$mem</span><br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|awk <span class="hljs-string">&#x27;&#123;print &quot;&lt;tr&gt;&lt;td&gt;&quot;$2&quot;&lt;/td&gt;&lt;td&gt;&quot;$5&quot; %&lt;/td&gt;&lt;td&gt;&quot;$7&quot; %&lt;/td&gt;&lt;td&gt;&quot;$9&quot; %&lt;/td&gt;&lt;/tr&gt;&quot;&#125;&#x27;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><span class="hljs-keyword">done</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;/table&gt;&lt;/div&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br><span class="hljs-comment"># disk</span><br>zabbix_api --report <span class="hljs-string">&quot;/: Space utilization&quot;</span> <span class="hljs-string">&quot;<span class="hljs-subst">$(date -d <span class="hljs-string">&quot;-4 hour&quot;</span> &#x27;+%Y-%m-%d %H:%M:%S&#x27;)</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-subst">$(date -d <span class="hljs-string">&quot;-2 hour&quot;</span> &#x27;+%Y-%m-%d %H:%M:%S&#x27;)</span>&quot;</span> --table --sort 5 --desc --hostgroupid <span class="hljs-string">&quot;Linux servers&quot;</span>|egrep <span class="hljs-string">&quot;[0-9]&#123;5&#125;&quot;</span>|sed <span class="hljs-string">&quot;s/|//g&quot;</span>|sed <span class="hljs-string">&quot;s/\.[0-9]*//g&quot;</span>|grep -v k8s &gt; /tmp/k8s_disk<br>zabbix_api --report <span class="hljs-string">&quot;/host: Space utilization&quot;</span> <span class="hljs-string">&quot;<span class="hljs-subst">$(date -d <span class="hljs-string">&quot;-2 hour&quot;</span> &#x27;+%Y-%m-%d %H:%M:%S&#x27;)</span>&quot;</span> <span class="hljs-string">&quot;<span class="hljs-subst">$(date -d <span class="hljs-string">&quot;-1 hour&quot;</span> &#x27;+%Y-%m-%d %H:%M:%S&#x27;)</span>&quot;</span> --table --sort 5 --desc --hostgroupid <span class="hljs-string">&quot;Linux servers&quot;</span>|egrep <span class="hljs-string">&quot;[0-9]&#123;5&#125;&quot;</span>|sed <span class="hljs-string">&quot;s/|//g&quot;</span>|sed <span class="hljs-string">&quot;s/\.[0-9]*//g&quot;</span> &gt;&gt; /tmp/k8s_disk<br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;div&gt;&lt;h1&gt;磁盘使用率&lt;/h1&gt;&lt;table border=1 cellspacing=0 style=&#x27;width:100%;font-size: 40px;&#x27;&gt;&lt;tr&gt;&lt;td&gt;主机&lt;/td&gt;&lt;td&gt;最小值&lt;/td&gt;&lt;td&gt;最大值&lt;/td&gt;&lt;td&gt;平均值&lt;/td&gt;&lt;/tr&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> `cat /tmp/k8s_disk`<br><span class="hljs-keyword">do</span><br>    <span class="hljs-built_in">echo</span> <span class="hljs-variable">$i</span>|awk <span class="hljs-string">&#x27;&#123;print &quot;&lt;tr&gt;&lt;td&gt;&quot;$2&quot;&lt;/td&gt;&lt;td&gt;&quot;$6&quot; %&lt;/td&gt;&lt;td&gt;&quot;$8&quot; %&lt;/td&gt;&lt;td&gt;&quot;$10&quot; %&lt;/td&gt;&lt;/tr&gt;&quot;&#125;&#x27;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><span class="hljs-keyword">done</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&lt;/table&gt;&lt;/div&gt;&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br>IFS=<span class="hljs-variable">$SAVEIFS</span> <br><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;</span><br><span class="hljs-string">&lt;/body&gt;</span><br><span class="hljs-string">&lt;/html&gt;</span><br><span class="hljs-string">&quot;</span> &gt;&gt; /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br>scp /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html root@10.0.1.120:/data/nginxWebUI/html/baobiao/<br>ssh root@10.0.1.120 <span class="hljs-string">&quot;chmod 777 /data/nginxWebUI/html/baobiao/<span class="hljs-variable">$&#123;time&#125;</span>.html&quot;</span><br>rm -f /scripts/<span class="hljs-variable">$&#123;time&#125;</span>.html<br><br>curl -i -X POST \<br><span class="hljs-string">&#x27;https://open.feishu.cn/open-apis/bot/v2/hook/1d4ec947-141d-4b39-a2ab-8f4c60e42f67&#x27;</span> \<br>-H <span class="hljs-string">&#x27;Content-type&#x27;</span>:<span class="hljs-string">&#x27;application/json&#x27;</span> \<br>-d <span class="hljs-string">&#x27;</span><br><span class="hljs-string">&#123;</span><br><span class="hljs-string">  &quot;msg_type&quot;: &quot;post&quot;,</span><br><span class="hljs-string">  &quot;content&quot;: &#123;</span><br><span class="hljs-string">    &quot;post&quot;: &#123;</span><br><span class="hljs-string">      &quot;zh_cn&quot;: &#123;</span><br><span class="hljs-string">        &quot;title&quot;: &quot;性能报表&quot;,</span><br><span class="hljs-string">        &quot;content&quot;: [</span><br><span class="hljs-string">          [</span><br><span class="hljs-string">            &#123;</span><br><span class="hljs-string">              &quot;tag&quot;: &quot;text&quot;,</span><br><span class="hljs-string">              &quot;text&quot;: &quot;每周云服务器性能报表，按最大值降序排列&quot;</span><br><span class="hljs-string">            &#125;,</span><br><span class="hljs-string">            &#123;</span><br><span class="hljs-string">              &quot;tag&quot;: &quot;a&quot;,</span><br><span class="hljs-string">              &quot;text&quot;: &quot;请查看&quot;,</span><br><span class="hljs-string">              &quot;href&quot;: &quot;http://183.134.214.86:20001/&#x27;</span><span class="hljs-variable">$&#123;time&#125;</span><span class="hljs-string">&#x27;.html&quot;</span><br><span class="hljs-string">            &#125;,</span><br><span class="hljs-string">            &#123;</span><br><span class="hljs-string">              &quot;tag&quot;: &quot;at&quot;,</span><br><span class="hljs-string">              &quot;user_id&quot;: &quot;all&quot;,</span><br><span class="hljs-string">              &quot;user_name&quot;: &quot;所有人&quot;</span><br><span class="hljs-string">            &#125;</span><br><span class="hljs-string">          ]</span><br><span class="hljs-string">        ]</span><br><span class="hljs-string">      &#125;</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string">  &#125;</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="zabbix飞书告警"><a href="#zabbix飞书告警" class="headerlink" title="zabbix飞书告警"></a>zabbix飞书告警</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>to=<span class="hljs-variable">$1</span><br>subject=<span class="hljs-variable">$2</span><br>text=<span class="hljs-variable">$3</span><br><br><span class="hljs-comment">#飞书报警脚本，发送到运维部门群</span><br>curl -X POST <span class="hljs-string">&#x27;https://open.feishu.cn/open-apis/bot/v2/hook/1d4ec947-141d-4b39-a2ab-xxxxxx&#x27;</span> -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> -d <span class="hljs-string">&#x27;&#123;&quot;msg_type&quot;:&quot;text&quot;,&quot;content&quot;:&#123;&quot;text&quot;:&quot;&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$text</span>&quot;</span><span class="hljs-string">&#x27;&quot;&#125;&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="zabbix钉钉告警"><a href="#zabbix钉钉告警" class="headerlink" title="zabbix钉钉告警"></a>zabbix钉钉告警</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br>to=<span class="hljs-variable">$1</span><br>subject=<span class="hljs-variable">$2</span><br>text=<span class="hljs-variable">$3</span><br> <br><span class="hljs-comment">#钉钉报警脚本，发送到运维部门群</span><br>curl -i -X POST \<br><span class="hljs-string">&#x27;https://oapi.dingtalk.com/robot/send?access_token=cb8ddfe0377c28a4294439e3a9b47588aaccbde11054a1f0163dd7a6xxxxxx&#x27;</span> \<br>-H <span class="hljs-string">&#x27;Content-type&#x27;</span>:<span class="hljs-string">&#x27;application/json&#x27;</span> \<br>-d <span class="hljs-string">&#x27;</span><br><span class="hljs-string">&#123;</span><br><span class="hljs-string">  &quot;msgtype&quot;: &quot;text&quot;,</span><br><span class="hljs-string">     &quot;text&quot;: &#123;</span><br><span class="hljs-string">        &quot;content&quot;: &quot;&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$text</span>&quot;</span><span class="hljs-string">&#x27;&quot;</span><br><span class="hljs-string">        &#125;,</span><br><span class="hljs-string">  &quot;at&quot;:&#123;</span><br><span class="hljs-string">    &quot;atMobiles&quot;:[</span><br><span class="hljs-string">      &quot;&#x27;</span><span class="hljs-string">&quot;<span class="hljs-variable">$1</span>&quot;</span><span class="hljs-string">&#x27;&quot;</span><br><span class="hljs-string">      ],</span><br><span class="hljs-string">  &quot;isAtAll&quot;: &quot;true&quot;</span><br><span class="hljs-string">   &#125; </span><br><span class="hljs-string">&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="es查询指定索引字段"><a href="#es查询指定索引字段" class="headerlink" title="es查询指定索引字段"></a>es查询指定索引字段</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-meta">#!/bin/bash</span><br><span class="hljs-comment"># 安装邮件工具</span><br><span class="hljs-keyword">if</span> [ ! -e <span class="hljs-string">&quot;/tmp/sendEmail-v1.56/sendEmail&quot;</span> ];<span class="hljs-keyword">then</span><br>     <span class="hljs-built_in">cd</span> /tmp &amp;&amp; wget http://caspian.dotconf.net/menu/Software/SendEmail/sendEmail-v1.56.tar.gz &amp;&amp; tar xf sendEmail-v1.56.tar.gz &amp;&amp; chmod +x /tmp/sendEmail-v1.56/sendEmail<br><span class="hljs-keyword">fi</span><br><br><span class="hljs-comment"># 获取elasticsearch指定索引，指向条件，指定时间的错误</span><br>data=`curl -s -H <span class="hljs-string">&quot;Content-Type:application/json&quot;</span> -XPOST http://172.16.190.240:9200/err-dockerlogs-*/_search -d <span class="hljs-string">&#x27;&#123;&quot;query&quot;: &#123;&quot;bool&quot;: &#123;&quot;must&quot;: [&#123;&quot;bool&quot;: &#123;&quot;should&quot;: [&#123;&quot;match_phrase&quot;: &#123;&quot;message&quot;: &quot;Cause: java.sql.SQLSyntaxErrorException:&quot;&#125;&#125;,&#123;&quot;match_phrase&quot;: &#123;&quot;message&quot;: &quot;### Error updating database&quot;&#125;&#125;,&#123;&quot;match_phrase&quot;: &#123;&quot;message&quot;: &quot;### Cause: java.sql&quot;&#125;&#125;,&#123;&quot;match_phrase&quot;: &#123;&quot;message&quot;: &quot;message:### SQL&quot;&#125;&#125;,&#123;&quot;match_phrase&quot;: &#123;&quot;message&quot;: &quot;SQLException&quot;&#125;&#125;]&#125;&#125;,&#123;&quot;range&quot;: &#123;&quot;@timestamp&quot;: &#123;&quot;gte&quot;: &quot;now-5m/m&quot;,&quot;lte&quot;: &quot;now/m&quot;,&quot;format&quot;: &quot;epoch_millis&quot;&#125;&#125;&#125;]&#125;&#125;,&quot;from&quot;: 0,&quot;size&quot;: 5&#125;&#x27;</span>`<br><br><span class="hljs-comment"># 转为可读json格式</span><br>jqdata=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$data</span>|jq .`<br><br><span class="hljs-comment"># 获取错误总数</span><br>num=`<span class="hljs-built_in">echo</span> <span class="hljs-variable">$data</span>|cut -d <span class="hljs-string">&quot;:&quot;</span> -f 10|cut -d <span class="hljs-string">&quot;,&quot;</span> -f 1`<br><br><span class="hljs-comment"># 发送邮件报警</span><br><span class="hljs-keyword">if</span> [ <span class="hljs-string">&quot;<span class="hljs-variable">$num</span>&quot;</span> -gt <span class="hljs-string">&quot;0&quot;</span> ];<span class="hljs-keyword">then</span><br>	<span class="hljs-built_in">echo</span> <span class="hljs-variable">$num</span><br>	/tmp/sendEmail-v1.56/sendEmail -o message-charset=<span class="hljs-string">&quot;utf-8&quot;</span> -f 111@111.com -t 222@222.com -s smtp.111.com -u <span class="hljs-string">&quot;elk-sql-err&quot;</span> -xu 111@111.com -xp 1111.1234 -m <span class="hljs-string">&quot;<span class="hljs-variable">$jqdata</span>&quot;</span> -o tls=no<br><span class="hljs-keyword">fi</span><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/linux/">linux</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2023/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">openldap 容器安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
