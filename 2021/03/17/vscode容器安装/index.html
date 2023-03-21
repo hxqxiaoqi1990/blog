@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>nginx之lua - 自在博客</title>
+  <title>vscode容器安装 - 自在博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="nginx之lua">
+            <span class="h2" id="subtitle" title="vscode容器安装">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2020-12-03 10:10" pubdate>
-        2020年12月3日 上午
+      <time datetime="2021-03-17 10:27" pubdate>
+        2021年3月17日 上午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      280 字
+      727 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      9
        分钟
     </span>
   
@@ -237,10 +237,45 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">nginx之lua</h1>
+            <h1 style="display: none">vscode容器安装</h1>
             
             <div class="markdown-body">
-              <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><code class="hljs bash">worker_processes  1;<br><br>events &#123;<br>    worker_connections  1024;<br>&#125;<br><br><br>http &#123;<br>    include       mime.types;<br>    default_type  application/octet-stream;<br><br>    <span class="hljs-comment">#log_format  main  &#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span><br>    <span class="hljs-comment">#                  &#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span><br>    <span class="hljs-comment">#                  &#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;;</span><br><br>    <span class="hljs-comment">#access_log  logs/access.log  main;</span><br><br>    sendfile        on;<br>    <span class="hljs-comment">#tcp_nopush     on;</span><br><br>    <span class="hljs-comment">#keepalive_timeout  0;</span><br>    keepalive_timeout  65;<br><br>    <span class="hljs-comment">#gzip  on;</span><br><br>    server &#123;<br>        listen       80;<br>        server_name  localhost;<br><br>        <span class="hljs-comment">#charset koi8-r;</span><br><br>        <span class="hljs-comment">#access_log  logs/host.access.log  main;</span><br>		<br>		<span class="hljs-built_in">set</span> <span class="hljs-variable">$name</span> <span class="hljs-variable">$args</span>;<br><br>        location / &#123;<br>            root   html;<br>            index  index.html index.htm;<br>        &#125;<br>        location /luatest<br>        &#123;       <br>                default_type text/html;<br>                <span class="hljs-comment">#这里的lua文件的路径为绝对路径，请根据自己安装的实际路径填写</span><br>                <span class="hljs-comment">#记得斜杠是/这个。</span><br>                content_by_lua_file /usr/<span class="hljs-built_in">local</span>/openresty/lualib/testcode/testlua.lua;<br>        &#125; <br>        location /whoami &#123;<br>                default_type application/json;<br>                content_by_lua_block &#123;<br>						<span class="hljs-built_in">local</span> did, err = ngx.re.match(ngx.req.get_body_data(),<span class="hljs-string">&quot;[0-9]+&quot;</span>,<span class="hljs-string">&quot;isjo&quot;</span>)<br>                        <span class="hljs-keyword">if</span> not did <span class="hljs-keyword">then</span><br>                                ngx.status = 400<br>                                ngx.print(<span class="hljs-string">&quot;&#123;\&quot;get_did\&quot;:\&quot;false\&quot;&#125;&quot;</span>)<br>                                ngx.exit(ngx.HTTP_OK)<br>                        end<br>                        <span class="hljs-built_in">local</span> cjson = require <span class="hljs-string">&quot;cjson&quot;</span><br>                        <span class="hljs-built_in">local</span> r = &#123;&#125;<br>                        r[<span class="hljs-string">&quot;forword-for&quot;</span>] = ngx.var.http_x_forwarded_for<br>                        r[<span class="hljs-string">&quot;remote_addr&quot;</span>] = ngx.var.remote_addr<br>                        r[<span class="hljs-string">&quot;request&quot;</span>] = ngx.var.request<br>                        r[<span class="hljs-string">&quot;request_time&quot;</span>] = ngx.var.request_time<br>						r[<span class="hljs-string">&quot;http_user_agent&quot;</span>] = ngx.var.http_user_agent<br>						r[<span class="hljs-string">&quot;arg&quot;</span>] = ngx.var.name<br>						r[<span class="hljs-string">&quot;did&quot;</span>] = did<br>						<br>                        <span class="hljs-built_in">local</span> s = cjson.encode(r)<br>                        ngx.say(s)<br>                &#125;<br>        &#125;<br><br>        <span class="hljs-comment">#error_page  404              /404.html;</span><br><br>        <span class="hljs-comment"># redirect server error pages to the static page /50x.html</span><br>        <span class="hljs-comment">#</span><br>        error_page   500 502 503 504  /50x.html;<br>        location = /50x.html &#123;<br>            root   html;<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+              <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2.1&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">code-server:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">linuxserver/code-server:latest</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">code-server</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PUID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PGID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SUDO_PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">DEFAULT_WORKSPACE=/config/workspace</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOROOT=/config/go</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOPATH=/config/gopath</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOPROXY=https://goproxy.cn,direct</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PATH=$PATH:/config/go/bin:/config/gopath/bin</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/vscode/config:/config</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">8443</span><span class="hljs-string">:8443</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="go跨平台编译"><a href="#go跨平台编译" class="headerlink" title="go跨平台编译"></a>go跨平台编译</h3><p>默认我们<code>go build</code>的可执行文件都是当前操作系统可执行的文件，Go语言支持跨平台编译——在当前平台（例如Windows）下编译其他平台（例如Linux）的可执行文件。</p>
+<h4 id="Windows编译Linux可执行文件"><a href="#Windows编译Linux可执行文件" class="headerlink" title="Windows编译Linux可执行文件"></a>Windows编译Linux可执行文件</h4><p>如果我想在Windows下编译一个Linux下可执行文件，那需要怎么做呢？只需要在编译时指定目标操作系统的平台和处理器架构即可。</p>
+<blockquote>
+<p>注意：无论你在Windows电脑上使用VsCode编辑器还是Goland编辑器，都要注意你使用的终端类型，因为不同的终端下命令不一样！！！目前的Windows通常默认使用的是<code>PowerShell</code>终端。</p>
+</blockquote>
+<p>如果你的<code>Windows</code>使用的是<code>cmd</code>，那么按如下方式指定环境变量。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">SET CGO_ENABLED=0  // 禁用CGO<br>SET GOOS=linux  // 目标平台是linux<br>SET GOARCH=amd64  // 目标处理器架构是amd64<br></code></pre></td></tr></table></figure>
+
+<p>如果你的<code>Windows</code>使用的是<code>PowerShell</code>终端，那么设置环境变量的语法为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$ENV</span>:CGO_ENABLED=0<br><span class="hljs-variable">$ENV</span>:GOOS=<span class="hljs-string">&quot;linux&quot;</span><br><span class="hljs-variable">$ENV</span>:GOARCH=<span class="hljs-string">&quot;amd64&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>在你的<code>Windows</code>终端下执行完上述命令后，再执行下面的命令，得到的就是能够在Linux平台运行的可执行文件了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build<br></code></pre></td></tr></table></figure>
+
+<h4 id="Windows编译Mac可执行文件"><a href="#Windows编译Mac可执行文件" class="headerlink" title="Windows编译Mac可执行文件"></a>Windows编译Mac可执行文件</h4><p>Windows下编译Mac平台64位可执行程序：</p>
+<p>cmd终端下执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">SET CGO_ENABLED=0<br>SET GOOS=darwin<br>SET GOARCH=amd64<br>go build<br></code></pre></td></tr></table></figure>
+
+<p>PowerShell终端下执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$ENV</span>:CGO_ENABLED=0<br><span class="hljs-variable">$ENV</span>:GOOS=<span class="hljs-string">&quot;darwin&quot;</span><br><span class="hljs-variable">$ENV</span>:GOARCH=<span class="hljs-string">&quot;amd64&quot;</span><br>go build<br></code></pre></td></tr></table></figure>
+
+<h4 id="Mac编译Linux可执行文件"><a href="#Mac编译Linux可执行文件" class="headerlink" title="Mac编译Linux可执行文件"></a>Mac编译Linux可执行文件</h4><p>Mac电脑编译得到Linux平台64位可执行程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build<br></code></pre></td></tr></table></figure>
+
+<h4 id="Mac编译Windows可执行文件"><a href="#Mac编译Windows可执行文件" class="headerlink" title="Mac编译Windows可执行文件"></a>Mac编译Windows可执行文件</h4><p>Mac电脑编译得到Windows平台64位可执行程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build<br></code></pre></td></tr></table></figure>
+
+<h4 id="Linux编译Mac可执行文件"><a href="#Linux编译Mac可执行文件" class="headerlink" title="Linux编译Mac可执行文件"></a>Linux编译Mac可执行文件</h4><p>Linux平台下编译Mac平台64位可执行程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build<br></code></pre></td></tr></table></figure>
+
+<h4 id="Linux编译Windows可执行文件"><a href="#Linux编译Windows可执行文件" class="headerlink" title="Linux编译Windows可执行文件"></a>Linux编译Windows可执行文件</h4><p>Linux平台下编译Windows平台64位可执行程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build<br></code></pre></td></tr></table></figure>
+
+<h3 id="go常用命令"><a href="#go常用命令" class="headerlink" title="go常用命令"></a>go常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># go常用命令</span><br>go env											<span class="hljs-comment">#查看go环境变量</span><br>go env -w GOPROXY=https://goproxy.cn,direct		<span class="hljs-comment">#设置国内代理</span><br>go mod init hello								<span class="hljs-comment">#初始化mod项目</span><br>go build -o heiheihei.exe						<span class="hljs-comment">#编译并重命名</span><br>go run main.go									<span class="hljs-comment">#运行代码</span><br>go install										<span class="hljs-comment">#安装命令，可执行文件会存储到gopath的bin目录下</span><br><br><span class="hljs-comment"># go mod常用命令</span><br>go mod download    <span class="hljs-comment">#下载依赖的module到本地cache（默认为$GOPATH/pkg/mod目录）</span><br>go mod edit        <span class="hljs-comment">#编辑go.mod文件</span><br>go mod graph       <span class="hljs-comment">#打印模块依赖图</span><br>go mod init        <span class="hljs-comment">#初始化当前文件夹, 创建go.mod文件</span><br>go mod tidy        <span class="hljs-comment">#增加缺少的module，删除无用的module</span><br>go mod vendor      <span class="hljs-comment">#将依赖复制到vendor下</span><br>go mod verify      <span class="hljs-comment">#校验依赖</span><br>go mod why         <span class="hljs-comment">#解释为什么需要依赖</span><br></code></pre></td></tr></table></figure>
 
 
             </div>
@@ -251,7 +286,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
+                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
                     
                   </div>
                 
@@ -259,7 +294,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/blog/tags/nginx/">nginx</a>
+                      <a class="hover-with-bg" href="/blog/tags/vscode/">vscode</a>
                     
                   </div>
                 
@@ -276,9 +311,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2021/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">
+                      <a href="/blog/2021/05/18/k8s%20%E8%AF%81%E4%B9%A6%E7%BB%AD%E7%AD%BE/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">openldap 容器安装</span>
+                        <span class="hidden-mobile">k8s证书续签</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -286,8 +321,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2020/11/11/k8s%E4%B9%8BHPA%E5%AE%B9%E5%99%A8%E6%B0%B4%E5%B9%B3%E4%BC%B8%E7%BC%A9/">
-                        <span class="hidden-mobile">k8s之HPA容器水平伸缩</span>
+                      <a href="/blog/2021/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">
+                        <span class="hidden-mobile">openldap 容器安装</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

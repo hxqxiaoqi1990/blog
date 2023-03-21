@@ -4,56 +4,6 @@
   
   
   <entry>
-    <title>gitlab容器安装</title>
-    <link href="/blog/2023/03/17/gitlab%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
-    <url>/blog/2023/03/17/gitlab%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
-    
-    <content type="html"><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>    <span class="hljs-attr">gitlab:</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">&#x27;gitlab/gitlab-ce:13.3.6-ce.0&#x27;</span><br>      <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>      <span class="hljs-attr">container_name:</span> <span class="hljs-string">gitlab</span><br>      <span class="hljs-attr">deploy:</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">limits:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">4G</span><br>          <span class="hljs-attr">reservations:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;0.5&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">200M</span><br>      <span class="hljs-attr">environment:</span><br>        <span class="hljs-attr">TZ:</span> <span class="hljs-string">&#x27;Asia/Shanghai&#x27;</span><br>        <span class="hljs-attr">GITLAB_OMNIBUS_CONFIG:</span> <span class="hljs-string">|</span><br><span class="hljs-string">          external_url &#x27;http://192.168.40.100:8999&#x27;</span><br><span class="hljs-string">          gitlab_rails[&#x27;time_zone&#x27;] = &#x27;Asia/Shanghai&#x27; </span><br><span class="hljs-string">          gitlab_rails[&#x27;gitlab_shell_ssh_port&#x27;] = 3222</span><br><span class="hljs-string">          unicorn[&#x27;port&#x27;] = 8888</span><br><span class="hljs-string">          nginx[&#x27;listen_port&#x27;] = 8999</span><br><span class="hljs-string">          registry_external_url &#x27;http://192.168.40.100:8000&#x27;</span><br><span class="hljs-string"></span>      <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8999:8999&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;9443:443&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;3222:22&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8000:8000&#x27;</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/config:/etc/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/repo:/var/opt/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/logs:/var/log/gitlab</span><br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>中间件</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>git</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>vscode容器安装</title>
-    <link href="/blog/2023/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
-    <url>/blog/2023/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
-    
-    <content type="html"><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2.1&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">code-server:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">linuxserver/code-server:latest</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">code-server</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PUID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PGID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SUDO_PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">DEFAULT_WORKSPACE=/config/workspace</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOROOT=/config/go</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOPATH=/config/gopath</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PATH=$PATH:/config/go/bin:/config/gopath/bin</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/vscode/config:/config</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">8443</span><span class="hljs-string">:8443</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>中间件</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>vscode</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>通用脚本</title>
     <link href="/blog/2023/03/15/%E9%80%9A%E7%94%A8%E8%84%9A%E6%9C%AC/"/>
     <url>/blog/2023/03/15/%E9%80%9A%E7%94%A8%E8%84%9A%E6%9C%AC/</url>
@@ -71,31 +21,6 @@
     <tags>
       
       <tag>linux</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>openldap 容器安装</title>
-    <link href="/blog/2023/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
-    <url>/blog/2023/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
-    
-    <content type="html"><![CDATA[<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">my-network:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">openldap:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">bitnami/openldap:2.5.14-debian-11-r6</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;389:1389&#x27;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;1636:1636&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_USERNAME=admin</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_PASSWORD=123456</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_USERS=huang</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_PASSWORDS=123123</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;openldap_data:/bitnami/openldap&#x27;</span><br>  <span class="hljs-attr">phpldapadmin:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">osixia/phpldapadmin</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">phpldapadmin</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">links:</span>                                                                                                                   <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">depends_on:</span>                                                                                                              <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8081:80&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_HTTPS=false</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_LDAP_HOSTS=192.168.40.100</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br><span class="hljs-attr">volumes:</span><br>  <span class="hljs-attr">openldap_data:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">local</span><br><br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-    <categories>
-      
-      <category>linux基础</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>ldap</tag>
       
     </tags>
     
@@ -271,6 +196,31 @@
     <tags>
       
       <tag>nginx</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>gitlab容器安装</title>
+    <link href="/blog/2022/03/21/gitlab%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
+    <url>/blog/2022/03/21/gitlab%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
+    
+    <content type="html"><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>    <span class="hljs-attr">gitlab:</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">&#x27;gitlab/gitlab-ce:13.3.6-ce.0&#x27;</span><br>      <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>      <span class="hljs-attr">container_name:</span> <span class="hljs-string">gitlab</span><br>      <span class="hljs-attr">deploy:</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">limits:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">4G</span><br>          <span class="hljs-attr">reservations:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;0.5&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">200M</span><br>      <span class="hljs-attr">environment:</span><br>        <span class="hljs-attr">TZ:</span> <span class="hljs-string">&#x27;Asia/Shanghai&#x27;</span><br>        <span class="hljs-attr">GITLAB_OMNIBUS_CONFIG:</span> <span class="hljs-string">|</span><br><span class="hljs-string">          external_url &#x27;http://192.168.40.100:8999&#x27;</span><br><span class="hljs-string">          gitlab_rails[&#x27;time_zone&#x27;] = &#x27;Asia/Shanghai&#x27; </span><br><span class="hljs-string">          gitlab_rails[&#x27;gitlab_shell_ssh_port&#x27;] = 3222</span><br><span class="hljs-string">          unicorn[&#x27;port&#x27;] = 8888</span><br><span class="hljs-string">          nginx[&#x27;listen_port&#x27;] = 8999</span><br><span class="hljs-string">          registry_external_url &#x27;http://192.168.40.100:8000&#x27;</span><br><span class="hljs-string"></span>      <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8999:8999&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;9443:443&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;3222:22&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8000:8000&#x27;</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/config:/etc/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/repo:/var/opt/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/logs:/var/log/gitlab</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>中间件</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
       
     </tags>
     
@@ -621,6 +571,56 @@
     <tags>
       
       <tag>k8s</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>vscode容器安装</title>
+    <link href="/blog/2021/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
+    <url>/blog/2021/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
+    
+    <content type="html"><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&quot;2.1&quot;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">code-server:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">linuxserver/code-server:latest</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">code-server</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PUID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PGID=1000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">TZ=Asia/Shanghai</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SUDO_PASSWORD=123123</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">DEFAULT_WORKSPACE=/config/workspace</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOROOT=/config/go</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOPATH=/config/gopath</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">GOPROXY=https://goproxy.cn,direct</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PATH=$PATH:/config/go/bin:/config/gopath/bin</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/vscode/config:/config</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">8443</span><span class="hljs-string">:8443</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">unless-stopped</span><br></code></pre></td></tr></table></figure><h3 id="go跨平台编译"><a href="#go跨平台编译" class="headerlink" title="go跨平台编译"></a>go跨平台编译</h3><p>默认我们<code>go build</code>的可执行文件都是当前操作系统可执行的文件，Go语言支持跨平台编译——在当前平台（例如Windows）下编译其他平台（例如Linux）的可执行文件。</p><h4 id="Windows编译Linux可执行文件"><a href="#Windows编译Linux可执行文件" class="headerlink" title="Windows编译Linux可执行文件"></a>Windows编译Linux可执行文件</h4><p>如果我想在Windows下编译一个Linux下可执行文件，那需要怎么做呢？只需要在编译时指定目标操作系统的平台和处理器架构即可。</p><blockquote><p>注意：无论你在Windows电脑上使用VsCode编辑器还是Goland编辑器，都要注意你使用的终端类型，因为不同的终端下命令不一样！！！目前的Windows通常默认使用的是<code>PowerShell</code>终端。</p></blockquote><p>如果你的<code>Windows</code>使用的是<code>cmd</code>，那么按如下方式指定环境变量。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">SET CGO_ENABLED=0  // 禁用CGO<br>SET GOOS=linux  // 目标平台是linux<br>SET GOARCH=amd64  // 目标处理器架构是amd64<br></code></pre></td></tr></table></figure><p>如果你的<code>Windows</code>使用的是<code>PowerShell</code>终端，那么设置环境变量的语法为</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$ENV</span>:CGO_ENABLED=0<br><span class="hljs-variable">$ENV</span>:GOOS=<span class="hljs-string">&quot;linux&quot;</span><br><span class="hljs-variable">$ENV</span>:GOARCH=<span class="hljs-string">&quot;amd64&quot;</span><br></code></pre></td></tr></table></figure><p>在你的<code>Windows</code>终端下执行完上述命令后，再执行下面的命令，得到的就是能够在Linux平台运行的可执行文件了。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">go build<br></code></pre></td></tr></table></figure><h4 id="Windows编译Mac可执行文件"><a href="#Windows编译Mac可执行文件" class="headerlink" title="Windows编译Mac可执行文件"></a>Windows编译Mac可执行文件</h4><p>Windows下编译Mac平台64位可执行程序：</p><p>cmd终端下执行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">SET CGO_ENABLED=0<br>SET GOOS=darwin<br>SET GOARCH=amd64<br>go build<br></code></pre></td></tr></table></figure><p>PowerShell终端下执行：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-variable">$ENV</span>:CGO_ENABLED=0<br><span class="hljs-variable">$ENV</span>:GOOS=<span class="hljs-string">&quot;darwin&quot;</span><br><span class="hljs-variable">$ENV</span>:GOARCH=<span class="hljs-string">&quot;amd64&quot;</span><br>go build<br></code></pre></td></tr></table></figure><h4 id="Mac编译Linux可执行文件"><a href="#Mac编译Linux可执行文件" class="headerlink" title="Mac编译Linux可执行文件"></a>Mac编译Linux可执行文件</h4><p>Mac电脑编译得到Linux平台64位可执行程序：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build<br></code></pre></td></tr></table></figure><h4 id="Mac编译Windows可执行文件"><a href="#Mac编译Windows可执行文件" class="headerlink" title="Mac编译Windows可执行文件"></a>Mac编译Windows可执行文件</h4><p>Mac电脑编译得到Windows平台64位可执行程序：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build<br></code></pre></td></tr></table></figure><h4 id="Linux编译Mac可执行文件"><a href="#Linux编译Mac可执行文件" class="headerlink" title="Linux编译Mac可执行文件"></a>Linux编译Mac可执行文件</h4><p>Linux平台下编译Mac平台64位可执行程序：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build<br></code></pre></td></tr></table></figure><h4 id="Linux编译Windows可执行文件"><a href="#Linux编译Windows可执行文件" class="headerlink" title="Linux编译Windows可执行文件"></a>Linux编译Windows可执行文件</h4><p>Linux平台下编译Windows平台64位可执行程序：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build<br></code></pre></td></tr></table></figure><h3 id="go常用命令"><a href="#go常用命令" class="headerlink" title="go常用命令"></a>go常用命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># go常用命令</span><br>go env<span class="hljs-comment">#查看go环境变量</span><br>go env -w GOPROXY=https://goproxy.cn,direct<span class="hljs-comment">#设置国内代理</span><br>go mod init hello<span class="hljs-comment">#初始化mod项目</span><br>go build -o heiheihei.exe<span class="hljs-comment">#编译并重命名</span><br>go run main.go<span class="hljs-comment">#运行代码</span><br>go install<span class="hljs-comment">#安装命令，可执行文件会存储到gopath的bin目录下</span><br><br><span class="hljs-comment"># go mod常用命令</span><br>go mod download    <span class="hljs-comment">#下载依赖的module到本地cache（默认为$GOPATH/pkg/mod目录）</span><br>go mod edit        <span class="hljs-comment">#编辑go.mod文件</span><br>go mod graph       <span class="hljs-comment">#打印模块依赖图</span><br>go mod init        <span class="hljs-comment">#初始化当前文件夹, 创建go.mod文件</span><br>go mod tidy        <span class="hljs-comment">#增加缺少的module，删除无用的module</span><br>go mod vendor      <span class="hljs-comment">#将依赖复制到vendor下</span><br>go mod verify      <span class="hljs-comment">#校验依赖</span><br>go mod why         <span class="hljs-comment">#解释为什么需要依赖</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>中间件</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>vscode</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>openldap 容器安装</title>
+    <link href="/blog/2021/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/"/>
+    <url>/blog/2021/03/13/openldap%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">my-network:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">openldap:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">bitnami/openldap:2.5.14-debian-11-r6</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;389:1389&#x27;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;1636:1636&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_USERNAME=admin</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_PASSWORD=123456</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_USERS=huang</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_PASSWORDS=123123</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;openldap_data:/bitnami/openldap&#x27;</span><br>  <span class="hljs-attr">phpldapadmin:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">osixia/phpldapadmin</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">phpldapadmin</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">links:</span>                                                                                                                   <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">depends_on:</span>                                                                                                              <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8081:80&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_HTTPS=false</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_LDAP_HOSTS=192.168.40.100</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br><span class="hljs-attr">volumes:</span><br>  <span class="hljs-attr">openldap_data:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">local</span><br><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>linux基础</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>ldap</tag>
       
     </tags>
     

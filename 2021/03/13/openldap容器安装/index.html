@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>gitlab容器安装 - 自在博客</title>
+  <title>openldap 容器安装 - 自在博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="gitlab容器安装">
+            <span class="h2" id="subtitle" title="openldap 容器安装">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2023-03-17 11:13" pubdate>
-        2023年3月17日 上午
+      <time datetime="2021-03-13 12:27" pubdate>
+        2021年3月13日 中午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      123 字
+      81 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      2
+      1
        分钟
     </span>
   
@@ -237,10 +237,10 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">gitlab容器安装</h1>
+            <h1 style="display: none">openldap 容器安装</h1>
             
             <div class="markdown-body">
-              <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>    <span class="hljs-attr">gitlab:</span><br>      <span class="hljs-attr">image:</span> <span class="hljs-string">&#x27;gitlab/gitlab-ce:13.3.6-ce.0&#x27;</span><br>      <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>      <span class="hljs-attr">container_name:</span> <span class="hljs-string">gitlab</span><br>      <span class="hljs-attr">deploy:</span><br>        <span class="hljs-attr">resources:</span><br>          <span class="hljs-attr">limits:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">4G</span><br>          <span class="hljs-attr">reservations:</span><br>            <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;0.5&#x27;</span><br>            <span class="hljs-attr">memory:</span> <span class="hljs-string">200M</span><br>      <span class="hljs-attr">environment:</span><br>        <span class="hljs-attr">TZ:</span> <span class="hljs-string">&#x27;Asia/Shanghai&#x27;</span><br>        <span class="hljs-attr">GITLAB_OMNIBUS_CONFIG:</span> <span class="hljs-string">|</span><br><span class="hljs-string">          external_url &#x27;http://192.168.40.100:8999&#x27;</span><br><span class="hljs-string">          gitlab_rails[&#x27;time_zone&#x27;] = &#x27;Asia/Shanghai&#x27; </span><br><span class="hljs-string">          gitlab_rails[&#x27;gitlab_shell_ssh_port&#x27;] = 3222</span><br><span class="hljs-string">          unicorn[&#x27;port&#x27;] = 8888</span><br><span class="hljs-string">          nginx[&#x27;listen_port&#x27;] = 8999</span><br><span class="hljs-string">          registry_external_url &#x27;http://192.168.40.100:8000&#x27;</span><br><span class="hljs-string"></span>      <span class="hljs-attr">ports:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8999:8999&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;9443:443&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;3222:22&#x27;</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8000:8000&#x27;</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/config:/etc/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/repo:/var/opt/gitlab</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-string">/data/gitlab/logs:/var/log/gitlab</span><br></code></pre></td></tr></table></figure>
+              <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">my-network:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">openldap:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">bitnami/openldap:2.5.14-debian-11-r6</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;389:1389&#x27;</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;1636:1636&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_USERNAME=admin</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_ADMIN_PASSWORD=123456</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_USERS=huang</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">LDAP_PASSWORDS=123123</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;openldap_data:/bitnami/openldap&#x27;</span><br>  <span class="hljs-attr">phpldapadmin:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">osixia/phpldapadmin</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">phpldapadmin</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">links:</span>                                                                                                                   <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">depends_on:</span>                                                                                                              <br>      <span class="hljs-bullet">-</span> <span class="hljs-string">openldap</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8081:80&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_HTTPS=false</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">PHPLDAPADMIN_LDAP_HOSTS=192.168.40.100</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">my-network</span><br><span class="hljs-attr">volumes:</span><br>  <span class="hljs-attr">openldap_data:</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">local</span><br><br></code></pre></td></tr></table></figure>
 
 
             </div>
@@ -251,7 +251,7 @@
                   <div class="post-meta mr-3">
                     <i class="iconfont icon-category"></i>
                     
-                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+                      <a class="hover-with-bg" href="/blog/categories/linux%E5%9F%BA%E7%A1%80/">linux基础</a>
                     
                   </div>
                 
@@ -259,7 +259,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/blog/tags/git/">git</a>
+                      <a class="hover-with-bg" href="/blog/tags/ldap/">ldap</a>
                     
                   </div>
                 
@@ -276,12 +276,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/blog/2021/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">vscode容器安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2023/03/17/vscode%E5%AE%B9%E5%99%A8%E5%AE%89%E8%A3%85/">
-                        <span class="hidden-mobile">vscode容器安装</span>
+                      <a href="/blog/2020/12/03/nginx%E4%B9%8Blua/">
+                        <span class="hidden-mobile">nginx之lua</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
