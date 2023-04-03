@@ -281,6 +281,9 @@
 <p><strong>查看当前连接数和最大连接数</strong><br>db.serverStatus().connections</p>
 <p><strong>实时查运行状态</strong><br>mongostat</p>
 <p><strong>查看压力</strong><br>mongotop</p>
+<p><strong>查看所有客户端连接信息</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">db.currentOp(true).inprog.forEach(<br>    function(opDoc)&#123;<br>        printjson(opDoc)<br>    &#125;<br>)<br></code></pre></td></tr></table></figure>
+
 
             </div>
             <hr>

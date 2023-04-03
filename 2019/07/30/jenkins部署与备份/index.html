@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.1k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      12
+      13
        分钟
     </span>
   
@@ -262,6 +262,9 @@
 <p>6.在<strong>Post Steps</strong>点击 <strong>Add post-build step</strong>，选择<strong>send files or execute commands over SSH</strong><br>7.ssh配置举例：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs bash">name：选择jar包传输的服务器，需要在系统设置中先添加ssh主机<br><br><span class="hljs-comment">#生成jar包位置</span><br>Source files：ytb-manager-server/target/*.jar<br><br><span class="hljs-comment">#移除Source files路径</span><br>Remove prefix：ytb-manager-server/target/<br><br><span class="hljs-comment">#jar上传到服务的目录</span><br>Remote directory：/home/opt/ytb<br><br><span class="hljs-comment">#服务器执行的脚本</span><br>Exec <span class="hljs-built_in">command</span>：<br>	<span class="hljs-comment">#!/bin/bash</span><br>	<span class="hljs-built_in">cd</span> /home/opt/ytb/manager-server<br>	sh ./stop.sh<br>	sh ./start.sh<br></code></pre></td></tr></table></figure>
 <p>8.保存配置，之后点击立即构建即可查看是否成功。</p>
+<h2 id="curl调用构建"><a href="#curl调用构建" class="headerlink" title="curl调用构建"></a>curl调用构建</h2><p>可用于自动构建发布使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -k -X POST http://192.168.40.100:8090/job/k8s_pord_zdh/buildWithParameters --user root:111876241f0dccd18f1241adfd76e95f85 --data-urlencode version=prod-v1.0.7 --data-urlencode zdhenv=hello<br></code></pre></td></tr></table></figure>
+
 <h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><h2 id="安装插件失败"><a href="#安装插件失败" class="headerlink" title="安装插件失败"></a>安装插件失败</h2><p>因为国内防火墙的问题，有时候无法获取到Jenkins的插件，或下载失败<br>1.更换插件源地址<br>2.<a target="_blank" rel="noopener" href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a> 更换为 <a target="_blank" rel="noopener" href="http://mirror.xmission.com/jenkins/updates/update-center.json">http://mirror.xmission.com/jenkins/updates/update-center.json</a><br>3.或更换为<a target="_blank" rel="noopener" href="https://updates.jenkins.io/update-center.json">https://updates.jenkins.io/update-center.json</a><br>4.点击提交<br>5.点击立即获取</p>
 
             </div>

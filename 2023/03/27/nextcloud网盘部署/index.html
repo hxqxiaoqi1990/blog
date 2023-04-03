@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>seafile私网网盘部署 - 自在博客</title>
+  <title>nextcloud网盘部署 - 自在博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -175,7 +175,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="seafile私网网盘部署">
+            <span class="h2" id="subtitle" title="nextcloud网盘部署">
               
             </span>
 
@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-12-30 11:00" pubdate>
-        2022年12月30日 上午
+      <time datetime="2023-03-27 16:30" pubdate>
+        2023年3月27日 下午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      315 字
+      185 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      5
+      3
        分钟
     </span>
   
@@ -237,18 +237,19 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">seafile私网网盘部署</h1>
+            <h1 style="display: none">nextcloud网盘部署</h1>
             
             <div class="markdown-body">
-              <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>私有化网盘</p>
-<p>官网： <a target="_blank" rel="noopener" href="https://www.seafile.com/en/download/">Download - Seafile</a> </p>
-<h2 id="docker-compose部署"><a href="#docker-compose部署" class="headerlink" title="docker compose部署"></a>docker compose部署</h2><p>seafile服务端</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2.0&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">db:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mariadb:10.5</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">seafile-mysql</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_ROOT_PASSWORD=123456</span>  <span class="hljs-comment"># Requested, set the root&#x27;s password of MySQL service.</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_LOG_CONSOLE=true</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/seafile-mysql/db:/var/lib/mysql</span>  <span class="hljs-comment"># Requested, specifies the path to MySQL data persistent store.</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">seafile-net</span><br><br>  <span class="hljs-attr">memcached:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">memcached:1.6</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">seafile-memcached</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">entrypoint:</span> <span class="hljs-string">memcached</span> <span class="hljs-string">-m</span> <span class="hljs-number">256</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">seafile-net</span><br>          <br>  <span class="hljs-attr">seafile:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">seafileltd/seafile-mc:latest</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">seafile</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;9091:80&quot;</span><br><span class="hljs-comment">#      - &quot;443:443&quot;  # If https is enabled, cancel the comment.</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/seafile-data:/shared</span>   <span class="hljs-comment"># Requested, specifies the path to Seafile data persistent store.</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">DB_HOST=db</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">DB_ROOT_PASSWD=123456</span>  <span class="hljs-comment"># Requested, the value shuold be root&#x27;s password of MySQL service.</span><br><span class="hljs-comment">#      - TIME_ZONE=Asia/Shanghai # Optional, default is UTC. Should be uncomment and set to your local time zone.</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEAFILE_ADMIN_EMAIL=root</span> <span class="hljs-comment"># Specifies Seafile admin user, default is &#x27;me@example.com&#x27;.</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEAFILE_ADMIN_PASSWORD=moxigame.ops</span>     <span class="hljs-comment"># Specifies Seafile admin password, default is &#x27;asecret&#x27;.</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEAFILE_SERVER_LETSENCRYPT=false</span>   <span class="hljs-comment"># Whether use letsencrypt to generate cert.</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">SEAFILE_SERVER_HOSTNAME=10.0.1.120:9091</span> <span class="hljs-comment"># Specifies your host name.</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">db</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">memcached</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">seafile-net</span><br><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">seafile-net:</span><br></code></pre></td></tr></table></figure>
+              <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>官网：<a target="_blank" rel="noopener" href="https://nextcloud.com/">https://nextcloud.com/</a></p>
+<p>nextcloud是一个私有云网盘，支持davfs远程挂载，手机客户端等</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;2&#x27;</span><br><span class="hljs-attr">volumes:</span><br>  <span class="hljs-attr">nextcloud:</span><br>  <span class="hljs-attr">db:</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">nextcloud-db:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mariadb:10.5</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">nextcloud-db</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">2000M</span><br>    <span class="hljs-attr">command:</span> <span class="hljs-string">--transaction-isolation=READ-COMMITTED</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/nextcloud-db:/var/lib/mysql</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_ROOT_PASSWORD=moxigame</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_PASSWORD=moxigame</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_DATABASE=nextcloud</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_USER=nextcloud</span><br>  <span class="hljs-attr">nextcloud:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nextcloud</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">nextcloud</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">mem_limit:</span> <span class="hljs-string">2000M</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">9091</span><span class="hljs-string">:80</span><br>    <span class="hljs-attr">links:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">db</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/nextcloud:/var/www/html</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_PASSWORD=moxigame</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_DATABASE=nextcloud</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_USER=nextcloud</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_HOST=nextcloud-db</span><br></code></pre></td></tr></table></figure>
 
-<p>客户端，用于远程挂在服务端目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#添加yum源</span><br>cat &gt; /etc/yum.repos.d/seafile.repo &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">[seafile]</span><br><span class="hljs-string">name=seafile</span><br><span class="hljs-string">baseurl=https://linux-clients.seafile.com/seafile-rpm/centos7</span><br><span class="hljs-string">gpgcheck=0</span><br><span class="hljs-string">enabled=1</span><br><span class="hljs-string">EOF</span><br><br><span class="hljs-comment">#下载</span><br>yum install -y epel-release<br>yum install -y seafile --enablerepo=cr<br><br><span class="hljs-comment">#同步例子</span><br>seaf-cli sync -l 89bc091d-f36e-4bbd-9144-8e13c45ca32a -s http://192.168.1.1/ -d phone -u <span class="hljs-built_in">test</span>@admin.com<br></code></pre></td></tr></table></figure>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>存储目录：/data/nextcloud/</p>
+<p>上传文件位置：/data/nextcloud/data/登录用户名/files/</p>
+<p>全局配置文件：/data/nextcloud/config/config.php</p>
+<p><strong>添加多域名认证：</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /data/nextcloud/config/config.php<br><span class="hljs-meta">#</span><span class="bash"> 修改前：</span><br>  array (<br>    0 =&gt; &#x27;192.168.40.100:9091&#x27;,<br>  ),<br><span class="hljs-meta">#</span><span class="bash"> 修改后：</span><br>  array (<br>    0 =&gt; &#x27;192.168.40.100:9091&#x27;,<br>    1 =&gt; &#x27;192.168.40.200:9091&#x27;,<br>  ),<br></code></pre></td></tr></table></figure>
 
-<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><p> <a target="_blank" rel="noopener" href="https://help.seafile.com/syncing_client/linux-cli/">适用于 CLI 服务器的海文件客户端 - 海文件用户手册 (seafile.com)</a> </p>
 
             </div>
             <hr>
@@ -266,7 +267,7 @@
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/blog/tags/seafile/">seafile</a>
+                      <a class="hover-with-bg" href="/blog/tags/nextcloud/">nextcloud</a>
                     
                   </div>
                 
@@ -283,18 +284,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2023/01/30/TIME_WAIT%E8%AF%A6%E8%A7%A3/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">TIME_WAIT详解</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2022/03/22/nginxwebui%E9%83%A8%E7%BD%B2/">
-                        <span class="hidden-mobile">nginxwebui部署</span>
+                      <a href="/blog/2023/03/15/%E9%80%9A%E7%94%A8%E8%84%9A%E6%9C%AC/">
+                        <span class="hidden-mobile">通用脚本</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
