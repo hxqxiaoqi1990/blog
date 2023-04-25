@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2.1k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      35
+      38
        分钟
     </span>
   
@@ -265,13 +265,24 @@
 <p>执行以下命令，解决组件健康检查报错问题</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -i <span class="hljs-string">&#x27;/--port=0/d&#x27;</span> /etc/kubernetes/manifests/kube-controller-manager.yaml<br>sed -i <span class="hljs-string">&#x27;/--port=0/d&#x27;</span> /etc/kubernetes/manifests/kube-scheduler.yaml<br>systemctl restart kubelet<br></code></pre></td></tr></table></figure>
 
-<h2 id="新增node"><a href="#新增node" class="headerlink" title="新增node"></a>新增node</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 生成token命令</span><br>kubeadm token create --print-join-command<br></code></pre></td></tr></table></figure>
+<h2 id="新增节点"><a href="#新增节点" class="headerlink" title="新增节点"></a>新增节点</h2><p>生成token命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubeadm token create --print-join-command<br></code></pre></td></tr></table></figure>
 
+<p>新增node</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubeadm join 10.0.1.33:6443 --token x9z4w5.5b82ogtxoenw602m     --discovery-token-ca-cert-hash sha256:b5607480f65e5feefac87ee6abfc55fbcad9bfa2e4aeae133f3b4231a5111d15<br></code></pre></td></tr></table></figure>
 
+<p>新增master</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubeadm join 10.0.1.50:6443 --token s8l0qd.ygzywq5cfmdri2oq     --discovery-token-ca-cert-hash sha256:2e6748819909eeb4fee505d9dfd0e7ec7d93d5210c574888eff49cffee6bd455  --control-plane   --certificate-key 90d8fb966e66d2a1b5712564da13dde0148109df93fa0246aef996fbf6c88154<br></code></pre></td></tr></table></figure>
 
-<h2 id="添加web管理界面"><a href="#添加web管理界面" class="headerlink" title="添加web管理界面"></a>添加web管理界面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">kubectl apply -f https://kuboard.cn/install-script/kuboard.yaml<br>kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.yaml<br><span class="hljs-built_in">echo</span> $(kubectl -n kube-system get secret $(kubectl -n kube-system get secret | grep kuboard-user | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>) -o go-template=<span class="hljs-string">&#x27;&#123;&#123;.data.token&#125;&#125;&#x27;</span> | base64 -d)<br></code></pre></td></tr></table></figure>
+<h2 id="添加web管理界面"><a href="#添加web管理界面" class="headerlink" title="添加web管理界面"></a>添加web管理界面</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 创建kuboard</span><br>kubectl apply -f https://kuboard.cn/install-script/kuboard.yaml<br>kubectl apply -f https://addons.kuboard.cn/metrics-server/0.3.7/metrics-server.yaml<br><span class="hljs-comment"># 获取token</span><br><span class="hljs-built_in">echo</span> $(kubectl -n kube-system get secret $(kubectl -n kube-system get secret | grep kuboard-user | awk <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span>) -o go-template=<span class="hljs-string">&#x27;&#123;&#123;.data.token&#125;&#125;&#x27;</span> | base64 -d)<br></code></pre></td></tr></table></figure>
 
 <h2 id="命令补全"><a href="#命令补全" class="headerlink" title="命令补全"></a>命令补全</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y bash-completion<br><span class="hljs-built_in">source</span> /usr/share/bash-completion/bash_completion<br><span class="hljs-built_in">source</span> &lt;(kubectl completion bash)<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;source &lt;(kubectl completion bash)&quot;</span> &gt;&gt; ~/.bashrc<br></code></pre></td></tr></table></figure>
+
+<h2 id="证书续签"><a href="#证书续签" class="headerlink" title="证书续签"></a>证书续签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 查看证书时间</span><br>kubeadm alpha certs check-expiration<br><span class="hljs-comment"># 更新证书</span><br>kubeadm alpha certs renew all<br><span class="hljs-comment"># 重启组件</span><br>docker ps |grep -E <span class="hljs-string">&#x27;k8s_kube-apiserver|k8s_kube-controller-manager|k8s_kube-scheduler|k8s_etcd_etcd&#x27;</span> | awk -F <span class="hljs-string">&#x27; &#x27;</span> <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> |xargs docker restart<br></code></pre></td></tr></table></figure>
+
+<h2 id="dns解析"><a href="#dns解析" class="headerlink" title="dns解析"></a>dns解析</h2><p>修改<code>coredns</code>的配置</p>
+<p><code>hosts</code>字段为自定义域名解析，修改后不需要重启<code>coredns</code>服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs bash">.:53 &#123;<br>    errors<br>    health &#123;<br>       lameduck 5s<br>    &#125;<br>    hosts &#123;<br>       10.0.0.10 huang.com<br>       10.0.0.10 xiao.com<br>       10.0.0.10 qi.com<br>       fallthrough<br>    &#125;<br>    ready<br>    kubernetes cluster.local in-addr.arpa ip6.arpa &#123;<br>       pods insecure<br>       fallthrough in-addr.arpa ip6.arpa<br>       ttl 30<br>    &#125;<br>    prometheus :9153<br>    forward . /etc/resolv.conf &#123;<br>       max_concurrent 1000<br>    &#125;<br>    cache 30<br>    loop<br>    reload<br>    loadbalance<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
             </div>
