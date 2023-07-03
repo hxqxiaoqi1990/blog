@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      817 字
+      902 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      11
        分钟
     </span>
   
@@ -240,7 +240,7 @@
             <h1 style="display: none">node.js和PM2安装和使用</h1>
             
             <div class="markdown-body">
-              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p><strong>Node.js：</strong> 就是运行在服务端的 JavaScript。<br>Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。<br>Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。</p>
+              <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p><strong>Node.js：</strong> 就是运行在服务端的 JavaScript。<br>Node.js 是一个基于Chrome JavaScript 运行时建立的一个平台。<br>Node.js是一个事件驱动I/O服务端JavaScript环境，基于Google的V8引擎，V8引擎执行Javascript的速度非常快，性能非常好。</p>
 <p><strong>NPM：</strong> 是随同NodeJS一起安装的包管理工具，能解决NodeJS代码部署上的很多问题，常见的使用场景有以下几种：</p>
 <ol>
 <li>允许用户从NPM服务器下载别人编写的第三方包到本地使用。</li>
@@ -249,7 +249,11 @@
 </ol>
 <p><strong>PM2：</strong> 是node进程管理工具，可以利用它来简化很多node应用管理的繁琐任务，如性能监控、自动重启、负载均衡等，而且使用非常简单。</p>
 <p>下面就对PM2进行入门性的介绍，基本涵盖了PM2的常用的功能和配置。</p>
-<h1 id="node-js安装"><a href="#node-js安装" class="headerlink" title="node.js安装"></a>node.js安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://cdn.npm.taobao.org/dist/node/v12.13.0/node-v12.13.0-linux-x64.tar.xz<br><br>tar xf node-v12.13.0-linux-x64.tar.xz -C /opt/<br><span class="hljs-built_in">cd</span> /opt<br>mv node-v12.13.0-linux-x64 node<br>ln -s /opt/node/bin/npm /usr/<span class="hljs-built_in">local</span>/bin/<br>ln -s /opt/node/bin/node /usr/<span class="hljs-built_in">local</span>/bin/<br><br>node -v<br>npm -v<br></code></pre></td></tr></table></figure>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="node-js安装"><a href="#node-js安装" class="headerlink" title="node.js安装"></a>node.js安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">version=<span class="hljs-string">&quot;v12.13.0&quot;</span><br><br>yum -y install wget<br>wget https://cdn.npm.taobao.org/dist/node/<span class="hljs-variable">$version</span>/node-<span class="hljs-variable">$&#123;version&#125;</span>-linux-x64.tar.xz<br><br>tar xf node-<span class="hljs-variable">$&#123;version&#125;</span>-linux-x64.tar.xz -C /opt/<br><span class="hljs-built_in">cd</span> /opt<br>ln -s /opt/node-<span class="hljs-variable">$&#123;version&#125;</span>-linux-x64/bin/* /usr/bin/<br><br>node -v<br>npm -v<br></code></pre></td></tr></table></figure>
+<h3 id="pm2安装"><a href="#pm2安装" class="headerlink" title="pm2安装"></a>pm2安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">npm i pm2 -g --registry=https://registry.npm.taobao.org<br></code></pre></td></tr></table></figure>
+
+<h3 id="pm2运行shell脚本"><a href="#pm2运行shell脚本" class="headerlink" title="pm2运行shell脚本"></a>pm2运行shell脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 运行脚本</span><br>cat &gt;test.sh&lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">#!/bin/bash</span><br><span class="hljs-string">tail -f /var/log/messages</span><br><span class="hljs-string">EOF</span><br><br><span class="hljs-comment"># pm2启动配置</span><br>cat &gt;test.json&lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">&#123;</span><br><span class="hljs-string">  apps : [&#123;</span><br><span class="hljs-string">    name      : &quot;test&quot;,</span><br><span class="hljs-string">    script    : &quot;./test.sh&quot;,</span><br><span class="hljs-string">    env: &#123;</span><br><span class="hljs-string">    &#125;,</span><br><span class="hljs-string">    merge_logs: true,</span><br><span class="hljs-string">    error_file: &quot;logs/test-err.log&quot;,</span><br><span class="hljs-string">    out_file: &quot;logs/test.log&quot;,</span><br><span class="hljs-string">    exec_mode: &quot;fork&quot;</span><br><span class="hljs-string">  &#125;]</span><br><span class="hljs-string">&#125;</span><br><span class="hljs-string">EOF</span><br><br><span class="hljs-comment"># 启动pm2</span><br>pm2 start test.json<br>pm2 ls<br></code></pre></td></tr></table></figure>
+
 <h2 id="npm常用命令"><a href="#npm常用命令" class="headerlink" title="npm常用命令"></a>npm常用命令</h2><ol>
 <li><strong>查看node版本</strong><br>node –version</li>
 <li><strong>查看npm 版本</strong><br>npm -v</li>
