@@ -185,8 +185,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-24 20:49" pubdate>
-        2021年8月24日 晚上
+      <time datetime="2022-11-25 15:53" pubdate>
+        2022年11月25日 下午
       </time>
     </span>
   
@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.1k 字
+      1.2k 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      18
+      21
        分钟
     </span>
   
@@ -256,6 +256,9 @@
 
 <h1 id="docker-disconf"><a href="#docker-disconf" class="headerlink" title="docker-disconf"></a>docker-disconf</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash">FROM centos:7.4.1708<br><br>ENV LANG en_US.UTF-8<br>ENV JAVA_HOME /opt/jdk1.8.0_221<br>ENV JRE_HOME <span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/jre<br>ENV CLASSPATH .:<span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/lib:<span class="hljs-variable">$&#123;JRE_HOME&#125;</span>/lib<br>ENV PATH <span class="hljs-variable">$&#123;JAVA_HOME&#125;</span>/bin:<span class="hljs-variable">$PATH</span><br>ENV MAVEN_HOME /opt/apache-maven-3.3.9<br>ENV PATH <span class="hljs-variable">$PATH</span>:<span class="hljs-variable">$JAVA_HOME</span>/bin:<span class="hljs-variable">$MAVEN_HOME</span>/bin<br>ENV ONLINE_CONFIG_PATH /usr/<span class="hljs-built_in">local</span>/disconf/resource<br>ENV WAR_ROOT_PATH /usr/<span class="hljs-built_in">local</span>/disconf/war<br><br>ADD ./jdk-8u221-linux-x64.tar.gz /opt/<br>ADD ./apache-maven-3.3.9-bin.tar.gz /opt/<br>ADD ./apache-tomcat-8.5.47.tar.gz /opt/<br>ADD ./disconf.tar.gz /usr/<span class="hljs-built_in">local</span>/<br>ADD ./nginx.sh /opt/<br>ADD ./redis.sh /opt/<br>ADD ./redis-stable.tar.gz /opt/<br>ADD	./nginx-1.14.2.tar.gz /opt/<br>ADD	./start.sh /opt/<br>ADD	./nginx.conf /opt/<br>ADD	./server.xml /opt/<br>ADD	./nginx.service /lib/systemd/system/<br><br>RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;Asia/Shanghai&#x27;</span> &gt;/etc/timezone<br>RUN yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel wget vim net-tools telnet<br>RUN sh /opt/nginx.sh<br>RUN sh /opt/redis.sh<br>RUN \mv /opt/nginx.conf /opt/nginx/conf/<br>RUN \mv /opt/server.xml /opt/apache-tomcat-8.5.47/conf/<br>RUN <span class="hljs-built_in">cd</span> /opt/ &amp;&amp; rm -rf nginx-1.14.2  nginx.sh  redis.sh <br><br>ENTRYPOINT <span class="hljs-built_in">cd</span> /opt/redis-stable/ &amp;&amp; ./src/redis-server ./redis.conf &amp;&amp; bash /opt/apache-tomcat-8.5.47/bin/startup.sh &amp;&amp; /opt/nginx/sbin/nginx -g <span class="hljs-string">&quot;daemon off;&quot;</span><br></code></pre></td></tr></table></figure>
 
+<h1 id="多阶段构建"><a href="#多阶段构建" class="headerlink" title="多阶段构建"></a>多阶段构建</h1><p>多阶段构建可以有效的减少镜像大小</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">FROM</span> <span class="hljs-string">alpine:3.18.2</span> <span class="hljs-string">AS</span> <span class="hljs-string">builder</span><br><span class="hljs-string">WORKDIR</span> <span class="hljs-string">/opt/</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">&#x27;s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g&#x27;</span> <span class="hljs-string">/etc/apk/repositories</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">apk</span> <span class="hljs-string">--no-cache</span> <span class="hljs-string">add</span> <span class="hljs-string">go</span><br><span class="hljs-string">COPY</span> <span class="hljs-string">alert-feishu</span> <span class="hljs-string">.</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">go</span> <span class="hljs-string">env</span> <span class="hljs-string">-w</span> <span class="hljs-string">GOPROXY=https://goproxy.cn,direct</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">go</span> <span class="hljs-string">install</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">go</span> <span class="hljs-string">build</span><br><br><span class="hljs-string">FROM</span> <span class="hljs-string">alpine:3.18.2</span><br><span class="hljs-string">WORKDIR</span> <span class="hljs-string">/opt/</span><br><span class="hljs-string">RUN</span> <span class="hljs-string">sed</span> <span class="hljs-string">-i</span> <span class="hljs-string">&#x27;s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g&#x27;</span> <span class="hljs-string">/etc/apk/repositories</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">apk</span> <span class="hljs-string">add</span> <span class="hljs-string">tzdata</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">cp</span> <span class="hljs-string">/usr/share/zoneinfo/Asia/Shanghai</span> <span class="hljs-string">/etc/localtime</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">echo</span> <span class="hljs-string">&quot;Asia/Shanghai&quot;</span> <span class="hljs-string">&gt;</span> <span class="hljs-string">/etc/timezone</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">apk</span> <span class="hljs-string">del</span> <span class="hljs-string">tzdata</span> <span class="hljs-string">&amp;&amp;</span> <span class="hljs-string">rm</span> <span class="hljs-string">-rf</span> <span class="hljs-string">/var/cache/apk/*</span><br><span class="hljs-string">ENV</span> <span class="hljs-string">LANG=zh_CN.UTF-8</span><br><span class="hljs-string">COPY</span> <span class="hljs-string">--from=builder</span> <span class="hljs-string">/opt/alert-feishu</span> <span class="hljs-string">.</span><br><span class="hljs-string">CMD</span> [<span class="hljs-string">&quot;./alert-feishu&quot;</span>]<br></code></pre></td></tr></table></figure>
+
 
             </div>
             <hr>
@@ -290,9 +293,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/blog/2021/08/27/rabbitmq%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                      <a href="/blog/2022/12/30/seafile%E7%A7%81%E7%BD%91%E7%BD%91%E7%9B%98%E9%83%A8%E7%BD%B2/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">rabbitmq集群部署</span>
+                        <span class="hidden-mobile">seafile私网网盘部署</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -300,8 +303,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/blog/2021/08/20/kubeadm%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4%E5%AE%89%E8%A3%85/">
-                        <span class="hidden-mobile">kubeadm高可用集群安装</span>
+                      <a href="/blog/2022/03/22/nginxwebui%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">nginxwebui部署</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
