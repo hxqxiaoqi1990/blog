@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      185 字
+      244 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3
+      4
        分钟
     </span>
   
@@ -249,6 +249,8 @@
 <p>全局配置文件：/data/nextcloud/config/config.php</p>
 <p><strong>添加多域名认证：</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /data/nextcloud/config/config.php<br><span class="hljs-meta">#</span><span class="bash"> 修改前：</span><br>  array (<br>    0 =&gt; &#x27;192.168.40.100:9091&#x27;,<br>  ),<br><span class="hljs-meta">#</span><span class="bash"> 修改后：</span><br>  array (<br>    0 =&gt; &#x27;192.168.40.100:9091&#x27;,<br>    1 =&gt; &#x27;192.168.40.200:9091&#x27;,<br>  ),<br></code></pre></td></tr></table></figure>
+
+<h2 id="远程挂载目录"><a href="#远程挂载目录" class="headerlink" title="远程挂载目录"></a>远程挂载目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install davfs2 -y<br>usermod -aG davfs2 root<br>mkdir ~/.davfs2<br>cp  /etc/davfs2/secrets ~/.davfs2/secrets<br>chown root:root ~/.davfs2/secrets<br>chmod 600 ~/.davfs2/secrets<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;/data/nextcloud-davfs 账号 密码&quot;</span> &gt;&gt; ~/.davfs2/secrets<br>mount -t davfs http://10.0.1.120:9091/remote.php/dav/files/root/FrontStatic/ /data/html/game.moxigame.cn/FrontStatic<br></code></pre></td></tr></table></figure>
 
 
             </div>
