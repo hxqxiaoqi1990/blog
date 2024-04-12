@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      181 字
+      193 字
     </span>
   
 
@@ -249,7 +249,7 @@
 <li>服务器配置至少<code>2核4G内存40G磁盘</code></li>
 <li>保证服务器可以访问公网</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装依赖</span><br>yum -y install socat conntrack ebtables ipset<br><br><span class="hljs-comment"># 安装kk工具</span><br><span class="hljs-built_in">export</span> KKZONE=cn<br>curl -sfL https://get-kk.kubesphere.io | VERSION=v3.0.7 sh -<br>chmod +x kk<br>mv kk /usr/<span class="hljs-built_in">local</span>/bin/<br><br><span class="hljs-comment"># 安装集群</span><br>kk create cluster --with-kubernetes v1.24.9 --with-kubesphere v3.3.2 --container-manager containerd<br><br><span class="hljs-comment"># 访问控制台</span><br>Console: http://192.168.0.2:30880<br>Account: admin<br>Password: P@88w0rd<br></code></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 安装依赖</span><br>yum -y install socat conntrack ebtables ipset<br><br><span class="hljs-comment"># 安装kk工具</span><br><span class="hljs-built_in">export</span> KKZONE=cn<br>curl -sfL https://get-kk.kubesphere.io | VERSION=v3.0.7 sh -<br>chmod +x kk<br>mv kk /usr/<span class="hljs-built_in">local</span>/bin/<br><br><span class="hljs-comment"># 查看可安装集群</span><br>kk version --show-supported-k8s<br><br><span class="hljs-comment"># 安装集群</span><br>kk create cluster --with-kubernetes v1.24.9 --with-kubesphere v3.3.2 --container-manager containerd<br><br><span class="hljs-comment"># 访问控制台</span><br>Console: http://192.168.0.2:30880<br>Account: admin<br>Password: P@88w0rd<br></code></pre></td></tr></table></figure>
 
 
             </div>
