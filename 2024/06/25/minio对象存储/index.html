@@ -1,0 +1,480 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=&#34;auto&#34;>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/blog/img/favicon.png">
+  <link rel="icon" href="/blog/img/favicon.png">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+  <title>minio对象存储 - 自在博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/blog/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/blog/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/blog/","version":"1.8.11","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null}},"search_path":"/blog/local-search.xml"};
+  </script>
+  <script  src="/blog/js/utils.js" ></script>
+  <script  src="/blog/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 40vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand"
+       href="/blog/">&nbsp;<strong>HXQ</strong>&nbsp;</a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/blog/link/">
+                <i class="iconfont icon-link-fill"></i>
+                链接
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" data-toggle="modal" data-target="#modalSearch">&nbsp;<i
+                class="iconfont icon-search"></i>&nbsp;</a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/blog/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="minio对象存储">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-06-25 10:00" pubdate>
+        2024年6月25日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.8k 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      34
+       分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">minio对象存储</h1>
+            
+            <div class="markdown-body">
+              <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p> <code>MinIO</code> 是一个<strong>高性能</strong>、<strong>轻量级</strong>的<code>对象存储服务器</code>，专为<strong>大规模数据存储和分析</strong>而设计。它兼容 <code>Amazon S3 API</code>，可以无缝替代 <code>Amazon S3</code> 作为<strong>存储后端</strong>，并且<strong>支持在各种环境中部署</strong>，包括<code>物理服务器</code>、<code>虚拟机</code>、<code>容器</code>等。 </p>
+<p>官网：<a target="_blank" rel="noopener" href="https://min.io/docs/minio/linux/index.html?ref=con">https://min.io/docs/minio/linux/index.html?ref=con</a></p>
+<h1 id="docker-安装"><a href="#docker-安装" class="headerlink" title="docker 安装"></a>docker 安装</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">minio:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">minio/minio:latest</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">myminio</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">9000</span><span class="hljs-string">:9000</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-number">9001</span><span class="hljs-string">:9001</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/minio/data:/data</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">/data/minio/config:/root/.minio</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">MINIO_ROOT_USER:</span> <span class="hljs-string">&quot;root&quot;</span><br>      <span class="hljs-attr">MINIO_ROOT_PASSWORD:</span> <span class="hljs-string">&quot;root&quot;</span><br>    <span class="hljs-attr">command:</span> <span class="hljs-string">server</span> <span class="hljs-string">/data</span> <span class="hljs-string">--console-address</span> <span class="hljs-string">:9090</span> <span class="hljs-string">-address</span> <span class="hljs-string">:9091</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">privileged:</span> <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="k8s-安装"><a href="#k8s-安装" class="headerlink" title="k8s 安装"></a>k8s 安装</h1><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># Deploys a new Namespace for the MinIO Pod</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Namespace</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">minio-dev</span> <span class="hljs-comment"># Change this value if you want a different namespace name</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">minio-dev</span> <span class="hljs-comment"># Change this value to match metadata.name</span><br><span class="hljs-meta">---</span><br><span class="hljs-comment"># Deploys a new MinIO Pod into the metadata.namespace Kubernetes namespace</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># The `spec.containers[0].args` contains the command run on the pod</span><br><span class="hljs-comment"># The `/data` directory corresponds to the `spec.containers[0].volumeMounts[0].mountPath`</span><br><span class="hljs-comment"># That mount path corresponds to a Kubernetes HostPath which binds `/data` to a local drive or volume on the worker node where the pod runs</span><br><span class="hljs-comment"># </span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">minio</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">minio</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">minio-dev</span> <span class="hljs-comment"># Change this value to match the namespace metadata.name</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">minio</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-number">10.0</span><span class="hljs-number">.1</span><span class="hljs-number">.120</span><span class="hljs-string">:8000/ops/minio:RELEASE.2024-06-13T22-53-53Z.fips</span><br>    <span class="hljs-attr">command:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">/bin/bash</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">-c</span><br>    <span class="hljs-attr">args:</span> <br>    <span class="hljs-bullet">-</span> <span class="hljs-string">minio</span> <span class="hljs-string">server</span> <span class="hljs-string">/data</span> <span class="hljs-string">--console-address</span> <span class="hljs-string">:9090</span> <span class="hljs-string">-address</span> <span class="hljs-string">:9091</span><br>    <span class="hljs-attr">volumeMounts:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/data</span><br>      <span class="hljs-attr">name:</span> <span class="hljs-string">localvolume</span> <span class="hljs-comment"># Corresponds to the `spec.volumes` Persistent Volume</span><br>  <span class="hljs-attr">nodeSelector:</span><br>    <span class="hljs-attr">kubernetes.io/hostname:</span> <span class="hljs-string">k8s-master</span> <span class="hljs-comment"># Specify a node label associated to the Worker Node on which you want to deploy the pod.</span><br>  <span class="hljs-attr">volumes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">localvolume</span><br>    <span class="hljs-attr">hostPath:</span> <span class="hljs-comment"># MinIO generally recommends using locally-attached volumes</span><br>      <span class="hljs-attr">path:</span> <span class="hljs-string">/mnt/disk1/data</span> <span class="hljs-comment"># Specify a path to a local drive or volume on the Kubernetes worker node</span><br>      <span class="hljs-attr">type:</span> <span class="hljs-string">DirectoryOrCreate</span> <span class="hljs-comment"># The path to the last directory must exist</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">minio</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">minio-dev</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">http</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">9090</span><br>      <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>      <span class="hljs-attr">targetPort:</span> <span class="hljs-number">9090</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">tcp</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">9091</span><br>      <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>      <span class="hljs-attr">targetPort:</span> <span class="hljs-number">9091</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">minio</span><br>  <span class="hljs-attr">sessionAffinity:</span> <span class="hljs-string">None</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">NodePort</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="k8s-csi"><a href="#k8s-csi" class="headerlink" title="k8s csi"></a>k8s csi</h1><p>用于把minio作为pvc存储</p>
+<ul>
+<li><strong>Provisioner</strong>：负责根据 PVC 的请求动态创建存储卷（PV）。</li>
+<li><strong>Attacher</strong>：负责将存储卷附加到集群中的相应节点。</li>
+<li><strong>CSI-S3</strong>：是一个特定的 CSI 插件，用于将 S3 兼容的对象存储用作 Kubernetes 的持久存储</li>
+</ul>
+<p>官网：<a target="_blank" rel="noopener" href="https://github.com/ctrox/csi-s3">https://github.com/ctrox/csi-s3</a></p>
+<p>attacher.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher-sa</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">external-attacher-runner</span><br><span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;secrets&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;events&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;nodes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;storage.k8s.io&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;volumeattachments&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>, <span class="hljs-string">&quot;patch&quot;</span>]<br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRoleBinding</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher-role</span><br><span class="hljs-attr">subjects:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher-sa</span><br>    <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">roleRef:</span><br>  <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">external-attacher-runner</span><br>  <span class="hljs-attr">apiGroup:</span> <span class="hljs-string">rbac.authorization.k8s.io</span><br><span class="hljs-meta">---</span><br><span class="hljs-comment"># needed for StatefulSet</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">csi-attacher-s3</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">csi-attacher-s3</span><br>  <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-dummy</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">65535</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">serviceName:</span> <span class="hljs-string">&quot;csi-attacher-s3&quot;</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">csi-attacher-s3</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">csi-attacher-s3</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">serviceAccount:</span> <span class="hljs-string">csi-attacher-sa</span><br>      <span class="hljs-attr">tolerations:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">node-role.kubernetes.io/master</span><br>        <span class="hljs-attr">operator:</span> <span class="hljs-string">&quot;Exists&quot;</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-attacher</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">quay.io/k8scsi/csi-attacher:v2.2.0</span><br>          <span class="hljs-attr">args:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--v=4&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--csi-address=$(ADDRESS)&quot;</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ADDRESS</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver/csi.sock</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">&quot;IfNotPresent&quot;</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">socket-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">socket-dir</span><br>          <span class="hljs-attr">hostPath:</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver</span><br>            <span class="hljs-attr">type:</span> <span class="hljs-string">DirectoryOrCreate</span><br></code></pre></td></tr></table></figure>
+
+<p>csi-s3.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br><span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;secrets&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;nodes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;namespaces&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;storage.k8s.io&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;volumeattachments&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRoleBinding</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br><span class="hljs-attr">subjects:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>    <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">roleRef:</span><br>  <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>  <span class="hljs-attr">apiGroup:</span> <span class="hljs-string">rbac.authorization.k8s.io</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">DaemonSet</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">csi-s3</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">csi-s3</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">serviceAccount:</span> <span class="hljs-string">csi-s3</span><br>      <span class="hljs-attr">hostNetwork:</span> <span class="hljs-literal">true</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">driver-registrar</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">quay.io/k8scsi/csi-node-driver-registrar:v1.2.0</span><br>          <span class="hljs-attr">args:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--kubelet-registration-path=$(DRIVER_REG_SOCK_PATH)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--v=4&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--csi-address=$(ADDRESS)&quot;</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ADDRESS</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">/csi/csi.sock</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">DRIVER_REG_SOCK_PATH</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver/csi.sock</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">KUBE_NODE_NAME</span><br>              <span class="hljs-attr">valueFrom:</span><br>                <span class="hljs-attr">fieldRef:</span><br>                  <span class="hljs-attr">fieldPath:</span> <span class="hljs-string">spec.nodeName</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">plugin-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/csi</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registration-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/registration/</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>          <span class="hljs-attr">securityContext:</span><br>            <span class="hljs-attr">privileged:</span> <span class="hljs-literal">true</span><br>            <span class="hljs-attr">capabilities:</span><br>              <span class="hljs-attr">add:</span> [<span class="hljs-string">&quot;SYS_ADMIN&quot;</span>]<br>            <span class="hljs-attr">allowPrivilegeEscalation:</span> <span class="hljs-literal">true</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-number">10.0</span><span class="hljs-number">.1</span><span class="hljs-number">.120</span><span class="hljs-string">:8000/ops/csi-s3:v1.2.0-rc.2</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">&quot;Always&quot;</span><br>          <span class="hljs-attr">args:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--endpoint=$(CSI_ENDPOINT)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--nodeid=$(NODE_ID)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--v=4&quot;</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">CSI_ENDPOINT</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">unix:///csi/csi.sock</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">NODE_ID</span><br>              <span class="hljs-attr">valueFrom:</span><br>                <span class="hljs-attr">fieldRef:</span><br>                  <span class="hljs-attr">fieldPath:</span> <span class="hljs-string">spec.nodeName</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">plugin-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/csi</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">pods-mount-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/kubelet/pods</span><br>              <span class="hljs-attr">mountPropagation:</span> <span class="hljs-string">&quot;Bidirectional&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">fuse-device</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/dev/fuse</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">registration-dir</span><br>          <span class="hljs-attr">hostPath:</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/kubelet/plugins_registry/</span><br>            <span class="hljs-attr">type:</span> <span class="hljs-string">DirectoryOrCreate</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">plugin-dir</span><br>          <span class="hljs-attr">hostPath:</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver</span><br>            <span class="hljs-attr">type:</span> <span class="hljs-string">DirectoryOrCreate</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">pods-mount-dir</span><br>          <span class="hljs-attr">hostPath:</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/var/lib/kubelet/pods</span><br>            <span class="hljs-attr">type:</span> <span class="hljs-string">Directory</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">fuse-device</span><br>          <span class="hljs-attr">hostPath:</span><br>            <span class="hljs-attr">path:</span> <span class="hljs-string">/dev/fuse</span><br></code></pre></td></tr></table></figure>
+
+<p>provisioner.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner-sa</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">external-provisioner-runner</span><br><span class="hljs-attr">rules:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;secrets&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumes&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;delete&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;persistentvolumeclaims&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;storage.k8s.io&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;storageclasses&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;get&quot;</span>, <span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>]<br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">apiGroups:</span> [<span class="hljs-string">&quot;&quot;</span>]<br>    <span class="hljs-attr">resources:</span> [<span class="hljs-string">&quot;events&quot;</span>]<br>    <span class="hljs-attr">verbs:</span> [<span class="hljs-string">&quot;list&quot;</span>, <span class="hljs-string">&quot;watch&quot;</span>, <span class="hljs-string">&quot;create&quot;</span>, <span class="hljs-string">&quot;update&quot;</span>, <span class="hljs-string">&quot;patch&quot;</span>]<br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRoleBinding</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">rbac.authorization.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner-role</span><br><span class="hljs-attr">subjects:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">kind:</span> <span class="hljs-string">ServiceAccount</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner-sa</span><br>    <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">roleRef:</span><br>  <span class="hljs-attr">kind:</span> <span class="hljs-string">ClusterRole</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">external-provisioner-runner</span><br>  <span class="hljs-attr">apiGroup:</span> <span class="hljs-string">rbac.authorization.k8s.io</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">csi-provisioner-s3</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">csi-provisioner-s3</span><br>  <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-dummy</span><br>      <span class="hljs-attr">port:</span> <span class="hljs-number">65535</span><br><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">StatefulSet</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner-s3</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">serviceName:</span> <span class="hljs-string">&quot;csi-provisioner-s3&quot;</span><br>  <span class="hljs-attr">replicas:</span> <span class="hljs-number">1</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">csi-provisioner-s3</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">csi-provisioner-s3</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">serviceAccount:</span> <span class="hljs-string">csi-provisioner-sa</span><br>      <span class="hljs-attr">tolerations:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">key:</span> <span class="hljs-string">node-role.kubernetes.io/master</span><br>          <span class="hljs-attr">operator:</span> <span class="hljs-string">&quot;Exists&quot;</span><br>      <span class="hljs-attr">containers:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-provisioner</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-string">quay.io/k8scsi/csi-provisioner:v2.1.0</span><br>          <span class="hljs-attr">args:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--csi-address=$(ADDRESS)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--v=4&quot;</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">ADDRESS</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver/csi.sock</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">&quot;IfNotPresent&quot;</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">socket-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br>          <span class="hljs-attr">image:</span> <span class="hljs-number">10.0</span><span class="hljs-number">.1</span><span class="hljs-number">.120</span><span class="hljs-string">:8000/ops/csi-s3:v1.2.0-rc.2</span><br>          <span class="hljs-attr">args:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--endpoint=$(CSI_ENDPOINT)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--nodeid=$(NODE_ID)&quot;</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;--v=4&quot;</span><br>          <span class="hljs-attr">env:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">CSI_ENDPOINT</span><br>              <span class="hljs-attr">value:</span> <span class="hljs-string">unix:///var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver/csi.sock</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">NODE_ID</span><br>              <span class="hljs-attr">valueFrom:</span><br>                <span class="hljs-attr">fieldRef:</span><br>                  <span class="hljs-attr">fieldPath:</span> <span class="hljs-string">spec.nodeName</span><br>          <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">&quot;Always&quot;</span><br>          <span class="hljs-attr">volumeMounts:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">socket-dir</span><br>              <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/var/lib/kubelet/plugins/ch.ctrox.csi.s3-driver</span><br>      <span class="hljs-attr">volumes:</span><br>        <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">socket-dir</span><br>          <span class="hljs-attr">emptyDir:</span> &#123;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>storageclass.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-meta">---</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">StorageClass</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">storage.k8s.io/v1</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3</span><br><span class="hljs-attr">provisioner:</span> <span class="hljs-string">ch.ctrox.csi.s3-driver</span><br><span class="hljs-attr">parameters:</span><br>  <span class="hljs-comment"># specify which mounter to use</span><br>  <span class="hljs-comment"># can be set to rclone, s3fs, goofys or s3backer</span><br>  <span class="hljs-attr">mounter:</span> <span class="hljs-string">goofys</span><br>  <span class="hljs-comment"># to use an existing bucket, specify it here:</span><br>  <span class="hljs-comment"># bucket: some-existing-bucket</span><br>  <span class="hljs-attr">csi.storage.k8s.io/provisioner-secret-name:</span> <span class="hljs-string">csi-s3-secret</span><br>  <span class="hljs-attr">csi.storage.k8s.io/provisioner-secret-namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">csi.storage.k8s.io/controller-publish-secret-name:</span> <span class="hljs-string">csi-s3-secret</span><br>  <span class="hljs-attr">csi.storage.k8s.io/controller-publish-secret-namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">csi.storage.k8s.io/node-stage-secret-name:</span> <span class="hljs-string">csi-s3-secret</span><br>  <span class="hljs-attr">csi.storage.k8s.io/node-stage-secret-namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">csi.storage.k8s.io/node-publish-secret-name:</span> <span class="hljs-string">csi-s3-secret</span><br>  <span class="hljs-attr">csi.storage.k8s.io/node-publish-secret-namespace:</span> <span class="hljs-string">kube-system</span><br></code></pre></td></tr></table></figure>
+
+<p>secret.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-secret</span><br><span class="hljs-attr">stringData:</span><br>  <span class="hljs-attr">accessKeyID:</span> <span class="hljs-string">yXbtu5yTKwRDgOwuRm09</span><br>  <span class="hljs-attr">secretAccessKey:</span> <span class="hljs-string">hZk0g0gMjTNpYLGswWVpZD1aWy15X1gLViuPxJmQ</span><br>  <span class="hljs-comment"># For AWS set it to &quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><br>  <span class="hljs-attr">endpoint:</span> <span class="hljs-string">http://10.96.38.156:9091</span><br>  <span class="hljs-comment"># If not on S3, set it to &quot;&quot;</span><br>  <span class="hljs-attr">region:</span> <span class="hljs-string">&quot;&quot;</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Secret</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">kube-system</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-secret</span><br><span class="hljs-attr">stringData:</span><br>  <span class="hljs-attr">accessKeyID:</span> <span class="hljs-string">yXbtu5yTKwRDgOwuRm09</span><br>  <span class="hljs-attr">secretAccessKey:</span> <span class="hljs-string">hZk0g0gMjTNpYLGswWVpZD1aWy15X1gLViuPxJmQ</span><br>  <span class="hljs-comment"># For AWS set it to &quot;https://s3.&lt;region&gt;.amazonaws.com&quot;</span><br>  <span class="hljs-attr">endpoint:</span> <span class="hljs-string">http://10.96.38.156:9091</span><br>  <span class="hljs-comment"># If not on S3, set it to &quot;&quot;</span><br>  <span class="hljs-attr">region:</span> <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>pvc.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">PersistentVolumeClaim</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-pvc-nginx</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">accessModes:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-string">ReadWriteOnce</span><br>  <span class="hljs-attr">resources:</span><br>    <span class="hljs-attr">requests:</span><br>      <span class="hljs-attr">storage:</span> <span class="hljs-string">5Gi</span><br>  <span class="hljs-attr">storageClassName:</span> <span class="hljs-string">csi-s3</span><br></code></pre></td></tr></table></figure>
+
+<p>pod.yaml</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Pod</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-test-nginx</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">default</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">containers:</span><br>   <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">csi-s3-test-nginx</span><br>     <span class="hljs-attr">image:</span> <span class="hljs-string">nginx</span><br>     <span class="hljs-attr">volumeMounts:</span><br>       <span class="hljs-bullet">-</span> <span class="hljs-attr">mountPath:</span> <span class="hljs-string">/usr/share/nginx/html</span><br>         <span class="hljs-attr">name:</span> <span class="hljs-string">webroot</span><br>  <span class="hljs-attr">volumes:</span><br>   <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">webroot</span><br>     <span class="hljs-attr">persistentVolumeClaim:</span><br>       <span class="hljs-attr">claimName:</span> <span class="hljs-string">csi-s3-pvc</span><br>       <span class="hljs-attr">readOnly:</span> <span class="hljs-literal">false</span><br></code></pre></td></tr></table></figure>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/blog/tags/k8s/">k8s</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/blog/2024/04/12/mongodb%20%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+                        <span class="hidden-mobile">mongodb 分片集群部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" ></script>
+<script  src="/blog/js/events.js" ></script>
+<script  src="/blog/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  
+    <script  src="/blog/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
+
+
+
+  <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2.0.8/dist/clipboard.min.js" ></script>
+
+
+
+  <script  src="/blog/js/local-search.js" ></script>
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/blog/js/boot.js" ></script>
+
+
+</body>
+</html>
